@@ -18,5 +18,27 @@
   <link rel="stylesheet" href="./assets/dist/css/adminlte.min.css">
 </head>
 
+<style>
+  /* Căn giữa text các cột số và thao tác */
+  th,
+  td {
+    vertical-align: middle !important;
+  }
+
+  /* Cân đều nút sửa xóa */
+  .btn-primary,
+  .btn-danger {
+    width: 60px;
+    margin-bottom: 5px;
+  }
+
+  /* Cho phép text trong các cột dài xuống dòng */
+  td,
+  th {
+    white-space: normal !important;
+  }
+</style>
+
+
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">

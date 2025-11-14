@@ -67,9 +67,8 @@
                         <a href="<?= BASE_URL_ADMIN . "?act=form-them-booking" ?>">
                           <button class="btn btn-success">Thêm Booking</button>
                         </a>
-                        <table id="example1" class="table table-bordered table-striped">
-
-                          <thead>
+                        <table id="example1" class="table table-bordered table-striped table-hover">
+                          <thead class="thead-light text-center">
                             <tr>
                               <th>STT</th>
                               <th>Mã Booking</th>
@@ -84,51 +83,32 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <?php
-                            foreach ($listBooking as $key => $Booking): ?>
+                            <?php foreach ($listBooking as $key => $Booking): ?>
                               <tr>
                                 <td class="text-center"><?= $key + 1 ?></td>
-                                <td><?= $Booking['dat_tour_id'] ?></td>
-                                <td><?= $Booking['ten_khach_hang'] ?></td>
-                                <td><?= $Booking['ten_tour'] ?></td>
-                                <td><?= tinhNgayDem($Booking['ngay_bat_dau'], $Booking['ngay_ket_thuc']) ?></td>
-                                <td><?php if ($Booking['loai'] == "group") {
-                                      echo "Cá Nhân";
-                                    } else {
-                                      echo "Theo Nhóm";
-                                    } ?>
-                                </td>
-                                <td><?= $Booking['so_nguoi'] ?></td>
-                                <td><?= formatPrice($Booking['tong_tien']) ?></td>
-                                <td><?= $Booking['ten_trang_thai'] ?></td>
-
+                                <td class="text-center"><?= $Booking['dat_tour_id'] ?></td>
+                                <td><?= htmlspecialchars($Booking['ten_khach_hang']) ?></td>
+                                <td><?= htmlspecialchars($Booking['ten_tour']) ?></td>
+                                <td class="text-center"><?= tinhNgayDem($Booking['ngay_bat_dau'], $Booking['ngay_ket_thuc']) ?></td>
                                 <td class="text-center">
-                                  <a href="<?= BASE_URL_ADMIN . "?act=form-sua-booking&id_booking=" . $Booking['id']; ?>">
-                                    <button class="btn btn-warning">Sửa</button>
+                                  <?= $Booking['loai'] == "group" ? "Cá Nhân" : "Theo Nhóm" ?>
+                                </td>
+                                <td class="text-center"><?= $Booking['so_nguoi'] ?></td>
+                                <td><?= formatPrice($Booking['tong_tien']) ?></td>
+                                <td><?= htmlspecialchars($Booking['ten_trang_thai']) ?></td>
+                                <td class="text-center">
+                                  <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
+                                    <button class="btn btn-primary btn-sm">Sửa</button>
                                   </a>
-                                  <a href="<?= BASE_URL_ADMIN . "?act=xoa-booking&id_booking=" . $Booking['id']; ?>"
-                                    onclick="return confirm('Bạn Có Muốn Đong Ý Xóa Hay Không')">
-                                    <button class="btn btn-danger">Xóa</button>
+                                  <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Booking này không?');">
+                                    <button class="btn btn-danger btn-sm">Xóa</button>
                                   </a>
                                 </td>
                               </tr>
                             <?php endforeach; ?>
                           </tbody>
-                          <tfoot>
-                            <tr>
-                              <th>STT</th>
-                              <th>Mã Booking</th>
-                              <th>Tên Khách Hàng</th>
-                              <th>Tên tour</th>
-                              <th>Số Ngày</th>
-                              <th>Loại</th>
-                              <th>Số Người</th>
-                              <th>Tổng Tiền</th>
-                              <th>Trạng Thái</th>
-                              <th>Thao Tác</th>
-                            </tr>
-                          </tfoot>
                         </table>
+
                       </div>
                       <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                         Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
