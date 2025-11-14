@@ -86,7 +86,7 @@ function checkAdmin()
 }
 function  formatPrice($price)
 {
-    return number_format($price, 0, ',', '.') . 'đ';
+    return number_format($price, 0, ',', '.') . ' VND';
 }
 
 function tinhNgayDem($ngay_bat_dau, $ngay_ket_thuc)

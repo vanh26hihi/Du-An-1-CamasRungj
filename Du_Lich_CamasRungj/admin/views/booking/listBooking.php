@@ -48,7 +48,7 @@
                   <div class="card-header p-0 pt-1">
                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                       <li class="nav-item">
-                        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Home</a>
+                        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Tùy Chỉnh Booking</a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Profile</a>
@@ -64,12 +64,11 @@
                   <div class="card-body">
                     <div class="tab-content" id="custom-tabs-one-tabContent">
                       <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                        <a href="<?= BASE_URL_ADMIN . "?act=form-them-booking" ?>">
+                          <button class="btn btn-success">Thêm Booking</button>
+                        </a>
                         <table id="example1" class="table table-bordered table-striped">
-                          <div class="card-header">
-                            <a href="<?= BASE_URL_ADMIN . "?act=form-them-booking" ?>">
-                              <button class="btn btn-success">Thêm Booking</button>
-                            </a>
-                          </div>
+
                           <thead>
                             <tr>
                               <th>STT</th>
@@ -93,6 +92,16 @@
                                 <td><?= $Booking['ten_khach_hang'] ?></td>
                                 <td><?= $Booking['ten_tour'] ?></td>
                                 <td><?= tinhNgayDem($Booking['ngay_bat_dau'], $Booking['ngay_ket_thuc']) ?></td>
+                                <td><?php if ($Booking['loai'] == "group") {
+                                      echo "Cá Nhân";
+                                    } else {
+                                      echo "Theo Nhóm";
+                                    } ?>
+                                </td>
+                                <td><?= $Booking['so_nguoi'] ?></td>
+                                <td><?= formatPrice($Booking['tong_tien']) ?></td>
+                                <td><?= $Booking['ten_trang_thai'] ?></td>
+
                                 <td class="text-center">
                                   <a href="<?= BASE_URL_ADMIN . "?act=form-sua-booking&id_booking=" . $Booking['id']; ?>">
                                     <button class="btn btn-warning">Sửa</button>

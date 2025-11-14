@@ -14,12 +14,14 @@ class AdminBooking
                 dat_tour.*,
                lich_khoi_hanh.ngay_bat_dau,
                 lich_khoi_hanh.ngay_ket_thuc,
+                trang_thai_booking.ten_trang_thai,
                 khach_hang.ho_ten as ten_khach_hang,
                 tour.ten as ten_tour
             FROM dat_tour 
             JOIN lich_khoi_hanh ON lich_khoi_hanh.lich_id = dat_tour.lich_id
             JOIN khach_hang ON khach_hang.khach_hang_id = dat_tour.khach_hang_id
             JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+            JOIN trang_thai_booking ON trang_thai_booking.trang_thai_id = dat_tour.trang_thai_id
             ORDER BY dat_tour.dat_tour_id DESC';
 
             $stmt = $this->conn->prepare($sql);
