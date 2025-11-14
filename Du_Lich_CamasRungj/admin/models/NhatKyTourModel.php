@@ -42,8 +42,7 @@ class NhatKyTourModel {
             $data['nhat_ky_id']
         ]);
     }
-
-    // Gửi đánh giá/phản hồi về tour
+// thêm phản hồi tour
     public static function addFeedback($data) {
         $sql = "INSERT INTO danh_gia_tour (hdv_id, tour_id, lich_id, diem_danh_gia, phan_hoi, ngay_tao)
                 VALUES (?, ?, ?, ?, ?, NOW())";
