@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class AdminBaoCaoThongKeController
 {
 
@@ -7,3 +7,4 @@ class AdminBaoCaoThongKeController
         require_once './views/home.php';
     }
 }
+

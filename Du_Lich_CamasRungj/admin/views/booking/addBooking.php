@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -45,7 +45,7 @@
                       <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                         <div class="form-group">
                           <label>Tên Booking</label>
-                          <input type="text" class="form-control" name="ten_danh_muc" placeholder="Nhập Tên Booking">
+                          <input type="text" class="form-control" ten="ten_danh_muc" placeholder="Nhập Tên Booking">
                           <?php
                           if (isset($error['ten_danh_muc'])) { ?>
                             <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group">
                           <label>Tên Booking</label>
-                          <input type="text" class="form-control" name="ten_danh_muc" placeholder="Nhập Tên Booking">
+                          <input type="text" class="form-control" ten="ten_danh_muc" placeholder="Nhập Tên Booking">
                           <?php
                           if (isset($error['ten_danh_muc'])) { ?>
                             <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-group">
                           <label>Mô Tả</label>
-                          <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"></textarea>
+                          <textarea ten="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"></textarea>
                         </div>
                         <!-- /.card-body -->
                       </div>
@@ -98,3 +98,4 @@
 </body>
 
 </html>
+

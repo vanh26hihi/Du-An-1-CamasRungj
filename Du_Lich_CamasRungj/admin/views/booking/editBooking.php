@@ -1,4 +1,4 @@
-
+﻿
 <!-- header  -->
  <?php require_once './views/layout/header.php';?>
   <!-- Navbar -->
@@ -33,12 +33,12 @@
               <!-- form start -->
               <form action="<?=BASE_URL_ADMIN."?act=sua-danh-muc"?>" method="POST">
 
-                <input type="text" value="<?=$danhMuc['id']?>" name='id' hidden>
+                <input type="text" value="<?=$danhMuc['id']?>" ten='id' hidden>
 
                 <div class="card-body">
                   <div class="form-group">
                     <label >Sửa Danh Mục</label>
-                    <input type="text" class="form-control" value="<?=$danhMuc['ten_danh_muc']?>" name="ten_danh_muc" placeholder="Nhập Tên Danh Mục">
+                    <input type="text" class="form-control" value="<?=$danhMuc['ten_danh_muc']?>" ten="ten_danh_muc" placeholder="Nhập Tên Danh Mục">
                     <?php
                     if(isset($error['ten_danh_muc'])){ ?>
                         <p class="text-danger"><?=$error['ten_danh_muc']?></p>
@@ -46,7 +46,7 @@
                   </div>
                   <div class="form-group">
                     <label >Mô Tả</label>
-                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"><?=$danhMuc['mo_ta']?></textarea>
+                    <textarea ten="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"><?=$danhMuc['mo_ta']?></textarea>
                   </div>
                   
                 </div>
@@ -72,3 +72,4 @@
   <!-- End Footer  -->
 </body>
 </html>
+

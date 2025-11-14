@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class AdminBookingController
 {
     public $modelBooking;
@@ -106,3 +106,4 @@ class AdminBookingController
     //     exit();
     // }
 }
+

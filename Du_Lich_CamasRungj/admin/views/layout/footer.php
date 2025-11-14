@@ -1,4 +1,4 @@
- <footer class="main-footer">
+﻿ <footer class="main-footer">
    <div class="float-right d-none d-sm-block">
      <b>CamasRungj</b>
    </div>
@@ -34,3 +34,4 @@
  <script src="./assets/dist/js/adminlte.min.js"></script>
  <!-- AdminLTE for demo purposes -->
  <script src="./assets/dist/js/demo.js"></script>
+

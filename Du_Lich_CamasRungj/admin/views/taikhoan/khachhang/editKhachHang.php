@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -33,11 +33,11 @@
                         <form action="<?= BASE_URL_ADMIN . "?act=sua-khach-hang" ?>" method="POST">
                             <div class="card-body">
 
-                                <input type="hidden" name="khach_hang_id" value="<?= $khachHang['id'] ?>">
+                                <input type="hidden" ten="khach_hang_id" value="<?= $khachHang['id'] ?>">
 
                                 <div class="form-group">
                                     <label>Họ tên</label>
-                                    <input type="text" class="form-control" name="ho_ten" placeholder="Nhập Tên Tài Khoản" value="<?= $khachHang['ho_ten'] ?>">
+                                    <input type="text" class="form-control" ten="ho_ten" placeholder="Nhập Tên Tài Khoản" value="<?= $khachHang['ho_ten'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['ho_ten'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['ho_ten'] ?></p>
@@ -46,7 +46,7 @@
 
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control" name="email" placeholder="Nhập Email" value="<?= $khachHang['email'] ?>">
+                                    <input type="email" class="form-control" ten="email" placeholder="Nhập Email" value="<?= $khachHang['email'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['email'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['email'] ?></p>
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Số Điện Thoại</label>
-                                    <input type="text" class="form-control" name="so_dien_thoai" placeholder="Nhập số Điện Thoại" value="<?= $khachHang['so_dien_thoai'] ?>">
+                                    <input type="text" class="form-control" ten="so_dien_thoai" placeholder="Nhập số Điện Thoại" value="<?= $khachHang['so_dien_thoai'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['so_dien_thoai'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['so_dien_thoai'] ?></p>
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Ngày Sinh</label>
-                                    <input type="date" class="form-control" name="ngay_sinh" placeholder="Nhập số Điện Thoại" value="<?= $khachHang['ngay_sinh'] ?>">
+                                    <input type="date" class="form-control" ten="ngay_sinh" placeholder="Nhập số Điện Thoại" value="<?= $khachHang['ngay_sinh'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['ngay_sinh'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['ngay_sinh'] ?></p>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Giới Tính</label>
-                                    <select name="gioi_tinh" id="inputName" class="form-control">
+                                    <select ten="gioi_tinh" id="inputName" class="form-control">
                                         <?php foreach ($gioiTinh as $key => $listGioiTinh): ?>
                                             <option
                                                 <?= $listGioiTinh['id'] == $khachHang['gioi_tinh'] ? 'selected' : '' ?>
@@ -83,12 +83,12 @@
 
                                 <div class="form-group">
                                     <label>Địa Chỉ</label>
-                                    <input type="text" class="form-control" name="dia_chi" placeholder="Nhập Địa Chỉ" value="<?= $khachHang['dia_chi'] ?>">
+                                    <input type="text" class="form-control" ten="dia_chi" placeholder="Nhập Địa Chỉ" value="<?= $khachHang['dia_chi'] ?>">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Trạng Thái</label>
-                                    <select name="trang_thai" id="inputName" class="form-control">
+                                    <select ten="trang_thai" id="inputName" class="form-control">
                                         <?php foreach ($trangThai as $key => $listTrangThai): ?>
                                             <option
                                                 <?= $listTrangThai['id'] == $khachHang['trang_thai'] ? 'selected' : '' ?>
@@ -124,3 +124,4 @@
 </body>
 
 </html>
+

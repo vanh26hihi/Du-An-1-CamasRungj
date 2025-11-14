@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -42,11 +42,11 @@
                         <h3>Thông tin cá nhân</h3>
 
                         <form class="form-horizontal" role="form">
-                            <input type="hidden" name="id_ca_nhan" value="<?= $thongTin['id'] ?>">
+                            <input type="hidden" ten="id_ca_nhan" value="<?= $thongTin['id'] ?>">
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Họ tên:</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="ho_ten" type="text" value="<?= $thongTin['ho_ten'] ?>">
+                                    <input class="form-control" ten="ho_ten" type="text" value="<?= $thongTin['ho_ten'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['ho_ten'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['ho_ten'] ?></p>
@@ -56,7 +56,7 @@
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Email:</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="email" type="text" value="<?= $thongTin['email'] ?>">
+                                    <input class="form-control" ten="email" type="text" value="<?= $thongTin['email'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['email'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['email'] ?></p>
@@ -66,7 +66,7 @@
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Ngày sinh:</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="ngay_sinh" type="date" value="<?= $thongTin['ngay_sinh'] ?>">
+                                    <input class="form-control" ten="ngay_sinh" type="date" value="<?= $thongTin['ngay_sinh'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['ngay_sinh'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['ngay_sinh'] ?></p>
@@ -76,7 +76,7 @@
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Số điện thoại:</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="so_dien_thoai" type="text" value="<?= $thongTin['so_dien_thoai'] ?>">
+                                    <input class="form-control" ten="so_dien_thoai" type="text" value="<?= $thongTin['so_dien_thoai'] ?>">
                                     <?php
                                     if (isset($_SESSION['error']['so_dien_thoai'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['so_dien_thoai'] ?></p>
@@ -86,14 +86,14 @@
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Địa Chỉ:</label>
                                 <div class="col-lg-8">
-                                    <input class="form-control" name="dia_chi" type="text" value="<?= $thongTin['dia_chi'] ?>">
+                                    <input class="form-control" ten="dia_chi" type="text" value="<?= $thongTin['dia_chi'] ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-lg-3 control-label">Giới Tính:</label>
                                 <div class="col-lg-8">
                                     <div class="ui-select">
-                                        <select id="user_time_zone" name="gioi_tinh" class="form-control">
+                                        <select id="user_time_zone" ten="gioi_tinh" class="form-control">
                                             <?php foreach ($gioiTinh as $key => $listGioiTinh): ?>
                                                 <option <?= $listGioiTinh['id'] == $thongTin['gioi_tinh'] ? 'selected' : '' ?> value="<?= $listGioiTinh['id'] ?>"><?= $listGioiTinh['ten_gioi_tinh'] ?></option>
                                             <?php endforeach ?>
@@ -132,23 +132,23 @@
                             <?php } ?>
                             <form action="<?= BASE_URL_ADMIN . '?act=sua-mat-khau-ca-nhan-quan-tri' ?>" method="post">
                         </div>
-                        <input type="hidden" name="email" value="<?= $thongTin['email'] ?>">
+                        <input type="hidden" ten="email" value="<?= $thongTin['email'] ?>">
                         <div class="form-group">
                             <label class="col-md-3 control-label">Mật khẩu cũ:</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="old_pass" type="text" value="">
+                                <input class="form-control" ten="old_pass" type="text" value="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Mật khẩu mới:</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="new_pass" type="text" value="">
+                                <input class="form-control" ten="new_pass" type="text" value="">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Nhập lại mật khẩu mới:</label>
                             <div class="col-md-8">
-                                <input class="form-control" name="confirm_pass" type="text" value="">
+                                <input class="form-control" ten="confirm_pass" type="text" value="">
                             </div>
                         </div>
 
@@ -174,3 +174,4 @@
 </body>
 
 </html>
+

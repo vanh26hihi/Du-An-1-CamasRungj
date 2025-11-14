@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class AdminBooking
 {
     public $conn;
@@ -92,3 +92,4 @@ class AdminBooking
     //     }
     // }
 }
+

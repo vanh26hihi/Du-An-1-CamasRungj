@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 class AdminTaiKhoanController
 {
     public $modelTaiKhoan;
@@ -212,7 +212,7 @@ class AdminTaiKhoanController
             // die;
 
             $user = $this->modelTaiKhoan->checkLogin($email, $password);
-            if ($user['status'] === true) {
+            if ($user['trang_thai'] === true) {
                 $_SESSION['user_admin'] = $user['user'];
                 $_SESSION['user_admin_infor'] = [
                     'id' => $user['user']['id'],
@@ -356,3 +356,4 @@ class AdminTaiKhoanController
         }
     }
 }
+

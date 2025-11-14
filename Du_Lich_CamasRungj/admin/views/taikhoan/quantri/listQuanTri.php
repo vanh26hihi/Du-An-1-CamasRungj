@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -132,3 +132,4 @@
 </body>
 
 </html>
+

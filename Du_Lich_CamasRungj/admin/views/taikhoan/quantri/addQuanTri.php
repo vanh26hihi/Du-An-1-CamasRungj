@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -34,7 +34,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Họ tên</label>
-                                    <input type="text" class="form-control" name="ho_ten" placeholder="Nhập Tên Họ Tên">
+                                    <input type="text" class="form-control" ten="ho_ten" placeholder="Nhập Tên Họ Tên">
                                     <?php
                                     if (isset($_SESSION['error']['ho_ten'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['ho_ten'] ?></p>
@@ -43,7 +43,7 @@
 
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control" name="email" placeholder="Nhập Tên Email">
+                                    <input type="email" class="form-control" ten="email" placeholder="Nhập Tên Email">
                                     <?php
                                     if (isset($_SESSION['error']['email'])) { ?>
                                         <p class="text-danger"><?= $_SESSION['error']['email'] ?></p>
@@ -74,3 +74,4 @@
 </body>
 
 </html>
+

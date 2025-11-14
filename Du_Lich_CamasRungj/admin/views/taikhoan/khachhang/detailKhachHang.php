@@ -1,4 +1,4 @@
-<!-- header  -->
+﻿<!-- header  -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
@@ -135,8 +135,8 @@
                                     <td><?= $binhluan['trang_thai'] == 1 ? 'Hiển thị' : 'Bị Ẩn' ?></td>
                                     <td class="text-center">
                                         <form action="<?= BASE_URL_ADMIN . "?act=update-trang-thai-binh-luan" ?>" method="post">
-                                            <input type="hidden" name="id_binh_luan" value="<?= $binhluan['id'] ?>">
-                                            <input type="hidden" name="name_view" value="detail_khach">
+                                            <input type="hidden" ten="id_binh_luan" value="<?= $binhluan['id'] ?>">
+                                            <input type="hidden" ten="name_view" value="detail_khach">
                                             <button type="submit" onclick="return confirm('Bạn Có Muốn Đồng Ý Ẩn Bình Luận Này Hay Không')" class="btn btn-danger">
                                                 <?= $binhluan['trang_thai'] == 1 ? '<i class="far fa-eye-slash"></i>' : '<i class="far fa-eye"></i>' ?>
 
@@ -181,3 +181,4 @@
 </script>
 
 </html>
+
