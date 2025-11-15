@@ -39,7 +39,8 @@
                                             <th style="width: 20%;">Tour</th>
                                             <th style="width: 15%;">Địa Điểm</th>
                                             <th style="width: 28%;">Nội Dung</th>
-                                            <th style="width: 20%;">Ảnh</th>
+                                            <th style="width: 12%;">Ảnh</th>
+                                            <th style="width: 8%;">Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -63,6 +64,11 @@
                                                 <?php else: ?>
                                                     <span class="text-muted"><i class="fas fa-image"></i> Không có</span>
                                                 <?php endif; ?>
+                                            </td>
+                                            <td class="text-center" style="width:80px;">
+                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-sua-nhat-ky&nhat_ky_id=" . $row['nhat_ky_tour_id'] ?>" class="btn btn-sm btn-primary" title="Sửa"><i class="fas fa-edit"></i></a>
+                                                &nbsp;
+                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa-nhat-ky&nhat_ky_id=" . $row['nhat_ky_tour_id'] . "&hdv_id=" . ($_GET['hdv_id'] ?? '') ?>" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa nhật ký này?')"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>

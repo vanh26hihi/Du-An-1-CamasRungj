@@ -42,6 +42,28 @@ class NhatKyTourModel {
             $data['nhat_ky_id']
         ]);
     }
+
+    // Xóa nhật ký và file ảnh liên quan (nếu có)
+    public static function delete($nhat_ky_id) {
+        // Lấy bản ghi trước để biết đường dẫn ảnh
+        $row = self::getById($nhat_ky_id);
+        if (!$row) return false;
+
+        $sql = "DELETE FROM nhat_ky_tour WHERE nhat_ky_tour_id = ?";
+        $res = db_query($sql, [$nhat_ky_id]);
+
+        // Xóa file ảnh trên đĩa nếu tồn tại và có đường dẫn
+        if (!empty($row['anh_tour'])) {
+            // trong DB lưu dạng '../img/nhatky/filename'
+            $relative = str_replace('../', '', $row['anh_tour']);
+            $filePath = PATH_ROOT . $relative;
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        return $res;
+    }
 // thêm phản hồi tour
     public static function addFeedback($data) {
         $sql = "INSERT INTO danh_gia_tour (hdv_id, tour_id, lich_id, diem_danh_gia, phan_hoi, ngay_tao)

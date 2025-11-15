@@ -108,6 +108,18 @@ class HDVController {
         header('Location: ?act=hdv-nhat-ky&hdv_id=' . $formData['hdv_id']);
     }
 
+    public static function xoaNhatKy($nhat_ky_id, $hdv_id = null) {
+        if (empty($nhat_ky_id)) {
+            header('Location: ?act=hdv-nhat-ky&hdv_id=' . ($hdv_id ?? ''));
+            return;
+        }
+
+        // Gọi model để xóa bản ghi và file ảnh (nếu có)
+        NhatKyTourModel::delete($nhat_ky_id);
+
+        header('Location: ?act=hdv-nhat-ky&hdv_id=' . ($hdv_id ?? ''));
+    }
+
     public static function yeuCauDacBiet($lich_id) {
         $data = HDVModel::getSpecialRequests($lich_id);
         include './views/layout/header.php';
