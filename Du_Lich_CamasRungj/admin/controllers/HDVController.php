@@ -41,6 +41,23 @@ class HDVController {
     }
 
     public static function themNhatKy($formData) {
+        // Xử lý upload ảnh nếu có
+        if (!empty($_FILES['anh_tour']) && $_FILES['anh_tour']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = PATH_ROOT . 'img/nhatky/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $ext = pathinfo($_FILES['anh_tour']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('nk_') . '.' . $ext;
+            $target = $uploadDir . $filename;
+            if (move_uploaded_file($_FILES['anh_tour']['tmp_name'], $target)) {
+                // Lưu đường dẫn tương đối để hiển thị từ trang admin (../img/...)
+                $formData['anh_tour'] = '../img/nhatky/' . $filename;
+            }
+        } else {
+            $formData['anh_tour'] = null;
+        }
+
         NhatKyTourModel::add($formData);
         header('Location: ?act=hdv-nhat-ky&hdv_id=' . $formData['hdv_id']);
     }
@@ -65,6 +82,28 @@ class HDVController {
     }
 
     public static function suaNhatKy($formData) {
+        // Lấy bản ghi hiện tại để giữ ảnh cũ khi không upload ảnh mới
+        $current = NhatKyTourModel::getById($formData['nhat_ky_id']);
+
+        if (!empty($_FILES['anh_tour']) && $_FILES['anh_tour']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = PATH_ROOT . 'img/nhatky/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $ext = pathinfo($_FILES['anh_tour']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('nk_') . '.' . $ext;
+            $target = $uploadDir . $filename;
+            if (move_uploaded_file($_FILES['anh_tour']['tmp_name'], $target)) {
+                $formData['anh_tour'] = '../img/nhatky/' . $filename;
+            } else {
+                // nếu không upload được thì giữ ảnh cũ
+                $formData['anh_tour'] = $current['anh_tour'] ?? null;
+            }
+        } else {
+            // không có file mới => giữ ảnh cũ
+            $formData['anh_tour'] = $current['anh_tour'] ?? null;
+        }
+
         NhatKyTourModel::update($formData);
         header('Location: ?act=hdv-nhat-ky&hdv_id=' . $formData['hdv_id']);
     }
