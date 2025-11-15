@@ -43,22 +43,104 @@
                   <div class="card-body">
                     <div class="tab-content" id="custom-tabs-one-tabContent">
                       <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+
+                        <h4>Thông Tin Người Đặt Tour</h4>
                         <div class="form-group">
-                          <label>Tên Booking</label>
-                          <input type="text" class="form-control" ten="ten_danh_muc" placeholder="Nhập Tên Booking">
+                          <label>Tên Khách Hàng</label>
+                          <input type="text" ten="ho_ten" name="ho_ten" id="ho_ten" class="form-control" placeholder="Nhập Tên Khách Hàng"></input>
                           <?php
-                          if (isset($error['ten_danh_muc'])) { ?>
-                            <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
+                          if (isset($error['ho_ten'])) { ?>
+                            <p class="text-danger"><?= $error['ho_ten'] ?></p>
                           <?php } ?>
                         </div>
+
                         <div class="form-group">
-                          <label>Tên Booking</label>
-                          <input type="text" class="form-control" ten="ten_danh_muc" placeholder="Nhập Tên Booking">
+                          <label>Số Điện Thoại</label>
+                          <input type="text" ten="so_dien_thoai" name="so_dien_thoai" id="so_dien_thoai" class="form-control" placeholder="Nhập Số Điện Thoại"></input>
                           <?php
-                          if (isset($error['ten_danh_muc'])) { ?>
-                            <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
+                          if (isset($error['so_dien_thoai'])) { ?>
+                            <p class="text-danger"><?= $error['so_dien_thoai'] ?></p>
                           <?php } ?>
                         </div>
+
+                        <div class="form-group">
+                          <label>Email</label>
+                          <input type="text" ten="email" name="email" id="email" class="form-control" placeholder="Nhập Số Điện Thoại"></input>
+                          <?php
+                          if (isset($error['email'])) { ?>
+                            <p class="text-danger"><?= $error['email'] ?></p>
+                          <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label>CCCD</label>
+                          <input type="text" ten="cccd" name="cccd" id="cccd" class="form-control" placeholder="Nhập Số Điện Thoại"></input>
+                          <?php
+                          if (isset($error['cccd'])) { ?>
+                            <p class="text-danger"><?= $error['cccd'] ?></p>
+                          <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Địa Chỉ</label>
+                          <input type="text" ten="dia_chi" name="dia_chi" id="dia_chi" class="form-control" placeholder="Nhập Số Điện Thoại"></input>
+                          <?php
+                          if (isset($error['dia_chi'])) { ?>
+                            <p class="text-danger"><?= $error['dia_chi'] ?></p>
+                          <?php } ?>
+                        </div>
+                        <hr>
+
+                        <h4>Chọn Tour Du Lịch</h4>
+
+                        <div class="form-group">
+                          <label for="lich_and_tour">Chọn Tour</label>
+                          <select id="lich_and_tour" name="lich_and_tour" class="form-control select2" style="width: 100%;">
+                            <?php foreach ($listLichAndTour as $item): ?>
+                              <option value="<?= [$item['lich_id'], $item['tour_id']]  ?>"><?= $item['ten_tour'] . " | " . formatDate($item["ngay_bat_dau"]) ?></option>
+                            <?php endforeach; ?>
+                          </select>
+                          <?php
+                          if (isset($error['lich_and_tour'])) { ?>
+                            <p class="text-danger"><?= $error['lich_and_tour'] ?></p>
+                          <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Loại Tour</label>
+                          <select id="loai" name="loai" class="form-control select2" style="width: 100%;">
+                            <option value="">--Chọn Loại Tour--</option>
+                            <option value="group">Theo Nhóm</option>
+                            <option value="individual">Cá Nhân</option>
+                          </select>
+                          <?php
+                          if (isset($error['loai'])) { ?>
+                            <p class="text-danger"><?= $error['loai'] ?></p>
+                          <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Số Lượng Người</label>
+                          <input type="number" ten="dia_chi" name="dia_chi" id="dia_chi" class="form-control" min="1" value="1" placeholder="Nhập Số Điện Thoại"></input>
+                          <?php
+                          if (isset($error['dia_chi'])) { ?>
+                            <p class="text-danger"><?= $error['dia_chi'] ?></p>
+                          <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="lich_and_tour"></label>
+                          <select id="lich_and_tour" name="lich_and_tour" class="form-control select2" style="width: 100%;">
+                            <?php foreach ($listLichAndTour as $item): ?>
+                              <option value="<?= [$item['lich_id'], $item['tour_id']]  ?>"><?= $item['ten_tour'] . " | " . formatDate($item["ngay_bat_dau"]) ?></option>
+                            <?php endforeach; ?>
+                          </select>
+                          <?php
+                          if (isset($error['lich_and_tour'])) { ?>
+                            <p class="text-danger"><?= $error['lich_and_tour'] ?></p>
+                          <?php } ?>
+                        </div>
+
                         <div class="form-group">
                           <label>Mô Tả</label>
                           <textarea ten="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"></textarea>
@@ -98,4 +180,3 @@
 </body>
 
 </html>
-

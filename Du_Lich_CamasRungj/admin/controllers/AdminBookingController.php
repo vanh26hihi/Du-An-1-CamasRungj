@@ -19,6 +19,9 @@ class AdminBookingController
 
     public function formAddBooking()
     {
+        $listLichAndTour = $this->modelBooking->getAllLichAndTour();
+        // var_dump($listLichAndTour);
+        // die();
         // hàm này dùng để nhập form sản phẩm
         require_once './views/Booking/addBooking.php';
     }
@@ -106,4 +109,3 @@ class AdminBookingController
     //     exit();
     // }
 }
-
