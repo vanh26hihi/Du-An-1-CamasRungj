@@ -1,4 +1,7 @@
 <?php
+
+use Dom\Document;
+
 class AdminBookingController
 {
     public $modelBooking;
@@ -19,6 +22,7 @@ class AdminBookingController
 
     public function formAddBooking()
     {
+        $listLichAndTour = $this->modelBooking->getAllTour();
         // hàm này dùng để nhập form sản phẩm
         require_once './views/Booking/addBooking.php';
     }

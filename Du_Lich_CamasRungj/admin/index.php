@@ -30,6 +30,7 @@ match ($act) {
     'booking' => (new AdminBookingController())->danhSachBooking(),
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
+    'check-tour' => (new AdminBookingController())->checkTour(),
     // 'form-sua-booking' => (new AdminBookingController())->formEditBooking(),
     // 'sua-booking' => (new AdminBookingController())->postEditBooking(),
     // 'xoa-booking' => (new AdminBookingController())->deleteBooking(),

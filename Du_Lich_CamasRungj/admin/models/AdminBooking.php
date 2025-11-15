@@ -31,6 +31,26 @@ class AdminBooking
             echo "Lỗi" . $e->getMessage();
         }
     }
+    public function getAllLichAndTour()
+    {
+        try {
+            $sql = 'SELECT lich_khoi_hanh.*,
+                     tour.ten as ten_tour,
+                        tour.tour_id,
+                        tour.mo_ta,
+                        tour.gia_co_ban,
+                        tour.diem_khoi_hanh,
+                    FROM lich_khoi_hanh
+                    JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id ';
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
     // public function insertBooking($ten_booking, $mo_ta)
     // {
     //     try {

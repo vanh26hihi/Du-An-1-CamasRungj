@@ -6,6 +6,27 @@
 
 <!-- Main Sidebar Container -->
 <?php require_once './views/layout/sidebar.php'; ?>
+
+<!-- <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Lấy tham chiếu đến nút và ô input
+    const button = document.getElementById("tour_id");
+    const input = document.getElementById("get_tour_id");
+
+    // Thêm sự kiện click cho nút
+    button.addEventListener("click", function() {
+      // Lấy giá trị đã chọn từ select
+      const select = document.querySelector("select[name='tour_id']");
+      const selectedValue = select.value;
+
+      // Gán giá trị vào ô input ẩn
+      input.value = selectedValue;
+
+      // Hiển thị giá trị trong console (hoặc thực hiện các hành động khác)
+
+    });
+  }); -->
+</script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -40,46 +61,29 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-one-tabContent">
-                      <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                  <div class="card-body ">
+                    <div class="tab-content " id="custom-tabs-one-tabContent">
+                      <div class="tab-pane fade show active" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+
                         <div class="form-group">
-                          <label>Tên Booking</label>
-                          <input type="text" class="form-control" name="ten_danh_muc" placeholder="Nhập Tên Booking">
-                          <?php
-                          if (isset($error['ten_danh_muc'])) { ?>
+                          <label for="tour_id">Chọn Tour</label>
+                          <select id="lich_id" name="tour_id" class="form-control select2" style="width: 100%;">
+                            <?php foreach ($listLichAndTour as $item): ?>
+                              <option value="<?= $listLichAndTour['lich_id'] ?>"><?= $listLichAndTour['ten_tour'] ?></option>
+                            <?php endforeach; ?>
+                          </select>
+                          <?php if (isset($error['ten_danh_muc'])): ?>
                             <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
-                          <?php } ?>
+                          <?php endif; ?>
                         </div>
-                        <div class="form-group">
-                          <label>Tên Booking</label>
-                          <input type="text" class="form-control" name="ten_danh_muc" placeholder="Nhập Tên Booking">
-                          <?php
-                          if (isset($error['ten_danh_muc'])) { ?>
-                            <p class="text-danger"><?= $error['ten_danh_muc'] ?></p>
-                          <?php } ?>
-                        </div>
-                        <div class="form-group">
-                          <label>Mô Tả</label>
-                          <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"></textarea>
-                        </div>
-                        <!-- /.card-body -->
+
                       </div>
-                      <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
-                        Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                      <!-- /.card -->
+                      <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
                       </div>
                     </div>
                   </div>
-                  <!-- /.card -->
-                  <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
-                </div>
-              </div>
-
-
-
-
             </form>
           </div>
         </div>
@@ -93,6 +97,7 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
+
 <?php require_once './views/layout/footer.php'; ?>
 <!-- End Footer  -->
 </body>
