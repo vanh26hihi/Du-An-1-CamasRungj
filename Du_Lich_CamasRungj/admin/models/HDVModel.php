@@ -16,10 +16,18 @@ class HDVModel {
 
     // Lấy danh sách hành khách của 1 lịch cụ thể
     public static function getPassengersByLich($lich_id) {
+        if (empty($lich_id)) {
+            // Nếu không truyền lich_id, trả về toàn bộ hành khách
+            $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
+                FROM hanh_khach_list hk
+                ORDER BY hk.ho_ten";
+            return db_query($sql)->fetchAll();
+        }
+
         $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
-                FROM dat_tour dt
-                JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
-                WHERE dt.lich_id = ?";
+            FROM dat_tour dt
+            JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
+            WHERE dt.lich_id = ?";
         return db_query($sql, [$lich_id])->fetchAll();
     }
 

@@ -43,6 +43,7 @@ match ($act) {
     'hdv-them-nhat-ky' => HDVController::themNhatKy($_POST),
     'hdv-form-sua-nhat-ky' => HDVController::formSuaNhatKy($_GET['nhat_ky_id'] ?? null),
     'hdv-sua-nhat-ky' => HDVController::suaNhatKy($_POST),
+    'hdv-xoa-nhat-ky' => HDVController::xoaNhatKy($_GET['nhat_ky_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-diem-danh' => HDVController::diemDanh($_GET['lich_trinh_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-yeu-cau-dac-biet' => HDVController::yeuCauDacBiet($_GET['lich_id'] ?? null),
     'hdv-form-sua-yeu-cau' => HDVController::formSuaYeuCau($_GET['khach_hang_id'] ?? null),
