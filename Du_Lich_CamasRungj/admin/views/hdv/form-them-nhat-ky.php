@@ -8,7 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= BASE_URL_ADMIN ?>">Trang Chủ</a></li>
-                        <li class="breadcrumb-item"><a href="<?= BASE_URL_ADMIN . "?act=hdv-nhat-ky&hdv_id=" . $_GET['hdv_id'] ?>">Nhật Ký Tour</a></li>
+                        <li class="breadcrumb-item"><a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . ($_GET['hdv_id'] ?? 'all') . "&tab=nhat-ky" ?>">Nhật Ký Tour</a></li>
                         <li class="breadcrumb-item active">Thêm Nhật Ký</li>
                     </ol>
                 </div>
@@ -29,18 +29,41 @@
                         <form action="<?= BASE_URL_ADMIN . '?act=hdv-them-nhat-ky' ?>" method="POST" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="hdv_id">HDV ID</label>
-                                    <input type="hidden" name="hdv_id" value="<?= $_GET['hdv_id'] ?>">
-                                    <input type="text" class="form-control" value="<?= $_GET['hdv_id'] ?>" disabled>
+                                    <label for="hdv_id">Hướng Dẫn Viên <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="hdv_id" name="hdv_id" required>
+                                        <option value="">-- Chọn Hướng Dẫn Viên --</option>
+                                        <?php if (!empty($allHDV)): ?>
+                                            <?php 
+                                            $selectedHDVId = $_GET['hdv_id'] ?? ($allHDV[0]['hdv_id'] ?? '');
+                                            foreach ($allHDV as $hdv): 
+                                            ?>
+                                                <option value="<?= $hdv['hdv_id'] ?>" <?= $selectedHDVId == $hdv['hdv_id'] ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($hdv['ho_ten']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="tour_id">Tour <span class="text-danger">*</span></label>
                                     <select class="form-control" id="tour_id" name="tour_id" required>
                                         <option value="">-- Chọn Tour --</option>
-                                        <option value="1">Tour 1</option>
-                                        <option value="2">Tour 2</option>
-                                        <!-- Thay bằng dynamic data nếu có -->
+                                        <?php if (!empty($toursData)): ?>
+                                            <?php 
+                                            $uniqueTours = [];
+                                            foreach ($toursData as $tour): 
+                                                if (!isset($uniqueTours[$tour['tour_id']])):
+                                                    $uniqueTours[$tour['tour_id']] = $tour['ten_tour'];
+                                            ?>
+                                                <option value="<?= $tour['tour_id'] ?>">
+                                                    <?= htmlspecialchars($tour['ten_tour']) ?>
+                                                </option>
+                                            <?php 
+                                                endif;
+                                            endforeach; 
+                                            ?>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
 
@@ -48,9 +71,13 @@
                                     <label for="lich_id">Lịch Khởi Hành <span class="text-danger">*</span></label>
                                     <select class="form-control" id="lich_id" name="lich_id" required>
                                         <option value="">-- Chọn Lịch --</option>
-                                        <option value="1">Lịch 1</option>
-                                        <option value="2">Lịch 2</option>
-                                        <!-- Thay bằng dynamic data nếu có -->
+                                        <?php if (!empty($toursData)): ?>
+                                            <?php foreach ($toursData as $tour): ?>
+                                                <option value="<?= $tour['lich_id'] ?>" data-tour-id="<?= $tour['tour_id'] ?>">
+                                                    <?= htmlspecialchars($tour['ten_tour']) ?> - <?= date('d/m/Y', strtotime($tour['ngay_bat_dau'])) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
 
@@ -58,9 +85,13 @@
                                     <label for="dia_diem_id">Địa Điểm <span class="text-danger">*</span></label>
                                     <select class="form-control" id="dia_diem_id" name="dia_diem_id" required>
                                         <option value="">-- Chọn Địa Điểm --</option>
-                                        <option value="1">Địa Điểm 1</option>
-                                        <option value="2">Địa Điểm 2</option>
-                                        <!-- Thay bằng dynamic data nếu có -->
+                                        <?php if (!empty($diaDiemData)): ?>
+                                            <?php foreach ($diaDiemData as $diaDiem): ?>
+                                                <option value="<?= $diaDiem['dia_diem_id'] ?>">
+                                                    <?= htmlspecialchars($diaDiem['ten']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
 
@@ -80,7 +111,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="fas fa-save"></i> Lưu Nhật Ký
                                 </button>
-                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-nhat-ky&hdv_id=" . $_GET['hdv_id'] ?>" class="btn btn-secondary">
+                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . ($_GET['hdv_id'] ?? 'all') . "&tab=nhat-ky" ?>" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Hủy
                                 </a>
                             </div>
@@ -127,3 +158,72 @@
         margin-right: 5px;
     }
 </style>
+
+<script>
+// Load tours and schedules when HDV changes
+document.addEventListener('DOMContentLoaded', function() {
+    const hdvSelect = document.getElementById('hdv_id');
+    const tourSelect = document.getElementById('tour_id');
+    const lichSelect = document.getElementById('lich_id');
+    
+    // Auto-sync tour_id when lich_id changes
+    if (lichSelect && tourSelect) {
+        lichSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const tourId = selectedOption.getAttribute('data-tour-id');
+            if (tourId) {
+                tourSelect.value = tourId;
+            }
+        });
+    }
+    
+    // Load tours and schedules when HDV is selected
+    if (hdvSelect) {
+        hdvSelect.addEventListener('change', function() {
+            const hdvId = this.value;
+            if (!hdvId) {
+                // Clear tours and schedules if no HDV selected
+                tourSelect.innerHTML = '<option value="">-- Chọn Tour --</option>';
+                lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
+                return;
+            }
+            
+            // Load tours and schedules via AJAX
+            fetch('<?= BASE_URL_ADMIN ?>?act=hdv-get-tours&hdv_id=' + hdvId)
+                .then(response => response.json())
+                .then(data => {
+                    // Update tour dropdown
+                    tourSelect.innerHTML = '<option value="">-- Chọn Tour --</option>';
+                    if (data.tours && data.tours.length > 0) {
+                        const uniqueTours = {};
+                        data.tours.forEach(tour => {
+                            if (!uniqueTours[tour.tour_id]) {
+                                uniqueTours[tour.tour_id] = tour.ten_tour;
+                                const option = document.createElement('option');
+                                option.value = tour.tour_id;
+                                option.textContent = tour.ten_tour;
+                                tourSelect.appendChild(option);
+                            }
+                        });
+                    }
+                    
+                    // Update schedule dropdown
+                    lichSelect.innerHTML = '<option value="">-- Chọn Lịch --</option>';
+                    if (data.tours && data.tours.length > 0) {
+                        data.tours.forEach(tour => {
+                            const option = document.createElement('option');
+                            option.value = tour.lich_id;
+                            option.setAttribute('data-tour-id', tour.tour_id);
+                            const dateStr = new Date(tour.ngay_bat_dau).toLocaleDateString('vi-VN');
+                            option.textContent = tour.ten_tour + ' - ' + dateStr;
+                            lichSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading tours:', error);
+                });
+        });
+    }
+});
+</script>
