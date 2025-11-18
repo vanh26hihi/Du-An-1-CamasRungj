@@ -1,16 +1,16 @@
 ﻿﻿<?php
-    class AdminBooking
-    {
-        public $conn;
+class AdminBooking
+{
+    public $conn;
 
-        public function __construct()
-        {
-            $this->conn  = connectDB();
-        }
-        public function getAllBooking()
-        {
-            try {
-                $sql = 'SELECT 
+    public function __construct()
+    {
+        $this->conn  = connectDB();
+    }
+    public function getAllBooking()
+    {
+        try {
+            $sql = 'SELECT 
                 dat_tour.*,
                lich_khoi_hanh.ngay_bat_dau,
                 lich_khoi_hanh.ngay_ket_thuc,
@@ -24,92 +24,93 @@
             JOIN trang_thai_booking ON trang_thai_booking.trang_thai_id = dat_tour.trang_thai_id
             ORDER BY dat_tour.dat_tour_id DESC';
 
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute();
-                return $stmt->fetchAll();
-            } catch (Exception $e) {
-                echo "Lỗi" . $e->getMessage();
-            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
         }
-        public function getAllLichAndTour()
-        {
-            try {
-                $sql = 'SELECT lich_khoi_hanh.*,
+    }
+    public function getAllLichAndTour()
+    {
+        try {
+            $sql = 'SELECT lich_khoi_hanh.*,
                      tour.ten as ten_tour,
                      tour.tour_id,
                      tour.mo_ta,
                      tour.gia_co_ban,
-                     tour.diem_khoi_hanh
+                     tour.diem_khoi_hanh,
+                     tour.chinh_sach
                 FROM lich_khoi_hanh
                 JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id';
 
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute();
-                return $stmt->fetchAll();
-            } catch (Exception $e) {
-                echo "Lỗi: " . $e->getMessage();
-            }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
         }
-
-
-        // public function insertBooking($ten_booking, $mo_ta)
-        // {
-        //     try {
-        //         $sql = 'INSERT INTO dat_tour(ten_booking,mo_ta)
-        //             VALUES(:ten_booking , :mo_ta)';
-        //         $stmt = $this->conn->prepare($sql);
-        //         $stmt->execute([
-        //             ':ten_booking' => $ten_booking,
-        //             ':mo_ta' => $mo_ta,
-        //         ]);
-        //         return true;
-        //     } catch (Exception $e) {
-        //         echo "Lỗi" . $e->getMessage();
-        //     }
-        // }
-        // public function getDetailBooking($id)
-        // {
-        //     try {
-        //         $sql = 'SELECT * FROM dat_tour WHERE id = :id';
-        //         $stmt = $this->conn->prepare($sql);
-        //         $stmt->execute([
-        //             ':id' => $id,
-        //         ]);
-        //         return $stmt->fetch();
-        //     } catch (Exception $e) {
-        //         echo "Lỗi" . $e->getMessage();
-        //     }
-        // }
-        // public function updateBooking($id, $ten_booking, $mo_ta)
-        // {
-        //     try {
-        //         $sql = 'UPDATE dat_tour SET ten_booking = :ten_booking, mo_ta = :mo_ta WHERE id = :id';
-
-        //         $stmt = $this->conn->prepare($sql);
-
-        //         $stmt->execute([
-        //             ':ten_booking' => $ten_booking,
-        //             ':mo_ta' => $mo_ta,
-        //             ':id' => $id,
-        //         ]);
-        //         return true;
-        //     } catch (Exception $e) {
-        //         echo "Lỗi" . $e->getMessage();
-        //     }
-        // }
-        // public function destroyBooking($id)
-        // {
-        //     try {
-        //         $sql = "DELETE FROM dat_tour WHERE `dat_tour`.`id` = :id";
-
-        //         $stmt = $this->conn->prepare($sql);
-
-        //         $stmt->execute([
-        //             ':id' => $id,
-        //         ]);
-        //         return true;
-        //     } catch (Exception $e) {
-        //         echo "Lỗi" . $e->getMessage();
-        //     }
-        // }
     }
+
+
+    // public function insertBooking($ten_booking, $mo_ta)
+    // {
+    //     try {
+    //         $sql = 'INSERT INTO dat_tour(ten_booking,mo_ta)
+    //             VALUES(:ten_booking , :mo_ta)';
+    //         $stmt = $this->conn->prepare($sql);
+    //         $stmt->execute([
+    //             ':ten_booking' => $ten_booking,
+    //             ':mo_ta' => $mo_ta,
+    //         ]);
+    //         return true;
+    //     } catch (Exception $e) {
+    //         echo "Lỗi" . $e->getMessage();
+    //     }
+    // }
+    // public function getDetailBooking($id)
+    // {
+    //     try {
+    //         $sql = 'SELECT * FROM dat_tour WHERE id = :id';
+    //         $stmt = $this->conn->prepare($sql);
+    //         $stmt->execute([
+    //             ':id' => $id,
+    //         ]);
+    //         return $stmt->fetch();
+    //     } catch (Exception $e) {
+    //         echo "Lỗi" . $e->getMessage();
+    //     }
+    // }
+    // public function updateBooking($id, $ten_booking, $mo_ta)
+    // {
+    //     try {
+    //         $sql = 'UPDATE dat_tour SET ten_booking = :ten_booking, mo_ta = :mo_ta WHERE id = :id';
+
+    //         $stmt = $this->conn->prepare($sql);
+
+    //         $stmt->execute([
+    //             ':ten_booking' => $ten_booking,
+    //             ':mo_ta' => $mo_ta,
+    //             ':id' => $id,
+    //         ]);
+    //         return true;
+    //     } catch (Exception $e) {
+    //         echo "Lỗi" . $e->getMessage();
+    //     }
+    // }
+    // public function destroyBooking($id)
+    // {
+    //     try {
+    //         $sql = "DELETE FROM dat_tour WHERE `dat_tour`.`id` = :id";
+
+    //         $stmt = $this->conn->prepare($sql);
+
+    //         $stmt->execute([
+    //             ':id' => $id,
+    //         ]);
+    //         return true;
+    //     } catch (Exception $e) {
+    //         echo "Lỗi" . $e->getMessage();
+    //     }
+    // }
+}
