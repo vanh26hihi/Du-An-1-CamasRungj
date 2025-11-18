@@ -31,6 +31,8 @@
                                     <label>Tên Khách</label>
                                     <input type="text" class="form-control" value="<?= htmlspecialchars($data['ho_ten'] ?? '') ?>" disabled>
                                     <input type="hidden" name="khach_hang_id" value="<?= $data['hanh_khach_id'] ?? '' ?>">
+                                    <input type="hidden" name="lich_id" value="<?= $_GET['lich_id'] ?? '' ?>">
+                                    <input type="hidden" name="hdv_id" value="<?= $_GET['hdv_id'] ?? '' ?>">
                                 </div>
 
                                 <div class="form-group">
@@ -44,7 +46,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="fas fa-save"></i> Lưu Yêu Cầu
                                 </button>
-                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-yeu-cau-dac-biet&lich_id=" . ($_GET['lich_id'] ?? '') ?>" class="btn btn-secondary">
+                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . ($_GET['hdv_id'] ?? '') . "&tab=yeu-cau-dac-biet&lich_id=" . ($_GET['lich_id'] ?? '') ?>" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Hủy
                                 </a>
                             </div>

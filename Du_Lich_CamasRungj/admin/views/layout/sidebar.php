@@ -58,39 +58,12 @@
           </li>
 
           <li class="nav-item">
-            <a href="<?= BASE_URL_ADMIN . "?act=hdv-lich-lam-viec&hdv_id=1" ?>" class="nav-link">
+            <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=1" ?>" class="nav-link">
               <i class="nav-icon fas fa-user-tie"></i>
               <p>
                 Quản Lý HDV
               </p>
-              <i class="fas fa-angle-left right"></i>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="<?= BASE_URL_ADMIN . "?act=hdv-lich-lam-viec&hdv_id=1" ?>" class="nav-link">
-                  <i class="nav-icon far fa-calendar"></i>
-                  <p>Lịch Làm Việc</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="<?= BASE_URL_ADMIN . "?act=hdv-nhat-ky&hdv_id=1" ?>" class="nav-link">
-                  <i class="nav-icon far fa-file-alt"></i>
-                  <p>Nhật Ký Tour</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="<?= BASE_URL_ADMIN . "?act=hdv-yeu-cau-dac-biet&lich_id=1" ?>" class="nav-link">
-                  <i class="nav-icon far fa-star"></i>
-                  <p>Yêu Cầu Đặc Biệt</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-danh-gia-tour&hdv_id=1" ?>" class="nav-link">
-                  <i class="nav-icon far fa-comment"></i>
-                  <p>Đánh Giá Tour</p>
-                </a>
-              </li>
-            </ul>
           </li>
 
           <li class="nav-item">

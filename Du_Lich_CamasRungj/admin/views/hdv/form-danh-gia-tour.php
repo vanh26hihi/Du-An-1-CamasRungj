@@ -31,8 +31,21 @@
                                     <label for="tour_id">Chọn Tour <span class="text-danger">*</span></label>
                                     <select class="form-control" id="tour_id" name="tour_id" required>
                                         <option value="">-- Chọn Tour --</option>
-                                        <option value="1">Tour 1</option>
-                                        <option value="2">Tour 2</option>
+                                        <?php if (!empty($toursData)): ?>
+                                            <?php 
+                                            $uniqueTours = [];
+                                            foreach ($toursData as $tour): 
+                                                if (!isset($uniqueTours[$tour['tour_id']])):
+                                                    $uniqueTours[$tour['tour_id']] = $tour['ten_tour'];
+                                            ?>
+                                                <option value="<?= $tour['tour_id'] ?>">
+                                                    <?= htmlspecialchars($tour['ten_tour']) ?>
+                                                </option>
+                                            <?php 
+                                                endif;
+                                            endforeach; 
+                                            ?>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
 
@@ -40,8 +53,13 @@
                                     <label for="lich_id">Lịch Khởi Hành <span class="text-danger">*</span></label>
                                     <select class="form-control" id="lich_id" name="lich_id" required>
                                         <option value="">-- Chọn Lịch --</option>
-                                        <option value="1">Lịch 1</option>
-                                        <option value="2">Lịch 2</option>
+                                        <?php if (!empty($toursData)): ?>
+                                            <?php foreach ($toursData as $tour): ?>
+                                                <option value="<?= $tour['lich_id'] ?>" data-tour-id="<?= $tour['tour_id'] ?>">
+                                                    <?= htmlspecialchars($tour['ten_tour']) ?> - <?= date('d/m/Y', strtotime($tour['ngay_bat_dau'])) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </select>
                                 </div>
 
@@ -69,7 +87,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="fas fa-paper-plane"></i> Gửi Đánh Giá
                                 </button>
-                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-lich-lam-viec&hdv_id=" . $_GET['hdv_id'] ?>" class="btn btn-secondary">
+                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $_GET['hdv_id'] . "&tab=danh-gia" ?>" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Hủy
                                 </a>
                             </div>
@@ -116,3 +134,21 @@
         margin-right: 5px;
     }
 </style>
+
+<script>
+// Auto-sync tour_id when lich_id changes
+document.addEventListener('DOMContentLoaded', function() {
+    const tourSelect = document.getElementById('tour_id');
+    const lichSelect = document.getElementById('lich_id');
+    
+    if (lichSelect && tourSelect) {
+        lichSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const tourId = selectedOption.getAttribute('data-tour-id');
+            if (tourId) {
+                tourSelect.value = tourId;
+            }
+        });
+    }
+});
+</script>
