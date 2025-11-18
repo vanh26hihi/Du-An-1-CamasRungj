@@ -87,8 +87,7 @@ match ($act) {
     'post-them-tour' => (new QuanLyTourController())->add(),
     'form-sua-tour' => (new QuanLyTourController())->editForm(),
     'post-sua-tour' => (new QuanLyTourController())->update(),
-    'san-pham' => (new QuanLyTourController())->index(),
-
+Anyone. 
     'xoa-tour' => (new QuanLyTourController())->delete(),
 
     

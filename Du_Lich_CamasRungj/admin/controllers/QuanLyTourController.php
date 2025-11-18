@@ -4,8 +4,8 @@ require_once __DIR__ . "/../models/QuanLyTour.php";    // MODEL
 
 class QuanLyTourController
 {
-    private $model;
-    private $conn;
+    public $model;
+    public $conn;
 
     public function __construct()
     {
@@ -15,10 +15,7 @@ class QuanLyTourController
         // TRUYỀN ĐÚNG KẾT NỐI VÀO MODEL
         $this->model = new Tour($conn);
 
-        // KIỂM TRA KẾT NỐI (debug nếu cần)
-        if ($conn === null) {
-            die("Lỗi: Không kết nối được database!");
-        }
+        // KIỂM TRA KẾT NỐI (debug nếu cần)Fine. 
     }
 
     public function index()

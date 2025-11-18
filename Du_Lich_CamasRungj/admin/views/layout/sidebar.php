@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= BASE_URL_ADMIN . "?act=danh-muc" ?>" class="nav-link">
+            <a href="<?= BASE_URL_ADMIN . "?act=danh-muc" ?>" class="nav-link">By. 
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Quản Lý Danh Mục Tour
@@ -40,7 +40,7 @@
 
           </li>
           <li class="nav-item">
-            <a href="<?= BASE_URL_ADMIN . "?act=san-pham" ?>" class="nav-link">
+            <a href="<?= BASE_URL_ADMIN . "?act=danh-sach-tour" ?>" class="nav-link">
               <i class="nav-icon fas fa-pizza-slice"></i>
               <p>
                 Quản lý Tour

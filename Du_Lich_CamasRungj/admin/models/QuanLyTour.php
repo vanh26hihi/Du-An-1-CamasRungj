@@ -12,10 +12,12 @@ class Tour
     // Lấy danh sách tour
     public function getAll()
     {
-        $sql = "SELECT * FROM $this->table ORDER BY tour_id DESC";
+        $sql = "SELECT  tour.* , danh_muc_tour.ten FROM tour
+        JOIN danh_muc_tour 
+                 ";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     // Lấy 1 tour theo id

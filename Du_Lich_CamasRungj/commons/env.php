@@ -12,4 +12,4 @@
     define('DB_NAME', 'tour_du_lich');  
 
     define('PATH_ROOT', __DIR__ . '/../');
-
+ 
