@@ -1,6 +1,6 @@
 <?php
-require_once ".../commons/env.php";       // KẾT NỐI DATABASE
-require_once "./models/QuanLyTour.php";    // MODEL
+require_once __DIR__ . "/../../commons/env.php";       // KẾT NỐI DATABASE
+require_once __DIR__ . "/../models/QuanLyTour.php";    // MODEL
 
 class QuanLyTourController
 {
