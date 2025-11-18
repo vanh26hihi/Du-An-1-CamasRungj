@@ -2,7 +2,7 @@
 <?php require_once './views/layout/header.php'; ?>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const select = document.getElementById("tour");
+    const select = document.getElementById("lich_id");
     const tourInfoBox = document.getElementById("tourInfo");
     const ten_tour = document.getElementById("ten_tour");
     const mo_ta = document.getElementById("mo_ta");
@@ -47,6 +47,15 @@
           </div>
 
           <div class="form-group">
+            <label>Giới Tính</label>
+            <select id="ds_khach[${i}][gioi_tinh]" name="ds_khach[${i}][gioi_tinh]" class="form-control select2" style="width: 100%;">
+                            <option value="">--Chọn Giới Tính--</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                          </select>
+          </div>
+
+          <div class="form-group">
             <label>Số Điện Thoại</label>
             <input type="text" name="ds_khach[${i}][so_dien_thoai]" class="form-control" placeholder="Nhập số điện thoại">
           </div>
@@ -62,8 +71,13 @@
           </div>
 
           <div class="form-group">
-            <label>Địa Chỉ</label>
-            <input type="text" name="ds_khach[${i}][dia_chi]" class="form-control" placeholder="Nhập địa chỉ">
+            <label>Ngày Sinh</label>
+            <input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control" placeholder="Nhập địa chỉ">
+          </div>
+
+          <div class="form-group">
+            <label>Ghi Chú</label>
+            <textarea ten="ds_khach[${i}][ghi_chu]" id="" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
           </div>
         </div>
       `;
@@ -127,7 +141,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1> Quản lý Booking</h1>
+          <h1> Tạo Booking</h1>
         </div>
       </div>
     </div><!-- /.container-fluid -->
@@ -141,7 +155,7 @@
           <div class="card ">
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="<?= BASE_URL_ADMIN . "?act=them-danh-muc" ?>" method="POST">
+            <form action="<?= BASE_URL_ADMIN . "?act=them-booking" ?>" method="POST">
               <div class="col-12 col-sm-12">
                 <div class="card card-primary card-tabs">
                   <div class="card-header p-0 pt-1">
@@ -163,7 +177,7 @@
                       <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                         <h4>Chọn Tour Du Lịch</h4>
                         <div class="form-group">
-                          <select id="tour" name="tour" class="form-control select2" style="width: 100%;">
+                          <select id="lich_id" name="lich_id" class="form-control select2" style="width: 100%;">
                             <option value="">--Chọn Tour--</option>
                             <?php foreach ($listLichAndTour as $item): ?>
                               <option value="<?= $item['lich_id'] ?>"
@@ -177,13 +191,14 @@
                             <?php endforeach; ?>
                           </select>
                           <?php
-                          if (isset($error['tour'])) { ?>
-                            <p class="text-danger"><?= $error['tour'] ?></p>
+                          if (isset($error['lich_id'])) { ?>
+                            <p class="text-danger"><?= $error['lich_id'] ?></p>
                           <?php } ?>
                         </div>
 
                         <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="display:none;">
                           <h5>Thông tin Tour</h5>
+
                           <div class="form-group">
                             <label>Tên Tour</label>
                             <input type="text" ten="ten_tour" name="ten_tour" id="ten_tour" class="form-control" readonly></input>
@@ -206,41 +221,47 @@
 
                           <div class="form-group">
                             <label>Mô Tả</label>
-                            <input type="text" ten="mo_ta" name="mo_ta" id="mo_ta" class="form-control" readonly></input>
+                            <textarea ten="mo_ta" id="mo_ta" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
                           </div>
 
-                        </div>
+                          <div class="form-group">
+                            <label>Loại Tour</label>
+                            <select id="loai" name="loai" class="form-control select2" style="width: 100%;">
+                              <option value="">--Chọn Loại Tour--</option>
+                              <option value="group">Theo Nhóm</option>
+                              <option value="individual">Cá Nhân</option>
+                            </select>
+                            <?php
+                            if (isset($error['loai'])) { ?>
+                              <p class="text-danger"><?= $error['loai'] ?></p>
+                            <?php } ?>
+                          </div>
 
-                        <div class="form-group">
-                          <label>Loại Tour</label>
-                          <select id="loai" name="loai" class="form-control select2" style="width: 100%;">
-                            <option value="">--Chọn Loại Tour--</option>
-                            <option value="group">Theo Nhóm</option>
-                            <option value="individual">Cá Nhân</option>
-                          </select>
-                          <?php
-                          if (isset($error['loai'])) { ?>
-                            <p class="text-danger"><?= $error['loai'] ?></p>
-                          <?php } ?>
-                        </div>
+                          <div class="form-group">
+                            <label>Số Lượng Người</label>
+                            <input type="number" ten="so_nguoi" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="1"></input>
+                            <?php
+                            if (isset($error['so_nguoi'])) { ?>
+                              <p class="text-danger"><?= $error['so_nguoi'] ?></p>
+                            <?php } ?>
+                          </div>
 
-                        <div class="form-group">
-                          <label>Số Lượng Người</label>
-                          <input type="number" ten="so_nguoi" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="1"></input>
-                          <?php
-                          if (isset($error['so_nguoi'])) { ?>
-                            <p class="text-danger"><?= $error['so_nguoi'] ?></p>
-                          <?php } ?>
-                        </div>
+                          <input type="hidden" name="trang_thai_id" value="1">
 
-                        <input type="hidden" name="trang_thai_id" value="1">
+                          <div class="form-group">
+                            <label>Ghi Chú</label>
+                            <textarea ten="ghi_chu" id="" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
+                          </div>
+                          <!-- /.card-body -->
 
-                        <div class="form-group">
-                          <label>Ghi Chú</label>
-                          <textarea ten="mo_ta" id="" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
+                          <div class="form-group">
+                            <label>Tổng Tiền</label>
+                            <input type="number" name="tong_tien" id="tong_tien" class="form-control" readonly>
+                          </div>
                         </div>
-                        <!-- /.card-body -->
                       </div>
+
+
 
                       <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                         <h4>Thông Tin Người Đặt Tour</h4>
@@ -308,9 +329,6 @@
                 </div>
               </div>
 
-
-
-
             </form>
           </div>
         </div>
@@ -324,8 +342,10 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
-<?php require_once './views/layout/footer.php'; ?>
+
 <!-- End Footer  -->
 </body>
+
+<?php require_once './views/layout/footer.php'; ?>
 
 </html>

@@ -105,6 +105,8 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
+<!-- Code injected by live-server -->
+</body>
 <?php require_once './views/layout/footer.php'; ?>
 <!-- End Footer  -->
 <!-- Page specific script -->
@@ -128,8 +130,5 @@
     });
   });
 </script>
-<!-- Code injected by live-server -->
-</body>
 
 </html>
-

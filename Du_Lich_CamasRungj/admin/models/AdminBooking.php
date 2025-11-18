@@ -53,21 +53,45 @@ class AdminBooking
     }
 
 
-    // public function insertBooking($ten_booking, $mo_ta)
-    // {
-    //     try {
-    //         $sql = 'INSERT INTO dat_tour(ten_booking,mo_ta)
-    //             VALUES(:ten_booking , :mo_ta)';
-    //         $stmt = $this->conn->prepare($sql);
-    //         $stmt->execute([
-    //             ':ten_booking' => $ten_booking,
-    //             ':mo_ta' => $mo_ta,
-    //         ]);
-    //         return true;
-    //     } catch (Exception $e) {
-    //         echo "Lỗi" . $e->getMessage();
-    //     }
-    // }
+    public function insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id)
+    {
+        try {
+            $sql = 'INSERT INTO dat_tour(lich_id, loai, so_nguoi, ghi_chu, khach_hang_id ,nguoi_tao_id)
+                VALUES(:lich_id, :loai, :so_nguoi, :ghi_chu, :khach_hang_id,nguoi_tao_id)';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':lich_id' => $lich_id,
+                ':loai' => $loai,
+                ':so_nguoi' => $so_nguoi,
+                ':ghi_chu' => $ghi_chu,
+                ':khach_hang_id' => $khach_hang_id,
+                ':nguoi_tao_id' => $nguoi_tao_id,
+            ]);
+            return $this->conn->lastInsertId();
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
+    public function insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi)
+    {
+        try {
+            $sql = 'INSERT INTO dat_tour(ho_ten, so_dien_thoai, email, cccd, dia_chi)
+                VALUES(:ho_ten, :so_dien_thoai, :email, :cccd, :dia_chi)';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':ho_ten' => $ho_ten,
+                ':so_dien_thoai' => $so_dien_thoai,
+                ':email' => $email,
+                ':cccd' => $cccd,
+                ':dia_chi' => $dia_chi,
+            ]);
+            return $this->conn->lastInsertId();
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
     // public function getDetailBooking($id)
     // {
     //     try {

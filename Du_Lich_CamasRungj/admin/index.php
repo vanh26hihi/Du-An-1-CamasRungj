@@ -78,4 +78,3 @@ match ($act) {
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
     'check-login-admin' => (new AdminTaiKhoanController())->login(),
 };
-
