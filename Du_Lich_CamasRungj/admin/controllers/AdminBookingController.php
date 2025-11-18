@@ -26,33 +26,33 @@ class AdminBookingController
         require_once './views/Booking/addBooking.php';
     }
 
-    public function postAddBooking()
-    {
-        // hàm này dùng để thêm dữ liệu từ form
-        // Kiểm tra xem dữ liệu có phải submit lên không
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            //lấy dữ liệu
-            $ten_danh_muc = $_POST['ten_danh_muc'];
-            $mo_ta = $_POST['mo_ta'];
-            $error = [];
-            if (empty($ten_danh_muc)) {
-                $error['ten_danh_muc'] = 'Tên Danh Mục Không Được Để Trống';
-            }
+    // public function postAddBooking()
+    // {
+    //     // hàm này dùng để thêm dữ liệu từ form
+    //     // Kiểm tra xem dữ liệu có phải submit lên không
+    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //         //lấy dữ liệu
+    //         $ten_danh_muc = $_POST['ten_danh_muc'];
+    //         $mo_ta = $_POST['mo_ta'];
+    //         $error = [];
+    //         if (empty($ten_danh_muc)) {
+    //             $error['ten_danh_muc'] = 'Tên Danh Mục Không Được Để Trống';
+    //         }
 
-            $_SESSION['error'] = $error;
-            //Nếu Không có lỗi thì tiến hành thêm danh mục
-            if (empty($error)) {
-                $this->modelBooking->insertBooking($ten_danh_muc, $mo_ta);
-                header("Location:" . BASE_URL_ADMIN . '?act=booking');
-                exit();
-            } else {
-                $_SESSION['flash'] = true;
-                // Trả về form vá lỗi
-                header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
-                exit();
-            }
-        }
-    }
+    //         $_SESSION['error'] = $error;
+    //         //Nếu Không có lỗi thì tiến hành thêm danh mục
+    //         if (empty($error)) {
+    //             $this->modelBooking->insertBooking($ten_danh_muc, $mo_ta);
+    //             header("Location:" . BASE_URL_ADMIN . '?act=booking');
+    //             exit();
+    //         } else {
+    //             $_SESSION['flash'] = true;
+    //             // Trả về form vá lỗi
+    //             header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+    //             exit();
+    //         }
+    //     }
+    // }
     // public function formEditBooking()
     // {
     //     // hàm này dùng để nhập form sản phẩm
