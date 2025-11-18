@@ -6,10 +6,12 @@ require_once '../commons/function.php'; // Hàm hỗ trợ
 require_once './controllers/AdminBookingController.php';
 require_once './controllers/AdminBaoCaoThongKeController.php';
 require_once './controllers/HDVController.php';
+require_once './controllers/QuanLyTourController.php';
 // // require_once './controllers/AdminTaiKhoanController.php';
 // Require toàn bộ file Models
 require_once './models/AdminBooking.php';
 // require_once './models/AdminTaiKhoan.php';
+
 
 // Route
 $act = $_GET['act'] ?? '/';
@@ -77,5 +79,18 @@ match ($act) {
     'login-admin' => (new AdminTaiKhoanController())->formLogin(),
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
     'check-login-admin' => (new AdminTaiKhoanController())->login(),
+
+    
+    //QL Tour
+    'danh-sach-tour' => (new QuanLyTourController())->index(),
+    'form-them-tour' => (new QuanLyTourController())->addForm(),
+    'post-them-tour' => (new QuanLyTourController())->add(),
+    'form-sua-tour' => (new QuanLyTourController())->editForm(),
+    'post-sua-tour' => (new QuanLyTourController())->update(),
+    'san-pham' => (new QuanLyTourController())->index(),
+
+    'xoa-tour' => (new QuanLyTourController())->delete(),
+
+    
 };
 
