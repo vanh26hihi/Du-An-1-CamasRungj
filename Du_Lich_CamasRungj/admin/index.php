@@ -8,6 +8,7 @@ require_once './controllers/AdminBookingController.php';
 require_once './controllers/AdminBaoCaoThongKeController.php';
 require_once './controllers/HDVController.php';
 require_once './controllers/QuanLyTourController.php';
+require_once './controllers/AdminDanhMucController.php';
 
 require_once './models/AdminBooking.php';
 
@@ -72,4 +73,11 @@ match ($act) {
     'san-pham' => (new QuanLyTourController())->index(),
 
     'xoa-tour' => (new QuanLyTourController())->delete(),
+    //router quản lí danh mục tour
+    'danh-muc-tour' => (new AdminDanhMucController())-> listDanhMuc(),
+    'form-them-danh-muc' => (new AdminDanhMucController()) -> formAddDanhMuc(),
+    'post-them-danh-muc' => (new AdminDanhMucController()) -> postAddDanhMuc(),
+    'form-sua-danh-muc' => (new AdminDanhMucController()) -> formEditDanhMuc(),
+    'post-sua-danh-muc' => (new AdminDanhMucController()) -> postEditDanhMuc(),
+    'xoa-danh-muc' => (new AdminDanhMucController()) -> deleteDanhMuc(),
 };
