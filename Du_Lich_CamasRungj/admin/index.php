@@ -74,7 +74,7 @@ match ($act) {
     'danh-muc-tour' => (new AdminDanhMucController())->listDanhMuc(),
     'form-them-danh-muc' => (new AdminDanhMucController())->formAddDanhMuc(),
     'post-them-danh-muc' => (new AdminDanhMucController())->postAddDanhMuc(),
-    // 'form-sua-danh-muc' => (new AdminDanhMucController())->formEditDanhMuc(),
-    // 'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
+    'form-sua-danh-muc' => (new AdminDanhMucController())->formEditDanhMuc(),
+    'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
     'xoa-danh-muc' => (new AdminDanhMucController())->deleteDanhMuc(),
 };

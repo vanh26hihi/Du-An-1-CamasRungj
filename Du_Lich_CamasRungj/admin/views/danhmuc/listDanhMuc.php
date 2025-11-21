@@ -53,7 +53,9 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên danh mục</th>
+                    <th>Mô tả</th>
                     <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
@@ -62,12 +64,15 @@
                     <tr>
                       <td class="text-center"><?= $key + 1 ?></td>
                       <td><?= htmlspecialchars($danhmuc['ten']) ?></td>
+                      <td><?= htmlspecialchars($danhmuc['mo_ta']) ?></td>
                       <td><?= htmlspecialchars($danhmuc['trang_thai']) ?></td>
+                      <td><?= htmlspecialchars($danhmuc['ngay_tao']) ?></td>
+
                       <td class="text-center">
-                        <a href="<?= BASE_URL_ADMIN . '?act=form-them-danh-muc&danh_muc_id=' . $danhmuc['danh_muc_id'] ?>">
+                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $danhmuc['danh_muc_id'] ?>">
                           <button class="btn btn-primary btn-sm">Sửa</button>
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-danh-muc&danh_muc_id=' . $danhmuc['danh_muc_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Danh Mục Tour này không?');">
+                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-danh-muc&id=' . $danhmuc['danh_muc_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Danh Mục Tour này không?');">
                           <button class="btn btn-danger btn-sm">Xóa</button>
                         </a>
                       </td>
