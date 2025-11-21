@@ -53,11 +53,13 @@ class AdminBooking
     }
 
 
-    public function insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id)
+    public function insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id, $tong_tien)
     {
+        $ten_te = "VND";
+        $nguoi_tao_id = 1;
         try {
-            $sql = 'INSERT INTO dat_tour(lich_id, loai, so_nguoi, ghi_chu, khach_hang_id ,nguoi_tao_id)
-                VALUES(:lich_id, :loai, :so_nguoi, :ghi_chu, :khach_hang_id,nguoi_tao_id)';
+            $sql = 'INSERT INTO dat_tour(lich_id, loai, so_nguoi, ghi_chu, khach_hang_id ,nguoi_tao_id,tong_tien,ten_te,nguoi_tao_id)
+                VALUES(:lich_id, :loai, :so_nguoi, :ghi_chu, :khach_hang_id,:nguoi_tao_id,:tong_tien,:ten_te,:nguoi_tao_id)';
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
                 ':lich_id' => $lich_id,
@@ -65,6 +67,9 @@ class AdminBooking
                 ':so_nguoi' => $so_nguoi,
                 ':ghi_chu' => $ghi_chu,
                 ':khach_hang_id' => $khach_hang_id,
+                ':nguoi_tao_id' => $nguoi_tao_id,
+                ':tong_tien' => $tong_tien,
+                ':ten_te' => $ten_te,
                 ':nguoi_tao_id' => $nguoi_tao_id,
             ]);
             return $this->conn->lastInsertId();
@@ -76,7 +81,7 @@ class AdminBooking
     public function insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi)
     {
         try {
-            $sql = 'INSERT INTO dat_tour(ho_ten, so_dien_thoai, email, cccd, dia_chi)
+            $sql = 'INSERT INTO khach_hang(ho_ten, so_dien_thoai, email, cccd, dia_chi)
                 VALUES(:ho_ten, :so_dien_thoai, :email, :cccd, :dia_chi)';
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
@@ -92,21 +97,22 @@ class AdminBooking
         }
     }
 
-    public function insertListKhachHang($ho_ten_list, $so_dien_thoai_list, $email_list, $gioi_tinh_list, $cccd_list, $ngay_sinh_list, $ghi_chu_list, $so_ghe_list)
+    public function insertListKhachHang($dat_tour_id, $ho_ten, $so_dien_thoai, $email, $gioi_tinh, $cccd, $ngay_sinh, $ghi_chu, $so_ghe)
     {
         try {
-            $sql = 'INSERT INTO dat_tour(ho_ten_list, so_dien_thoai_list, email_list, gioi_tinh_list, cccd_list, ngay_sinh_list, ghi_chu_list, so_ghe_list)
-                VALUES(:ho_ten_list, :so_dien_thoai_list, :email_list, :gioi_tinh_list, :cccd_list, :ngay_sinh_list, :ghi_chu_list, :so_ghe_list)';
+            $sql = 'INSERT INTO hanh_khach_list(dat_tour_id,ho_ten, so_dien_thoai, email, gioi_tinh, cccd, ngay_sinh, ghi_chu, so_ghe)
+                VALUES(:dat_tour_id,:ho_ten, :so_dien_thoai, :email, :gioi_tinh, :cccd, :ngay_sinh, :ghi_chu, :so_ghe)';
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
-                ':ho_ten_list' => $ho_ten_list,
-                ':so_dien_thoai_list' => $so_dien_thoai_list,
-                ':email_list' => $email_list,
-                ':gioi_tinh_list' => $gioi_tinh_list,
-                ':cccd_list' => $cccd_list,
-                ':ngay_sinh_list' => $ngay_sinh_list,
-                ':ghi_chu_list' => $ghi_chu_list,
-                ':so_ghe_list' => $so_ghe_list,
+                ':dat_tour_id' => $dat_tour_id,
+                ':ho_ten' => $ho_ten,
+                ':so_dien_thoai' => $so_dien_thoai,
+                ':email' => $email,
+                ':gioi_tinh' => $gioi_tinh,
+                ':cccd' => $cccd,
+                ':ngay_sinh' => $ngay_sinh,
+                ':ghi_chu' => $ghi_chu,
+                ':so_ghe' => $so_ghe,
 
             ]);
             return true;

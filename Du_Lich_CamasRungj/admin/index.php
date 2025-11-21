@@ -22,9 +22,6 @@ match ($act) {
     'booking' => (new AdminBookingController())->danhSachBooking(),
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
-    'form-sua-booking' => (function() { header("Location:" . BASE_URL_ADMIN . '?act=booking'); exit(); })(), // TODO: Implement formEditBooking
-    'sua-booking' => (function() { header("Location:" . BASE_URL_ADMIN . '?act=booking'); exit(); })(), // TODO: Implement postEditBooking
-    'xoa-booking' => (function() { header("Location:" . BASE_URL_ADMIN . '?act=booking'); exit(); })(), // TODO: Implement deleteBooking
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
@@ -74,10 +71,10 @@ match ($act) {
 
     'xoa-tour' => (new QuanLyTourController())->delete(),
     //router quản lí danh mục tour
-    'danh-muc-tour' => (new AdminDanhMucController())-> listDanhMuc(),
-    'form-them-danh-muc' => (new AdminDanhMucController()) -> formAddDanhMuc(),
-    'post-them-danh-muc' => (new AdminDanhMucController()) -> postAddDanhMuc(),
-    'form-sua-danh-muc' => (new AdminDanhMucController()) -> formEditDanhMuc(),
-    'post-sua-danh-muc' => (new AdminDanhMucController()) -> postEditDanhMuc(),
-    'xoa-danh-muc' => (new AdminDanhMucController()) -> deleteDanhMuc(),
+    'danh-muc-tour' => (new AdminDanhMucController())->listDanhMuc(),
+    'form-them-danh-muc' => (new AdminDanhMucController())->formAddDanhMuc(),
+    'post-them-danh-muc' => (new AdminDanhMucController())->postAddDanhMuc(),
+    // 'form-sua-danh-muc' => (new AdminDanhMucController())->formEditDanhMuc(),
+    // 'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
+    'xoa-danh-muc' => (new AdminDanhMucController())->deleteDanhMuc(),
 };

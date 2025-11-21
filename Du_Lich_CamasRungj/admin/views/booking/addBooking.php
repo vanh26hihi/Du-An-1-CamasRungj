@@ -38,48 +38,51 @@
       container.innerHTML = "";
       for (let i = 1; i <= count; i++) {
         const html = `
-        <div class="border p-3 mb-3 rounded bg-light khach-item">
-          <h5>Khách hàng ${i}</h5>
+      <div class="col-md-6">
+    <div class="border p-3 mb-3 rounded bg-light khach-item">
+      <h5>Khách hàng ${i}</h5>
 
-          <div class="form-group">
-            <label>Họ Tên</label>
-            <input type="text" name="ds_khach[${i}][ho_ten]" class="form-control" placeholder="Nhập tên khách hàng">
-          </div>
+      <div class="form-group">
+        <label>Họ Tên</label>
+        <input type="text" name="ds_khach[${i}][ho_ten]" class="form-control">
+      </div>
 
-          <div class="form-group">
-            <label>Giới Tính</label>
-            <select id="ds_khach[${i}][gioi_tinh]" name="ds_khach[${i}][gioi_tinh]" class="form-control select2" style="width: 100%;">
-                            <option value="">--Chọn Giới Tính--</option>
-                            <option value="Nam">Nam</option>
-                            <option value="Nữ">Nữ</option>
-                          </select>
-          </div>
+      <div class="form-group">
+        <label>Giới Tính</label>
+        <select name="ds_khach[${i}][gioi_tinh]" class="form-control select2">
+          <option value="" disabled selected>--Chọn Giới Tính--</option>
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+      </div>
 
-          <div class="form-group">
-            <label>Số Điện Thoại</label>
-            <input type="text" name="ds_khach[${i}][so_dien_thoai]" class="form-control" placeholder="Nhập số điện thoại">
-          </div>
+      <div class="form-group">
+        <label>Số Điện Thoại</label>
+        <input type="text" name="ds_khach[${i}][so_dien_thoai]" class="form-control">
+      </div>
 
-          <div class="form-group">
-            <label>Email</label>
-            <input type="text" name="ds_khach[${i}][email]" class="form-control" placeholder="Nhập email">
-          </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" name="ds_khach[${i}][email]" class="form-control">
+      </div>
 
-          <div class="form-group">
-            <label>CCCD</label>
-            <input type="text" name="ds_khach[${i}][cccd]" class="form-control" placeholder="Nhập CCCD">
-          </div>
+      <div class="form-group">
+        <label>CCCD</label>
+        <input type="text" name="ds_khach[${i}][cccd]" class="form-control">
+      </div>
 
-          <div class="form-group">
-            <label>Ngày Sinh</label>
-            <input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control" placeholder="Nhập địa chỉ">
-          </div>
+      <div class="form-group">
+        <label>Ngày Sinh</label>
+        <input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control">
+      </div>
 
-          <div class="form-group">
-            <label>Ghi Chú</label>
-            <textarea ten="ds_khach[${i}][ghi_chu]" id="" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
-          </div>
-        </div>
+      <div class="form-group">
+        <label>Ghi Chú</label>
+        <textarea name="ds_khach[${i}][ghi_chu]" class="form-control"></textarea>
+      </div>
+
+    </div>
+  </div>
       `;
         container.insertAdjacentHTML("beforeend", html);
       }
@@ -200,7 +203,7 @@
                         <h4>Chọn Tour Du Lịch</h4>
                         <div class="form-group">
                           <select id="lich_id" name="lich_id" class="form-control select2" style="width: 100%;">
-                            <option value="">--Chọn Tour--</option>
+                            <option value="" disabled selected>--Chọn Tour--</option>
                             <?php foreach ($listLichAndTour as $item): ?>
                               <option value="<?= $item['lich_id'] ?>"
                                 data-ten-tour="<?= $item['ten_tour'] ?>"
@@ -221,66 +224,76 @@
                         <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="display:none;">
                           <h5>Thông tin Tour</h5>
 
-                          <div class="form-group">
-                            <label>Tên Tour</label>
-                            <input type="text" ten="ten_tour" name="ten_tour" id="ten_tour" class="form-control" readonly></input>
-                          </div>
+                          <div class="row">
+                            <!-- Cột trái -->
+                            <div class="col-md-6">
 
-                          <div class="form-group">
-                            <label>Giá Cơ Bản</label>
-                            <input type="number" ten="gia_co_ban" name="gia_co_ban" id="gia_co_ban" class="form-control" readonly></input>
-                          </div>
+                              <div class="form-group">
+                                <label>Tên Tour</label>
+                                <input type="text" name="ten_tour" id="ten_tour" class="form-control" readonly>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Chính Sách</label>
-                            <input type="text" ten="chinh_sach" name="chinh_sach" id="chinh_sach" class="form-control" readonly></input>
-                          </div>
+                              <div class="form-group">
+                                <label>Giá Cơ Bản</label>
+                                <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" readonly>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Điểm Khởi Hành</label>
-                            <input type="text" ten="diem_khoi_hanh" name="diem_khoi_hanh" id="diem_khoi_hanh" readonly class="form-control"></input>
-                          </div>
+                              <div class="form-group">
+                                <label>Chính Sách</label>
+                                <input type="text" name="chinh_sach" id="chinh_sach" class="form-control" readonly>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Mô Tả</label>
-                            <textarea ten="mo_ta" id="mo_ta" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
-                          </div>
+                              <div class="form-group">
+                                <label>Điểm Khởi Hành</label>
+                                <input type="text" name="diem_khoi_hanh" id="diem_khoi_hanh" class="form-control" readonly>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Loại Tour</label>
-                            <select id="loai" name="loai" class="form-control select2" style="width: 100%;">
-                              <option value="">--Chọn Loại Tour--</option>
-                              <option value="group">Theo Nhóm</option>
-                              <option value="individual">Cá Nhân</option>
-                            </select>
-                            <?php
-                            if (isset($error['loai'])) { ?>
-                              <p class="text-danger"><?= $error['loai'] ?></p>
-                            <?php } ?>
-                          </div>
+                              <div class="form-group">
+                                <label>Mô Tả</label>
+                                <textarea name="mo_ta" id="mo_ta" class="form-control" readonly></textarea>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Số Lượng Người</label>
-                            <input type="number" ten="so_nguoi" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="1"></input>
-                            <?php
-                            if (isset($error['so_nguoi'])) { ?>
-                              <p class="text-danger"><?= $error['so_nguoi'] ?></p>
-                            <?php } ?>
-                          </div>
+                            </div>
 
-                          <input type="hidden" name="trang_thai_id" value="1">
+                            <!-- Cột phải -->
+                            <div class="col-md-6">
 
-                          <div class="form-group">
-                            <label>Ghi Chú</label>
-                            <textarea ten="ghi_chu" id="" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
-                          </div>
-                          <!-- /.card-body -->
+                              <div class="form-group">
+                                <label>Loại Tour</label>
+                                <select id="loai" name="loai" class="form-control select2">
+                                  <option value="" disabled selected>--Chọn Loại Tour--</option>
+                                  <option value="group">Theo Nhóm</option>
+                                  <option value="individual">Cá Nhân</option>
+                                </select>
+                                <?php if (isset($error['loai'])) { ?>
+                                  <p class="text-danger"><?= $error['loai'] ?></p>
+                                <?php } ?>
+                              </div>
 
-                          <div class="form-group">
-                            <label>Tổng Tiền</label>
-                            <input type="number" name="tong_tien" id="tong_tien" class="form-control" readonly>
+                              <div class="form-group">
+                                <label>Số Lượng Người</label>
+                                <input type="number" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="1">
+                                <?php if (isset($error['so_nguoi'])) { ?>
+                                  <p class="text-danger"><?= $error['so_nguoi'] ?></p>
+                                <?php } ?>
+                              </div>
+
+                              <input type="hidden" name="trang_thai_id" value="1">
+
+                              <div class="form-group">
+                                <label>Ghi Chú</label>
+                                <textarea name="ghi_chu" id="ghi_chu" name="ghi_chu" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Tổng Tiền</label>
+                                <input type="number" name="tong_tien" id="tong_tien" class="form-control" readonly>
+                              </div>
+
+                            </div>
                           </div>
                         </div>
+
                       </div>
 
 
@@ -335,7 +348,7 @@
 
                       <div class="tab-pane fade" id="custom-tabs-one-list" role="tabpanel" aria-labelledby="custom-tabs-one-list-tab">
                         <h4>Thông Tin Danh Sách Khách Hàng</h4>
-                        <div id="customerList">
+                        <div id="customerList" class="row">
                           <div id="warningSoNguoi" class="alert alert-danger" style="display:none;">
                             Vui lòng nhập Số Lượng Người Tham Gia Tour
                           </div>

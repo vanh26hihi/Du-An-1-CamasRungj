@@ -35,13 +35,24 @@
   }
 
   /* Cho phép text trong các cột dài xuống dòng */
-  td,
-  th {
-    white-space: normal !important;
+  .content-wrapper,
+  .content,
+  .content>.container-fluid {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  html,
+  body {
+    height: auto !important;
+  }
+
+  /* Footer tránh đè nội dung */
+  .main-footer {
+    position: relative !important;
   }
 </style>
 
 
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
-

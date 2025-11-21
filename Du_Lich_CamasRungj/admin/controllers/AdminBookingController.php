@@ -37,6 +37,7 @@ class AdminBookingController
             $loai = $_POST['loai'];
             $so_nguoi = $_POST['so_nguoi'];
             $ghi_chu = $_POST['ghi_chu'];
+            $tong_tien = $_POST['tong_tien'];
             $nguoi_tao_id = $_POST['nguoi_tao_id'] ?? null;
 
             //Thông tin người đặt tour
@@ -51,15 +52,15 @@ class AdminBookingController
 
 
             $error = [];
-            if (empty($ten_danh_muc)) {
-                $error['ten_danh_muc'] = 'Tên Danh Mục Không Được Để Trống';
-            }
+            // if (empty($ten_danh_muc)) {
+            //     $error['ten_danh_muc'] = 'Tên Danh Mục Không Được Để Trống';
+            // }
 
             $_SESSION['error'] = $error;
             //Nếu Không có lỗi thì tiến hành thêm danh mục
             if (empty($error)) {
                 $khach_hang_id = $this->modelBooking->insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi);
-                $dat_tour_id = $this->modelBooking->insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id);
+                $dat_tour_id = $this->modelBooking->insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id, $tong_tien);
                 foreach ($ds_khach as $kh) {
                     $ho_ten_list = $kh['ho_ten'] ?? '';
                     $so_dien_thoai_list = $kh['so_dien_thoai'] ?? '';
@@ -71,8 +72,9 @@ class AdminBookingController
                     $so_ghe_list = $kh['so_ghe'] ?? null;
 
                     // Thực hiện lưu DB
-                    $this->modelBooking->insertListKhachHang($ho_ten_list, $so_dien_thoai_list, $email_list, $gioi_tinh_list, $cccd_list, $ngay_sinh_list, $ghi_chu_list, $so_ghe_list);
+                    $this->modelBooking->insertListKhachHang($dat_tour_id, $ho_ten_list, $so_dien_thoai_list, $email_list, $gioi_tinh_list, $cccd_list, $ngay_sinh_list, $ghi_chu_list, $so_ghe_list);
                 }
+
                 header("Location:" . BASE_URL_ADMIN . '?act=booking');
                 exit();
             } else {
