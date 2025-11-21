@@ -92,6 +92,29 @@ class AdminBooking
         }
     }
 
+    public function insertListKhachHang($ho_ten_list, $so_dien_thoai_list, $email_list, $gioi_tinh_list, $cccd_list, $ngay_sinh_list, $ghi_chu_list, $so_ghe_list)
+    {
+        try {
+            $sql = 'INSERT INTO dat_tour(ho_ten_list, so_dien_thoai_list, email_list, gioi_tinh_list, cccd_list, ngay_sinh_list, ghi_chu_list, so_ghe_list)
+                VALUES(:ho_ten_list, :so_dien_thoai_list, :email_list, :gioi_tinh_list, :cccd_list, :ngay_sinh_list, :ghi_chu_list, :so_ghe_list)';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':ho_ten_list' => $ho_ten_list,
+                ':so_dien_thoai_list' => $so_dien_thoai_list,
+                ':email_list' => $email_list,
+                ':gioi_tinh_list' => $gioi_tinh_list,
+                ':cccd_list' => $cccd_list,
+                ':ngay_sinh_list' => $ngay_sinh_list,
+                ':ghi_chu_list' => $ghi_chu_list,
+                ':so_ghe_list' => $so_ghe_list,
+
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
     // public function getDetailBooking($id)
     // {
     //     try {

@@ -123,6 +123,28 @@
       }
     }
 
+    function tinhTongTien() {
+      const gia = parseFloat(gia_co_ban.value) || 0;
+      const soNguoi = parseInt(so_nguoi.value) || 1;
+      const tong = gia * soNguoi;
+      document.getElementById("tong_tien").value = tong;
+    }
+
+    // Khi chọn tour → cập nhật thông tin + tính tổng
+    select.addEventListener("change", function() {
+      tinhTongTien();
+    });
+
+    // Khi thay đổi số người → tạo danh sách khách + tính tổng
+    soNguoiInput.addEventListener("input", function() {
+      const val = parseInt(this.value) || 1;
+      generateCustomers(val);
+      tinhTongTien();
+    });
+
+    // Tính tổng ngay lúc load trang
+    tinhTongTien();
+
   });
 </script>
 
