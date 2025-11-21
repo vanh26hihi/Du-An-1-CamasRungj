@@ -52,6 +52,54 @@ class AdminBooking
         }
     }
 
+    public function getAllLichAndTourID($id)
+    {
+        try {
+            $sql = 'SELECT 
+                    dat_tour.*,
+                    
+                    lich_khoi_hanh.lich_id,
+                    
+                    tours.tour_id,
+                    tours.ten_tour,
+                    tours.mo_ta,
+                    tours.gia_co_ban,
+                    tours.chinh_sach,
+                    tours.diem_khoi_hanh,
+
+                    khach_hang.khach_hang_id ,
+                    khach_hang.ho_ten,
+                    khach_hang.so_dien_thoai,
+                    khach_hang.email,
+                    khach_hang.cccd,
+                    khach_hang.dia_chi,
+
+                    hanh_khach_list.hanh_khach_id ,
+                    hanh_khach_list.dat_tour_id,
+                    hanh_khach_list.ho_ten as ho_ten_hk,
+                    hanh_khach_list.gioi_tinh as gioi_tinh_hk,
+                    hanh_khach_list.ngay_sinh as ngay_sinh_hk,
+                    hanh_khach_list.email as email_hk,
+                    hanh_khach_list.cccd as cccd_hk,
+                    hanh_khach_list.do_dien_thoai as do_dien_thoai_hk,
+                    hanh_khach_list.ghi_chu as ghi_chu_hk
+
+                FROM dat_tour
+                JOIN lich_khoi_hanh ON lich_khoi_hanh.lich_id = dat_tour.lich_id
+                JOIN tours ON tours.tour_id = lich_khoi_hanh.tour_id
+                JOIN khach_hang ON khach_hang.khach_hang_id = dat_tour.khach_hang_id
+                JOIN hanh_khach_list ON hanh_khach_list.dat_tour_id = dat_tour.dat_tour_id
+                WHERE dat_tour.dat_tour_id = :id;
+                ';
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+        }
+    }
+
 
     public function insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id, $tong_tien)
     {

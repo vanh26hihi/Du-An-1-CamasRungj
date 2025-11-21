@@ -52,7 +52,6 @@
                 <thead class="thead-light text-center">
                   <tr>
                     <th>STT</th>
-                    <th>Mã Booking</th>
                     <th>Tên Khách Hàng</th>
                     <th>Tên tour</th>
                     <th>Số Ngày</th>
@@ -67,7 +66,6 @@
                   <?php foreach ($listBooking as $key => $Booking): ?>
                     <tr>
                       <td class="text-center"><?= $key + 1 ?></td>
-                      <td class="text-center"><?= $Booking['dat_tour_id'] ?></td>
                       <td><?= htmlspecialchars($Booking['ten_khach_hang']) ?></td>
                       <td><?= htmlspecialchars($Booking['ten_tour']) ?></td>
                       <td class="text-center"><?= tinhNgayDem($Booking['ngay_bat_dau'], $Booking['ngay_ket_thuc']) ?></td>

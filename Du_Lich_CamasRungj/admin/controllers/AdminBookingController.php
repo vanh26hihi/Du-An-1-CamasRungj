@@ -85,19 +85,19 @@ class AdminBookingController
             }
         }
     }
-    // public function formEditBooking()
-    // {
-    //     // hàm này dùng để nhập form sản phẩm
-    //     $id = $_GET['id_danh_muc'];
-    //     $Booking = $this->modelBooking->getDetailBooking($id);
-    //     if ($Booking) {
-    //         require_once './views/Booking/editBooking.php';
-    //         deleteSessionError();
-    //     } else {
-    //         header("Location:" . BASE_URL_ADMIN . '?act=booking');
-    //         exit();
-    //     }
-    // }
+    public function formEditBooking()
+    {
+        // hàm này dùng để nhập form sản phẩm
+        $id = $_GET['id_booking'];
+        $listLichAndTour = $this->modelBooking->getAllLichAndTourID($id);
+        if ($listLichAndTour) {
+            require_once './views/Booking/editBooking.php';
+            deleteSessionError();
+        } else {
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+    }
 
     // public function postEditBooking()
     // {
