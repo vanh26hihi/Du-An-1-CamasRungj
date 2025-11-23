@@ -28,12 +28,17 @@ public function insertDanhMuc($ten, $mo_ta,$trang_thai) {
 ]);
 }
 // cập nhật danh mục
-public function updateDanhMuc($id, $ten, $mo_ta, $trang_thai) {
-    $sql = "update danh_muc_tour set ten = :ten, mo_ta=:mo_ta, trang_thai = :trang_thai where danh_muc_id = :id";
+public function updateDanhMuc($id, $ten, $mo_ta, $trang_thai, $ngay_tao) {
+    $sql = "update danh_muc_tour set ten = :ten,
+     mo_ta=:mo_ta,
+      trang_thai = :trang_thai,
+      ngay_tao = :ngay_tao
+       where danh_muc_id = :id";
     $stmt = $this->conn->prepare($sql);
     return $stmt->execute(['ten'=>$ten,
                             'mo_ta'=>$mo_ta,
                              'trang_thai'=>$trang_thai,
+                             'ngay_tao'=>$ngay_tao,
                              'id'=>$id ]);
 }
 // xóa danh mục
