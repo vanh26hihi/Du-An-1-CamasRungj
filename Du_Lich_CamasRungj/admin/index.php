@@ -23,6 +23,7 @@ match ($act) {
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
     'form-sua-booking' => (new AdminBookingController())->formEditBooking(),
+    'sua-booking' => (new AdminBookingController())->postEditBooking(),
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),

@@ -41,16 +41,15 @@
       <div class="col-md-6">
     <div class="border p-3 mb-3 rounded bg-light khach-item">
       <h5>Khách hàng ${i}</h5>
-
       <div class="form-group">
         <label>Họ Tên</label>
-        <input type="text" name="ds_khach[${i}][ho_ten]" class="form-control">
+        <input type="text" name="ds_khach[${i}][ho_ten]"  class="form-control">
       </div>
 
       <div class="form-group">
         <label>Giới Tính</label>
         <select name="ds_khach[${i}][gioi_tinh]" class="form-control select2">
-          <option value="" disabled selected>--Chọn Giới Tính--</option>
+          <option value ="" disabled selected>--Chọn Giới Tính--</option>
           <option value="Nam">Nam</option>
           <option value="Nữ">Nữ</option>
         </select>
@@ -63,7 +62,7 @@
 
       <div class="form-group">
         <label>Email</label>
-        <input type="text" name="ds_khach[${i}][email]" class="form-control">
+        <input type="text" name="ds_khach[${i}][email]"  class="form-control">
       </div>
 
       <div class="form-group">
@@ -73,20 +72,40 @@
 
       <div class="form-group">
         <label>Ngày Sinh</label>
-        <input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control">
+        <input type="date" name="ds_khach[${i}][ngay_sinh]"  class="form-control">
       </div>
 
       <div class="form-group">
         <label>Ghi Chú</label>
-        <textarea name="ds_khach[${i}][ghi_chu]" class="form-control"></textarea>
+        <textarea name="ds_khach[${i}][ghi_chu]"  class="form-control"></textarea>
       </div>
-
     </div>
   </div>
       `;
         container.insertAdjacentHTML("beforeend", html);
       }
     }
+
+    soNguoiInput.addEventListener("input", function() {
+
+      let required = parseInt(this.value) || 1;
+      let current = document.querySelectorAll("#customerList .khach-item").length;
+
+      // Nếu cần thêm
+      if (required > current) {
+        for (let i = current + 1; i <= required; i++) {
+          customerList.insertAdjacentHTML("beforeend", generateEmptyCustomer(i));
+        }
+      }
+
+      // Nếu cần giảm
+      if (required < current) {
+        for (let i = current; i > required; i--) {
+          const item = document.querySelector(`#customerList .khach-item[data-index="${i}"]`);
+          if (item) item.remove();
+        }
+      }
+    });
 
     // khi thay đổi số lượng
     if (soNguoiInput) {
@@ -203,7 +222,17 @@
                         <h4>Chọn Tour Du Lịch</h4>
                         <div class="form-group">
                           <select id="lich_id" name="lich_id" class="form-control select2" style="width: 100%;">
-                            <option value="" disabled selected>--Chọn Tour--</option>
+
+                            <option value="<?= $listBookingID['lich_id'] ?>"
+                              data-ten-tour="<?= $listBookingID['ten_tour'] ?>"
+                              data-mo-ta="<?= $listBookingID['mo_ta'] ?>"
+                              data-gia-co-ban="<?= $listBookingID['gia_co_ban'] ?>"
+                              data-chinh-sach="<?= $listBookingID['chinh_sach'] ?>"
+                              data-diem-khoi-hanh="<?= $listBookingID['diem_khoi_hanh'] ?>"
+                              selected>
+                              <?= $listBookingID['ten_tour'] . " | " . formatDate($listBookingID["ngay_bat_dau"]) ?>
+                            </option>
+
                             <?php foreach ($listLichAndTour as $item): ?>
                               <option value="<?= $item['lich_id'] ?>"
                                 data-ten-tour="<?= $item['ten_tour'] ?>"
@@ -221,36 +250,35 @@
                           <?php } ?>
                         </div>
 
-                        <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="display:none;">
+                        <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="display:block;">
                           <h5>Thông tin Tour</h5>
 
                           <div class="row">
                             <!-- Cột trái -->
                             <div class="col-md-6">
-
                               <div class="form-group">
                                 <label>Tên Tour</label>
-                                <input type="text" name="ten_tour" id="ten_tour" class="form-control" readonly>
+                                <input type="text" name="ten_tour" id="ten_tour" class="form-control" value="<?= $listBookingID['ten_tour'] ?>" readonly>
                               </div>
 
                               <div class="form-group">
                                 <label>Giá Cơ Bản</label>
-                                <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" readonly>
+                                <input type="number" name="gia_co_ban" id="gia_co_ban" class="form-control" value="<?= $listBookingID['gia_co_ban'] ?>" readonly>
                               </div>
 
                               <div class="form-group">
                                 <label>Chính Sách</label>
-                                <input type="text" name="chinh_sach" id="chinh_sach" class="form-control" readonly>
+                                <input type="text" name="chinh_sach" id="chinh_sach" class="form-control" value="<?= $listBookingID['chinh_sach'] ?>" readonly>
                               </div>
 
                               <div class="form-group">
                                 <label>Điểm Khởi Hành</label>
-                                <input type="text" name="diem_khoi_hanh" id="diem_khoi_hanh" class="form-control" readonly>
+                                <input type="text" name="diem_khoi_hanh" id="diem_khoi_hanh" class="form-control" value="<?= $listBookingID['diem_khoi_hanh'] ?>" readonly>
                               </div>
 
                               <div class="form-group">
                                 <label>Mô Tả</label>
-                                <textarea name="mo_ta" id="mo_ta" class="form-control" readonly></textarea>
+                                <textarea name="mo_ta" id="mo_ta" class="form-control" value="<?= $listBookingID['mo_ta'] ?>" readonly></textarea>
                               </div>
 
                             </div>
@@ -261,7 +289,11 @@
                               <div class="form-group">
                                 <label>Loại Tour</label>
                                 <select id="loai" name="loai" class="form-control select2">
-                                  <option value="" disabled selected>--Chọn Loại Tour--</option>
+                                  <option value="<?= $booking['loai'] ?>" selected><?php if ($listBookingID['loai'] == "group") {
+                                                                                      echo "Theo Nhóm";
+                                                                                    } else {
+                                                                                      echo "Cá Nhân";
+                                                                                    }  ?></option>
                                   <option value="group">Theo Nhóm</option>
                                   <option value="individual">Cá Nhân</option>
                                 </select>
@@ -272,7 +304,7 @@
 
                               <div class="form-group">
                                 <label>Số Lượng Người</label>
-                                <input type="number" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="1">
+                                <input type="number" name="so_nguoi" id="so_nguoi" class="form-control" min="1" value="<?= $listBookingID['so_nguoi'] ?>">
                                 <?php if (isset($error['so_nguoi'])) { ?>
                                   <p class="text-danger"><?= $error['so_nguoi'] ?></p>
                                 <?php } ?>
@@ -282,12 +314,12 @@
 
                               <div class="form-group">
                                 <label>Ghi Chú</label>
-                                <textarea name="ghi_chu" id="ghi_chu" name="ghi_chu" class="form-control" placeholder="Nhập Ghi Chú"></textarea>
+                                <textarea name="ghi_chu" id="ghi_chu" name="ghi_chu" class="form-control" value="" placeholder="Nhập Ghi Chú"><?= $listBookingID['ghi_chu'] ?></textarea>
                               </div>
 
                               <div class="form-group">
                                 <label>Tổng Tiền</label>
-                                <input type="number" name="tong_tien" id="tong_tien" class="form-control" readonly>
+                                <input type="number" name="tong_tien" id="tong_tien" class="form-control" value="<?= $listBookingID['tong_tien'] ?>" readonly>
                               </div>
 
                             </div>
@@ -301,8 +333,10 @@
                       <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                         <h4>Thông Tin Người Đặt Tour</h4>
                         <div class="form-group">
+
+                          <input type="hidden" name="khach_hang_id" value="<?= $listBookingID['khach_hang_id'] ?>">
                           <label>Tên Khách Hàng</label>
-                          <input type="text" ten="ho_ten" name="ho_ten" id="ho_ten" class="form-control" placeholder="Nhập Tên Khách Hàng"></input>
+                          <input type="text" ten="ho_ten" name="ho_ten" id="ho_ten" class="form-control" value="<?= $listBookingID['ho_ten'] ?>" placeholder="Nhập Tên Khách Hàng"></input>
                           <?php
                           if (isset($error['ho_ten'])) { ?>
                             <p class="text-danger"><?= $error['ho_ten'] ?></p>
@@ -311,7 +345,7 @@
 
                         <div class="form-group">
                           <label>Số Điện Thoại</label>
-                          <input type="text" ten="so_dien_thoai" name="so_dien_thoai" id="so_dien_thoai" class="form-control" placeholder="Nhập Số Điện Thoại"></input>
+                          <input type="text" ten="so_dien_thoai" name="so_dien_thoai" id="so_dien_thoai" class="form-control" value="<?= $listBookingID['so_dien_thoai'] ?>" placeholder="Nhập Số Điện Thoại"></input>
                           <?php
                           if (isset($error['so_dien_thoai'])) { ?>
                             <p class="text-danger"><?= $error['so_dien_thoai'] ?></p>
@@ -320,7 +354,7 @@
 
                         <div class="form-group">
                           <label>Email</label>
-                          <input type="text" ten="email" name="email" id="email" class="form-control" placeholder="Nhập Số Email"></input>
+                          <input type="text" ten="email" name="email" id="email" class="form-control" value="<?= $listBookingID['email'] ?>" placeholder="Nhập Số Email"></input>
                           <?php
                           if (isset($error['email'])) { ?>
                             <p class="text-danger"><?= $error['email'] ?></p>
@@ -329,7 +363,7 @@
 
                         <div class="form-group">
                           <label>CCCD</label>
-                          <input type="text" ten="cccd" name="cccd" id="cccd" class="form-control" placeholder="Nhập Số CCCD"></input>
+                          <input type="text" ten="cccd" name="cccd" id="cccd" class="form-control" value="<?= $listBookingID['cccd'] ?>" placeholder="Nhập Số CCCD"></input>
                           <?php
                           if (isset($error['cccd'])) { ?>
                             <p class="text-danger"><?= $error['cccd'] ?></p>
@@ -338,7 +372,7 @@
 
                         <div class="form-group">
                           <label>Địa Chỉ</label>
-                          <input type="text" ten="dia_chi" name="dia_chi" id="dia_chi" class="form-control" placeholder="Nhập Số Địa Chỉ"></input>
+                          <input type="text" ten="dia_chi" name="dia_chi" id="dia_chi" class="form-control" value="<?= $listBookingID['dia_chi'] ?>" placeholder="Nhập Số Địa Chỉ"></input>
                           <?php
                           if (isset($error['dia_chi'])) { ?>
                             <p class="text-danger"><?= $error['dia_chi'] ?></p>
@@ -346,13 +380,69 @@
                         </div>
                       </div>
 
+                      <input type="hidden" name="dat_tour_id" value="<?= $listBookingID['dat_tour_id'] ?>">
                       <div class="tab-pane fade" id="custom-tabs-one-list" role="tabpanel" aria-labelledby="custom-tabs-one-list-tab">
                         <h4>Thông Tin Danh Sách Khách Hàng</h4>
                         <div id="customerList" class="row">
-                          <div id="warningSoNguoi" class="alert alert-danger" style="display:none;">
-                            Vui lòng nhập Số Lượng Người Tham Gia Tour
-                          </div>
+
+                          <?php $index = 1;
+                          foreach ($listHanhKhach as $kh): ?>
+                            <div class="col-md-6 khach-item" data-index="<?= $index ?>">
+                              <div class="border p-3 mb-3 rounded bg-light">
+                                <h5>Khách hàng <?= $index ?></h5>
+
+                                <div class="form-group">
+                                  <label>Họ Tên</label>
+                                  <input type="hidden" name="ds_khach[<?= $index ?>][hanh_khach_id]"
+                                    value="<?= $kh['hanh_khach_id'] ?>" class="form-control">
+                                  <input type="text" name="ds_khach[<?= $index ?>][ho_ten]"
+                                    value="<?= $kh['ho_ten'] ?>" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Giới Tính</label>
+                                  <select name="ds_khach[<?= $index ?>][gioi_tinh]" class="form-control">
+                                    <option <?= ($kh['gioi_tinh'] == "Nam" ? "selected" : "") ?>>Nam</option>
+                                    <option <?= ($kh['gioi_tinh'] == "Nữ" ? "selected" : "") ?>>Nữ</option>
+                                  </select>
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Số Điện Thoại</label>
+                                  <input type="text" name="ds_khach[<?= $index ?>][so_dien_thoai]"
+                                    value="<?= $kh['so_dien_thoai'] ?>" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Email</label>
+                                  <input type="text" name="ds_khach[<?= $index ?>][email]"
+                                    value="<?= $kh['email'] ?>" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>CCCD</label>
+                                  <input type="text" name="ds_khach[<?= $index ?>][cccd]"
+                                    value="<?= $kh['cccd'] ?>" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Ngày Sinh</label>
+                                  <input type="date" name="ds_khach[<?= $index ?>][ngay_sinh]"
+                                    value="<?= $kh['ngay_sinh'] ?>" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Ghi Chú</label>
+                                  <textarea name="ds_khach[<?= $index ?>][ghi_chu]"
+                                    class="form-control"><?= $kh['ghi_chu'] ?></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          <?php $index++;
+                          endforeach; ?>
+
                         </div>
+
                       </div>
 
                     </div>

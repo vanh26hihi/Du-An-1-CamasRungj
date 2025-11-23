@@ -89,9 +89,13 @@ class AdminBookingController
     {
         // hàm này dùng để nhập form sản phẩm
         $id = $_GET['id_booking'];
-        $listLichAndTour = $this->modelBooking->getAllLichAndTourID($id);
-        if ($listLichAndTour) {
-            require_once './views/Booking/editBooking.php';
+        $listBookingID = $this->modelBooking->getAllBookingID($id);
+        $listHanhKhach = $this->modelBooking->getAllHanhKhachID($id);
+        $listLichAndTour = $this->modelBooking->getAllLichAndTour();
+        // printf('<pre>%s</pre>', print_r($listBookingID, true));
+        // die();
+        if ($listBookingID) {
+            require_once './views/booking/editBooking.php';
             deleteSessionError();
         } else {
             header("Location:" . BASE_URL_ADMIN . '?act=booking');
@@ -99,34 +103,111 @@ class AdminBookingController
         }
     }
 
-    // public function postEditBooking()
-    // {
-    //     // hàm này dùng để thêm dữ liệu từ form
-    //     // Kiểm tra xem dữ liệu có phải submit lên không
-    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         //lấy dữ liệu
-    //         $ten_danh_muc = $_POST['ten_danh_muc'];
-    //         $mo_ta = $_POST['mo_ta'];
-    //         $id = $_POST['id'];
-    //         $error = [];
-    //         if (empty($ten_danh_muc)) {
-    //             $error['ten_danh_muc'] = 'Tên Danh Mục Không Được Để Trống';
-    //         }
-    //         //Nếu Không có lỗi thì tiến hành sửa danh mục
-    //         if (empty($error)) {
-    //             //Nếu Không có lỗi thì tiến hành sửa danh mục
-    //             // var_dump("Oke");
+    public function postEditBooking()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    //             $this->modelBooking->updateBooking($id, $ten_danh_muc, $mo_ta);
-    //             header("Location:" . BASE_URL_ADMIN . '?act=booking');
-    //             exit();
-    //         } else {
-    //             // Trả về form vá lỗi
-    //             $Booking = ['id' => $id, 'ten_danh_muc' => $ten_danh_muc, 'mo_ta' => $mo_ta];
-    //             require_once './views/Booking/editBooking.php';
-    //         }
-    //     }
-    // }
+            $dat_tour_id = $_POST['dat_tour_id'];
+            $khach_hang_id = $_POST['khach_hang_id'];
+
+            $lich_id = $_POST['lich_id'];
+            $loai = $_POST['loai'];
+            $so_nguoi = $_POST['so_nguoi'];
+            $ghi_chu = $_POST['ghi_chu'];
+            $tong_tien = $_POST['tong_tien'];
+            $nguoi_tao_id = $_POST['nguoi_tao_id'] ?? null;
+
+            // Thông tin người đặt tour
+            $ho_ten = $_POST['ho_ten'];
+            $so_dien_thoai = $_POST['so_dien_thoai'];
+            $email = $_POST['email'];
+            $cccd = $_POST['cccd'];
+            $dia_chi = $_POST['dia_chi'];
+
+            // Danh sách khách hàng từ form
+            $ds_khach = $_POST['ds_khach'] ?? [];
+
+            // 1. Lấy danh sách hành khách cũ
+            $oldList = $this->modelBooking->getAllHanhKhachID($dat_tour_id);
+            $oldIds = array_column($oldList, 'hanh_khach_id');
+
+            // Mảng lưu ID hành khách mới còn tồn tại
+            $currentIds = [];
+
+            // 2. XỬ LÝ DANH SÁCH KHÁCH GỬI LÊN
+            foreach ($ds_khach as $kh) {
+
+                $hanh_khach_id = $kh['hanh_khach_id'] ?? null;
+
+                // Nếu tồn tại -> UPDATE
+                if (!empty($hanh_khach_id)) {
+
+                    $currentIds[] = $hanh_khach_id;
+
+                    $this->modelBooking->updateListKhachHang(
+                        $hanh_khach_id,
+                        $dat_tour_id,
+                        $kh['ho_ten'],
+                        $kh['so_dien_thoai'],
+                        $kh['email'],
+                        $kh['gioi_tinh'],
+                        $kh['cccd'],
+                        $kh['ngay_sinh'],
+                        $kh['ghi_chu'],
+                        $kh['so_ghe']
+                    );
+                } else {
+
+                    // KHÁCH MỚI -> INSERT
+                    $this->modelBooking->insertListKhachHang(
+                        $dat_tour_id,
+                        $kh['ho_ten'],
+                        $kh['so_dien_thoai'],
+                        $kh['email'],
+                        $kh['gioi_tinh'],
+                        $kh['cccd'],
+                        $kh['ngay_sinh'],
+                        $kh['ghi_chu'],
+                        $kh['so_ghe']
+                    );
+                }
+            }
+
+            // 3. XÓA HÀNH KHÁCH BỊ GIẢM (không còn trong form)
+            foreach ($oldIds as $oldId) {
+                if (!in_array($oldId, $currentIds)) {
+                    $this->modelBooking->deleteListKhachHang($oldId);
+                }
+            }
+
+            // 4. UPDATE THÔNG TIN NGƯỜI ĐẶT
+            $this->modelBooking->updateKhachHang(
+                $khach_hang_id,
+                $dat_tour_id,
+                $ho_ten,
+                $so_dien_thoai,
+                $email,
+                $cccd,
+                $dia_chi
+            );
+
+            // 5. UPDATE THÔNG TIN BOOKING
+            $this->modelBooking->updateBooking(
+                $dat_tour_id,
+                $lich_id,
+                $loai,
+                $so_nguoi,
+                $ghi_chu,
+                $khach_hang_id,
+                $nguoi_tao_id,
+                $tong_tien
+            );
+
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+    }
+
     // public function deleteBooking()
     // {
     //     // hàm này dùng để xóa danh mục
