@@ -27,33 +27,37 @@
           <div class="col-12">
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Sửa Danh Mục Tour</h3>
+                <h3 class="card-title">Thêm Danh Mục Tour</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="<?=BASE_URL_ADMIN."?act=add-danh-muc-tour"?>" method="POST">
-
-                <input type="text" value="<?=$danhMuc['id']?>" ten='id' hidden>
-
+              <form action="<?=BASE_URL_ADMIN."?act=post-them-danh-muc"?>" method="POST">
                 <div class="card-body">
                   <div class="form-group">
-                    <label >Sửa Danh Mục</label>
-                    <input type="text" class="form-control" value="<?=$danhMuc['ten_danh_muc']?>" ten="ten_danh_muc" placeholder="Nhập Tên Danh Mục">
+                    <label >Thêm Danh Mục</label>
+                    <input type="text" class="form-control" name="ten" placeholder="Nhập Tên Danh Mục">
                     <?php
-                    if(isset($error['ten_danh_muc'])){ ?>
-                        <p class="text-danger"><?=$error['ten_danh_muc']?></p>
-                    <?php } ?>
+                    if(isset($error)): ?>
+                        <p class="text-danger"><?=$error?></p>
+                    <?php endif ; ?>
+                  </div>
+
+                  <div class="form-group">
+                    <label >Trạng thái</label>
+                    <select name="trang_thai" id="" class="form-control">
+                      <option value="Hiển thị">Hiển thị</option>
+                      <option value="Ẩn">Ẩn</option>
+                    </select>
                   </div>
                   <div class="form-group">
-                    <label >Mô Tả</label>
-                    <textarea ten="mo_ta" id="" class="form-control" placeholder="Nhập Mô Tả"><?=$danhMuc['mo_ta']?></textarea>
+                    <label for="">Mô tả</label>
+                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập mô tả đi bố"></textarea>
                   </div>
-                  
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Thêm</button>
                 </div>
               </form>
             </div>

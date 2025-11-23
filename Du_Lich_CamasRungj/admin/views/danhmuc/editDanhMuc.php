@@ -1,8 +1,13 @@
 <h2>Sửa danh mục</h2>
-<form action="?controller=danhmuc&action=postedit" method = "post">
-    <input type="hiden" name = "id" value="<?= $danhmuc['danh_muc_id'] ?>">
+<form action="?controller=danhmuc&action=post-sua-danh-muc" method = "post">
+
+<!-- ID ẩn -->
+
+    <input type="hidden" name = "id" value="<?= $danhmuc['danh_muc_id'] ?>">
     <label for="">Tên danh mục</label><br>
-    <input type="text" name = "ten_danh_muc" value="<?= $danhmuc['ten_danh_muc'] ?>" required><br><br>
+    <input type="text" name = "ten" value="<?= $danhmuc['ten'] ?>" required><br><br>
+    <label for="">Mô tả</label>
+    <input type="text" name="mo_ta" >
     <label for="">Trạng thái</label>
     <select name="trang_thai" id="">
         <option value="1" <?= $danhmuc['trang_thai'] == 1? 'selected' : ''?>>Hiển thị</option>
