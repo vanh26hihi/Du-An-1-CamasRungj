@@ -36,7 +36,7 @@ class AdminDanhMuc
     // cập nhật danh mục
     public function updateDanhMuc($id, $ten, $mo_ta, $trang_thai)
     {
-        $sql = "update danh_muc_tour set ten = :ten, mo_ta=:mo_ta, trang_thai = :trang_thai where danh_muc_id = :id";
+        $sql = "UPDATE danh_muc_tour set ten = :ten, mo_ta=:mo_ta, trang_thai = :trang_thai where danh_muc_id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             'ten' => $ten,

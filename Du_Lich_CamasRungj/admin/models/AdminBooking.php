@@ -224,11 +224,10 @@ class AdminBooking
     }
 
 
-    public function updateKhachHang($dat_tour_id, $khach_hang_id, $ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi)
+    public function updateKhachHang($khach_hang_id, $ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi)
     {
         try {
             $sql = 'UPDATE khach_hang SET 
-                    dat_tour_id = :dat_tour_id,
                     ho_ten = :ho_ten,
                     so_dien_thoai = :so_dien_thoai,
                     email = :email,
@@ -238,7 +237,6 @@ class AdminBooking
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
-                ':dat_tour_id' => $dat_tour_id,
                 ':ho_ten' => $ho_ten,
                 ':so_dien_thoai' => $so_dien_thoai,
                 ':email' => $email,
@@ -253,12 +251,11 @@ class AdminBooking
     }
 
 
-    public function updateListKhachHang($hanh_khach_id, $dat_tour_id, $ho_ten, $so_dien_thoai, $email, $gioi_tinh, $cccd, $ngay_sinh, $ghi_chu, $so_ghe)
+    public function updateListKhachHang($hanh_khach_id, $ho_ten, $so_dien_thoai, $email, $gioi_tinh, $cccd, $ngay_sinh, $ghi_chu, $so_ghe)
     {
         try {
             $sql = 'UPDATE hanh_khach_list SET 
                     ho_ten = :ho_ten,
-                    dat_tour_id = :dat_tour_id,
                     so_dien_thoai = :so_dien_thoai,
                     email = :email,
                     gioi_tinh = :gioi_tinh,
@@ -299,6 +296,66 @@ class AdminBooking
                 ':oldId' => $oldId,
             ]);
             return true;
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
+    public function destroyKhachHang($id)
+    {
+        try {
+            $sql = "DELETE FROM khach_hang WHERE `khach_hang`.`khach_hang_id` = :id";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->execute([
+                ':id' => $id,
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+    public function destroyBooking($id)
+    {
+        try {
+            $sql = "DELETE FROM dat_tour WHERE `dat_tour`.`dat_tour_id` = :id";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->execute([
+                ':id' => $id,
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+    public function destroyListKhachHang($id)
+    {
+        try {
+            $sql = "DELETE FROM hanh_khach_list WHERE `hanh_khach_list`.`hanh_khach_id` = :id";
+
+            $stmt = $this->conn->prepare($sql);
+
+            $stmt->execute([
+                ':id' => $id,
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi" . $e->getMessage();
+        }
+    }
+
+    function getDetailBooking($id)
+    {
+        try {
+            $sql = 'SELECT * FROM dat_tour WHERE dat_tour_id = :id';
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':id' => $id,
+            ]);
+            return $stmt->fetch();
         } catch (Exception $e) {
             echo "Lỗi" . $e->getMessage();
         }

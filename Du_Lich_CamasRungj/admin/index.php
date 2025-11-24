@@ -24,6 +24,7 @@ match ($act) {
     'them-booking' => (new AdminBookingController())->postAddBooking(),
     'form-sua-booking' => (new AdminBookingController())->formEditBooking(),
     'sua-booking' => (new AdminBookingController())->postEditBooking(),
+    'xoa-booking' => (new AdminBookingController())->deleteBooking(),
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
@@ -64,7 +65,7 @@ match ($act) {
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
     'check-login-admin' => (new AdminTaiKhoanController())->login(),
 
-    
+
     //router quản lí danh mục tour
     'danh-muc-tour' => (new AdminDanhMucController())->listDanhMuc(),
     'form-them-danh-muc' => (new AdminDanhMucController())->formAddDanhMuc(),
@@ -72,15 +73,13 @@ match ($act) {
     'form-sua-danh-muc' => (new AdminDanhMucController())->formEditDanhMuc(),
     'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
     'xoa-danh-muc' => (new AdminDanhMucController())->deleteDanhMuc(),
-// QL Tour
+    // QL Tour
     'quan-ly-tour' => (new QuanLyTourController())->listTour(),
     'form-them-tour' => (new QuanLyTourController())->formAddtour(),
     'post-them-tour' => (new QuanLyTourController())->AddTour(),
     'form-sua-tour' => (new QuanLyTourController())->EditTour(),
     'post-sua-tour' => (new QuanLyTourController())->postEdittour(),
-    
+
 
     'xoa-tour' => (new QuanLyTourController())->deleteTour(),
-
-
 };
