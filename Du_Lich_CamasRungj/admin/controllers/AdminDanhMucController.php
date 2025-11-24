@@ -44,7 +44,7 @@ class AdminDanhMucController {
     }
     //xử lí sửa danh mục
    
-    public function postEditDanhMuc($id) {
+    public function postEditDanhMuc() {
          if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $id = $_POST['id'];

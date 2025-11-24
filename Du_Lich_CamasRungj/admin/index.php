@@ -64,14 +64,7 @@ match ($act) {
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
     'check-login-admin' => (new AdminTaiKhoanController())->login(),
 
-    'danh-sach-tour' => (new QuanLyTourController())->index(),
-    'form-them-tour' => (new QuanLyTourController())->addForm(),
-    'post-them-tour' => (new QuanLyTourController())->add(),
-    'form-sua-tour' => (new QuanLyTourController())->editForm(),
-    'post-sua-tour' => (new QuanLyTourController())->update(),
-    'san-pham' => (new QuanLyTourController())->index(),
-
-    'xoa-tour' => (new QuanLyTourController())->delete(),
+    
     //router quản lí danh mục tour
     'danh-muc-tour' => (new AdminDanhMucController())->listDanhMuc(),
     'form-them-danh-muc' => (new AdminDanhMucController())->formAddDanhMuc(),
@@ -79,4 +72,15 @@ match ($act) {
     'form-sua-danh-muc' => (new AdminDanhMucController())->formEditDanhMuc(),
     'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
     'xoa-danh-muc' => (new AdminDanhMucController())->deleteDanhMuc(),
+// QL Tour
+    'quan-ly-tour' => (new QuanLyTourController())->listTour(),
+    'form-them-tour' => (new QuanLyTourController())->formAddtour(),
+    'post-them-tour' => (new QuanLyTourController())->AddTour(),
+    'form-sua-tour' => (new QuanLyTourController())->EditTour(),
+    'post-sua-tour' => (new QuanLyTourController())->postEdittour(),
+    
+
+    'xoa-tour' => (new QuanLyTourController())->deleteTour(),
+
+
 };
