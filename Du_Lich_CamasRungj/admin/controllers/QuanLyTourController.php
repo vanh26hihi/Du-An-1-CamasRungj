@@ -1,26 +1,31 @@
 <?php
 require_once 'models/QuanLyTourModel.php';
 
-class QuanLyTourController {
+class QuanLyTourController
+{
     public $model;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->model = new QuanLyTourModel(); // gọi model
     }
 
     // hiển thị danh sách tour
-    public function listTour() {
+    public function listTour()
+    {
         $listTour = $this->model->getAllTours();
         require 'views/tour/listTour.php';
     }
 
     // form thêm tour
-    public function formAddtour(){
+    public function formAddtour()
+    {
         require 'views/tour/addTour.php';
     }
 
     // xử lý thêm tour
-    public function AddTour() {
+    public function AddTour()
+    {
         $data = [
             'ten' => $_POST['ten'],
             'danh_muc_id' => $_POST['danh_muc_id'],
@@ -40,14 +45,16 @@ class QuanLyTourController {
     }
 
     // form sửa tour
-    public function EditTour(){
+    public function EditTour()
+    {
         $id = $_GET['tour_id'];
         $tour = $this->model->getTour($id);
         require 'views/tour/editTour.php';
     }
 
     // xử lý sửa tour
-    public function postEdittour(){
+    public function postEdittour()
+    {
         $id = $_POST['id'];
         $data = [
             'ten' => $_POST['ten'],
@@ -66,9 +73,10 @@ class QuanLyTourController {
     }
 
     // xóa tour
-    public function deleteTour(){
+    public function deleteTour()
+    {
         $id = $_GET['tour_id'];
-        if($id){
+        if ($id) {
             $this->model->deleteTour($id);
         }
         header('Location: ?act=danh-sach-tour');
@@ -76,4 +84,3 @@ class QuanLyTourController {
         exit();
     }
 }
-?>

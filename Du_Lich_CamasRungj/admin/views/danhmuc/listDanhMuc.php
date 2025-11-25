@@ -52,29 +52,34 @@
                 <thead class="thead-light text-center">
                   <tr>
                     <th>STT</th>
+                    <th>Tên tour</th>
                     <th>Tên danh mục</th>
                     <th>Mô tả</th>
-                    <th>Trạng thái</th>
-                    <th>Ngày tạo</th>
+                    <th>Giá cơ bản</th>
+                    <th>Chính sách</th>
+                    <th>Điểm khởi hành</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($listDanhMuc as $key => $danhmuc): ?>
+                  <?php foreach ($listDanhMuc as $key => $row): ?>
                     <tr>
                       <td class="text-center"><?= $key + 1 ?></td>
-                      <td><?= htmlspecialchars($danhmuc['ten']) ?></td>
-                      <td><?= htmlspecialchars($danhmuc['mo_ta']) ?></td>
-                      <td><?= htmlspecialchars($danhmuc['trang_thai']) ?></td>
-                      <td><?= htmlspecialchars($danhmuc['ngay_tao']) ?></td>
+                      <td><?= $row['ten_tour'] ?? '' ?></td>
+                      <td><?= $row['ten_danh_muc'] ?? '' ?></td>
+                      <td><?= $row['mo_ta'] ?? '' ?></td>
+                      <td><?= formatPrice($row['gia_co_ban']) ?></td>
+                      <td><?= $row['chinh_sach'] ?? '' ?></td>
+                      <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
 
                       <td class="text-center">
-                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $danhmuc['danh_muc_id'] ?>">
-                          <button class="btn btn-primary btn-sm">Sửa</button>
+                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['danh_muc_id'] ?>" class="btn btn-sm btn-outline-primary" title="Sửa">
+                          <i class="fas fa-edit"></i>
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-danh-muc&id=' . $danhmuc['danh_muc_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Danh Mục Tour này không?');">
-                          <button class="btn btn-danger btn-sm">Xóa</button>
+                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-danh-muc&id=' . $row['danh_muc_id'] ?>" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
+                          <i class="fas fa-trash-alt"></i>
                         </a>
+
                       </td>
                     </tr>
                   <?php endforeach; ?>
