@@ -12,13 +12,17 @@ class AdminBaoCaoThongKe
     public function getTongDoanhThu()
     {
         try {
-            $sql = "SELECT COALESCE(SUM(tong_tien), 0) as tong_doanh_thu 
+            $sql = "SELECT SUM(tong_tien) as tong_doanh_thu 
                     FROM dat_tour 
-                    WHERE trang_thai_id IN (2, 3)"; // Chỉ tính booking đã xác nhận hoặc hoàn thành
+                    WHERE trang_thai_id = 2 OR trang_thai_id = 3";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['tong_doanh_thu'] ?? 0;
+            // Nếu không có dữ liệu thì trả về 0
+            if ($result['tong_doanh_thu'] == null) {
+                return 0;
+            }
+            return $result['tong_doanh_thu'];
         } catch (Exception $e) {
             return 0;
         }
@@ -29,15 +33,23 @@ class AdminBaoCaoThongKe
     public function getDoanhThuThangHienTai()
     {
         try {
-            $sql = "SELECT COALESCE(SUM(tong_tien), 0) as doanh_thu 
+            // Lấy tháng và năm hiện tại
+            $thang = date('m');
+            $nam = date('Y');
+            
+            $sql = "SELECT SUM(tong_tien) as doanh_thu 
                     FROM dat_tour 
-                    WHERE trang_thai_id IN (2, 3)
-                    AND MONTH(ngay_tao) = MONTH(CURRENT_DATE())
-                    AND YEAR(ngay_tao) = YEAR(CURRENT_DATE())";
+                    WHERE (trang_thai_id = 2 OR trang_thai_id = 3)
+                    AND MONTH(ngay_tao) = $thang
+                    AND YEAR(ngay_tao) = $nam";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['doanh_thu'] ?? 0;
+            // Nếu không có dữ liệu thì trả về 0
+            if ($result['doanh_thu'] == null) {
+                return 0;
+            }
+            return $result['doanh_thu'];
         } catch (Exception $e) {
             return 0;
         }
@@ -66,18 +78,26 @@ class AdminBaoCaoThongKe
                         t.tour_id,
                         t.ten as ten_tour,
                         COUNT(dt.dat_tour_id) as so_booking,
-                        COALESCE(SUM(dt.tong_tien), 0) as tong_doanh_thu
+                        SUM(dt.tong_tien) as tong_doanh_thu
                     FROM tour t
-                    LEFT JOIN lich_khoi_hanh lk ON lk.tour_id = t.tour_id
-                    LEFT JOIN dat_tour dt ON dt.lich_id = lk.lich_id AND dt.trang_thai_id IN (2, 3)
+                    JOIN lich_khoi_hanh lk ON lk.tour_id = t.tour_id
+                    JOIN dat_tour dt ON dt.lich_id = lk.lich_id
+                    WHERE dt.trang_thai_id = 2 OR dt.trang_thai_id = 3
                     GROUP BY t.tour_id, t.ten
-                    HAVING so_booking > 0
                     ORDER BY tong_doanh_thu DESC
-                    LIMIT :limit";
+                    LIMIT $limit";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Xử lý null thành 0
+            foreach ($results as $key => $row) {
+                if ($row['tong_doanh_thu'] == null) {
+                    $results[$key]['tong_doanh_thu'] = 0;
+                }
+            }
+            
+            return $results;
         } catch (Exception $e) {
             return [];
         }
@@ -87,14 +107,18 @@ class AdminBaoCaoThongKe
     public function getBookingMoiThangHienTai()
     {
         try {
+            // Lấy tháng và năm hiện tại
+            $thang = date('m');
+            $nam = date('Y');
+            
             $sql = "SELECT COUNT(*) as so_booking 
                     FROM dat_tour 
-                    WHERE MONTH(ngay_tao) = MONTH(CURRENT_DATE())
-                    AND YEAR(ngay_tao) = YEAR(CURRENT_DATE())";
+                    WHERE MONTH(ngay_tao) = $thang
+                    AND YEAR(ngay_tao) = $nam";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['so_booking'] ?? 0;
+            return $result['so_booking'];
         } catch (Exception $e) {
             return 0;
         }
