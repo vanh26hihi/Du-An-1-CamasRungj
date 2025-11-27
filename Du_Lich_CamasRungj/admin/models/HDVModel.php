@@ -147,31 +147,6 @@ class HDVModel {
         return db_query($sql, [$tour_id])->fetchAll();
     }
 
-    // Lấy yêu cầu đặc biệt của khách trong tour (sử dụng ghi_chu)
-    public static function getSpecialRequests($lich_id) {
-        $sql = "SELECT hk.hanh_khach_id, hk.ho_ten, hk.ghi_chu AS yeu_cau_dac_biet
-                FROM dat_tour dt
-                JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
-                WHERE dt.lich_id = ? AND hk.ghi_chu IS NOT NULL AND hk.ghi_chu != ''
-                ORDER BY hk.ho_ten";
-        return db_query($sql, [$lich_id])->fetchAll();
-    }
-
-    // Lấy chi tiết khách hàng
-    public static function getCustomerDetails($khach_hang_id) {
-        $sql = "SELECT hanh_khach_id, ho_ten, ghi_chu AS yeu_cau_dac_biet
-                FROM hanh_khach_list
-                WHERE hanh_khach_id = ?";
-        return db_query($sql, [$khach_hang_id])->fetch();
-    }
-
-    // Cập nhật yêu cầu đặc biệt của khách (lưu vào ghi_chu)
-    public static function updateSpecialRequest($data) {
-        $sql = "UPDATE hanh_khach_list 
-                SET ghi_chu = ?
-                WHERE hanh_khach_id = ?";
-        return db_query($sql, [$data['yeu_cau_dac_biet'], $data['khach_hang_id']]);
-    }
 
     // Lấy danh sách địa điểm
     public static function getAllDiaDiem() {
