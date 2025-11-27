@@ -17,7 +17,7 @@ class AdminBaoCaoThongKe
                     WHERE trang_thai_id = 2 OR trang_thai_id = 3";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch();
             // Nếu không có dữ liệu thì trả về 0
             if ($result['tong_doanh_thu'] == null) {
                 return 0;
@@ -44,7 +44,7 @@ class AdminBaoCaoThongKe
                     AND YEAR(ngay_tao) = $nam";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch();
             // Nếu không có dữ liệu thì trả về 0
             if ($result['doanh_thu'] == null) {
                 return 0;
@@ -62,8 +62,8 @@ class AdminBaoCaoThongKe
             $sql = "SELECT COUNT(*) as tong_booking FROM dat_tour";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['tong_booking'] ?? 0;
+            $result = $stmt->fetch();
+            return $result['tong_booking'];
         } catch (Exception $e) {
             return 0;
         }
@@ -88,7 +88,7 @@ class AdminBaoCaoThongKe
                     LIMIT $limit";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $results = $stmt->fetchAll();
             
             // Xử lý null thành 0
             foreach ($results as $key => $row) {
@@ -117,7 +117,7 @@ class AdminBaoCaoThongKe
                     AND YEAR(ngay_tao) = $nam";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch();
             return $result['so_booking'];
         } catch (Exception $e) {
             return 0;
