@@ -43,14 +43,11 @@ class AdminTourController
             $trang_thai_id = $_POST['trang_thai_id'] ?? '';
             $ghi_chu = $_POST['ghi_chu'] ?? '';
 
-            // Tab 2: Lịch trình (array)
-            $lich_trinh = $_POST['lich_trinh'] ?? [];
-
-            // Tab 3: HDV (array)
+            // Tab 2: HDV (array)
             $hdv_ids = $_POST['hdv_id'] ?? [];
             $vai_tros = $_POST['vai_tro'] ?? [];
 
-            // Tab 4: Dịch vụ
+            // Tab 3: Dịch vụ
             $transport_id = $_POST['transport_id'] ?? '';
             $transport_ghi_chu = $_POST['transport_ghi_chu'] ?? '';
 
@@ -112,18 +109,7 @@ class AdminTourController
                 $trang_thai_id = 1; // ID của trạng thái "Đang mở"
             }
 
-            // Validate Tab 2: Lịch trình
-            if (empty($lich_trinh)) {
-                $error['lich_trinh'] = "Vui lòng chọn tour để tạo lịch trình";
-            } else {
-                foreach ($lich_trinh as $index => $lt) {
-                    if (empty($lt['noi_dung'])) {
-                        $error['lich_trinh_' . $index] = "Nội dung ngày " . ($index + 1) . " không được để trống";
-                    }
-                }
-            }
-
-            // Validate Tab 3: HDV
+            // Validate Tab 2: HDV
             if (empty($hdv_ids) || count($hdv_ids) == 0) {
                 $error['hdv_id'] = "Vui lòng chọn ít nhất 1 hướng dẫn viên";
             } else {
@@ -134,7 +120,7 @@ class AdminTourController
                 }
             }
 
-            // Validate Tab 4: Dịch vụ
+            // Validate Tab 3: Dịch vụ
             if (empty($transport_id)) {
                 $error['transport_id'] = "Vui lòng chọn dịch vụ vận chuyển";
             }
@@ -164,18 +150,6 @@ class AdminTourController
             ]);
 
             if ($lichId) {
-                // Insert lịch trình
-                foreach ($lich_trinh as $lt) {
-                    $this->model->insertLichTrinh([
-                        'tour_id' => $tour_id,  // Sử dụng tour_id thay vì lich_id
-                        'ngay_thu' => $lt['ngay_thu'],
-                        'dia_diem_id' => $lt['dia_diem_id'],
-                        'tieu_de' => $lt['tieu_de'] ?? '',
-                        'noi_dung' => $lt['noi_dung'],
-                        'mo_ta' => $lt['mo_ta'] ?? ''
-                    ]);
-                }
-
                 // Insert phân công HDV
                 foreach ($hdv_ids as $index => $hdv_id) {
                     if (!empty($hdv_id)) {
@@ -277,9 +251,6 @@ class AdminTourController
         $hotelServices = $this->model->getDichVuByType('hotel');
         $cateringServices = $this->model->getDichVuByType('catering');
 
-        // Lấy lịch trình đã tạo (theo tour_id)
-        $lichTrinhList = $this->model->getLichTrinhByTour($lichKhoiHanh['tour_id']);
-
         // Lấy HDV đã phân công
         $hdvList = $this->model->getPhanCongHDVByLich($lich_id);
 
@@ -300,7 +271,6 @@ class AdminTourController
             $trang_thai_id = $_POST['trang_thai_id'] ?? '';
             $ghi_chu = $_POST['ghi_chu'] ?? '';
 
-            $lich_trinh = $_POST['lich_trinh'] ?? [];
             $hdv_ids = $_POST['hdv_id'] ?? [];
             $vai_tros = $_POST['vai_tro'] ?? [];
 
@@ -362,17 +332,6 @@ class AdminTourController
                 $error['trang_thai_id'] = "Trạng thái không được để trống";
             }
 
-            // Validate lịch trình
-            if (empty($lich_trinh)) {
-                $error['lich_trinh'] = "Vui lòng nhập lịch trình";
-            } else {
-                foreach ($lich_trinh as $index => $lt) {
-                    if (empty($lt['noi_dung'])) {
-                        $error['lich_trinh_' . $index] = "Nội dung ngày " . ($index + 1) . " không được để trống";
-                    }
-                }
-            }
-
             // Validate HDV
             if (empty($hdv_ids) || count($hdv_ids) == 0) {
                 $error['hdv'] = "Vui lòng chọn ít nhất 1 hướng dẫn viên";
@@ -416,16 +375,6 @@ class AdminTourController
             ]);
 
             if ($updateLich) {
-                // Cập nhật lịch trình
-                foreach ($lich_trinh as $lt) {
-                    if (isset($lt['lich_trinh_id'])) {
-                        $this->model->updateLichTrinh($lt['lich_trinh_id'], [
-                            'noi_dung' => $lt['noi_dung'],
-                            'mo_ta' => $lt['mo_ta'] ?? ''
-                        ]);
-                    }
-                }
-
                 // Xóa HDV cũ và thêm mới
                 $this->model->deletePhanCongHDVByLich($lich_id);
                 foreach ($hdv_ids as $index => $hdv_id) {

@@ -155,11 +155,11 @@
                       <!-- TAB 3: LỊCH TRÌNH -->
                       <div class="tab-pane fade" id="tab-lich-trinh" role="tabpanel">
                         <h4><i class="fas fa-route"></i> Lịch Trình Tour</h4>
-                        <p class="text-info">Lịch trình sẽ được tạo tự động theo số ngày và địa điểm bạn đã chọn ở Tab 2.</p>
+                        <p class="text-info">Lịch trình sẽ được tạo tự động theo số ngày và địa điểm bạn đã chọn ở Địa Điểm Tour.</p>
 
                         <div class="card-body">
                           <div id="lich_trinh_container">
-                            <p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Tab 2 để tạo lịch trình tự động</p>
+                            <p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Địa Điểm Tour để tạo lịch trình tự động</p>
                           </div>
                         </div>
                       </div>

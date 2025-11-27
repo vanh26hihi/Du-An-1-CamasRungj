@@ -117,16 +117,16 @@
                                 <ul class="nav nav-tabs" id="editTourTabs" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="tab1-link" data-toggle="pill" href="#tab1" role="tab">
-                                            <i class="fas fa-info-circle"></i> Thông tin & Lịch trình
+                                            <i class="fas fa-info-circle"></i> Thông tin
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="tab3-link" data-toggle="pill" href="#tab3" role="tab">
+                                        <a class="nav-link" id="tab2-link" data-toggle="pill" href="#tab2" role="tab">
                                             <i class="fas fa-users"></i> Hướng Dẫn Viên
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="tab4-link" data-toggle="pill" href="#tab4" role="tab">
+                                        <a class="nav-link" id="tab3-link" data-toggle="pill" href="#tab3" role="tab">
                                             <i class="fas fa-building"></i> Nhà Cung Cấp
                                         </a>
                                     </li>
@@ -222,48 +222,8 @@
                                         </div>
                                     </div>
 
-                                    <!-- TAB 2: Lịch Trình -->
+                                    <!-- TAB 2: Hướng Dẫn Viên -->
                                     <div class="tab-pane fade" id="tab2" role="tabpanel">
-                                        <p class="text-info">Chỉnh sửa nội dung lịch trình của từng ngày.</p>
-                                        <div id="lichTrinhContainer">
-                                            <?php if (!empty($lichTrinhList) && is_array($lichTrinhList)): ?>
-                                                <?php foreach ($lichTrinhList as $index => $lt): ?>
-                                                    <div class="card card-secondary">
-                                                        <div class="card-header">
-                                                            <h3 class="card-title">Ngày <?= isset($lt['ngay_thu']) ? $lt['ngay_thu'] : ($index + 1) ?>: <?= htmlspecialchars($lt['ten_dia_diem'] ?? 'Chưa rõ địa điểm') ?></h3>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <input type="hidden" name="lich_trinh[<?= $index ?>][lich_trinh_id]" value="<?= $lt['lich_trinh_id'] ?? '' ?>">
-                                                            <input type="hidden" name="lich_trinh[<?= $index ?>][dia_diem_id]" value="<?= $lt['dia_diem_id'] ?? '' ?>">
-                                                            <input type="hidden" name="lich_trinh[<?= $index ?>][ngay_thu]" value="<?= $lt['ngay_thu'] ?? ($index + 1) ?>">
-
-                                                            <div class="form-group">
-                                                                <label>Tên địa điểm cụ thể</label>
-                                                                <input type="text" class="form-control" name="lich_trinh[<?= $index ?>][mo_ta]"
-                                                                    value="<?= htmlspecialchars($lt['mo_ta'] ?? '') ?>"
-                                                                    placeholder="Ví dụ: Vịnh Hạ Long, Bãi Cháy..." />
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label>Nội dung <span class="text-danger">*</span></label>
-                                                                <textarea class="form-control <?= isset($error['lich_trinh_' . $index]) ? 'is-invalid' : '' ?>"
-                                                                    name="lich_trinh[<?= $index ?>][noi_dung]" rows="4"
-                                                                    placeholder="Mô tả hoạt động trong ngày..."><?= htmlspecialchars($lt['noi_dung'] ?? '') ?></textarea>
-                                                                <?php if (isset($error['lich_trinh_' . $index])): ?>
-                                                                    <div class="invalid-feedback d-block"><?= $error['lich_trinh_' . $index] ?></div>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <p class="text-muted">Chưa có lịch trình.</p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-
-                                    <!-- TAB 3: Hướng Dẫn Viên -->
-                                    <div class="tab-pane fade" id="tab3" role="tabpanel">
                                         <button type="button" class="btn btn-success btn-sm mb-3" id="addHDV">
                                             <i class="fas fa-plus"></i> Thêm HDV
                                         </button>
@@ -314,8 +274,8 @@
                                         </div>
                                     </div>
 
-                                    <!-- TAB 4: Nhà Cung Cấp Dịch Vụ -->
-                                    <div class="tab-pane fade" id="tab4" role="tabpanel">
+                                    <!-- TAB 3: Nhà Cung Cấp Dịch Vụ -->
+                                    <div class="tab-pane fade" id="tab3" role="tabpanel">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="card card-outline card-primary">
@@ -463,7 +423,11 @@
           </div>
           <div class="form-group">
             <label>Vai trò <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="vai_tro[]" placeholder="VD: Trưởng đoàn" required>
+            <select class="form-control" name="vai_tro[]" required>
+              <option value="" disabled selected>-- Chọn vai trò --</option>
+              <option value="main">Chính</option>
+              <option value="support">Hỗ trợ</option>
+            </select>
           </div>
         </div>
       </div>

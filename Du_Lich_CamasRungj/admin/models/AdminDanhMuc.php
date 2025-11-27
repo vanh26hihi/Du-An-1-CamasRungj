@@ -222,9 +222,9 @@ class AdminDanhMuc
     {
         return $this->insertTour($data);
     }
-    
+
     // ===== LỊCH TRÌNH METHODS =====
-    
+
     public function insertLichTrinh($data)
     {
         try {
@@ -238,10 +238,10 @@ class AdminDanhMuc
                 'tieu_de' => $data['tieu_de'] ?? '',
                 'noi_dung' => $data['noi_dung']
             ]);
-            
+
             if ($result) {
                 $lichTrinhId = $this->conn->lastInsertId();
-                
+
                 // Nếu có dia_diem_id, insert vào dia_diem_lich_trinh
                 if (!empty($data['dia_diem_id'])) {
                     $this->insertDiaDiemLichTrinh([
@@ -251,7 +251,7 @@ class AdminDanhMuc
                         'mo_ta' => $data['mo_ta'] ?? ''
                     ]);
                 }
-                
+
                 return $lichTrinhId;
             }
             return false;
@@ -260,7 +260,7 @@ class AdminDanhMuc
             return false;
         }
     }
-    
+
     public function insertDiaDiemLichTrinh($data)
     {
         try {
@@ -278,7 +278,7 @@ class AdminDanhMuc
             return false;
         }
     }
-    
+
     public function getLichTrinhByTour($tourId)
     {
         $sql = "SELECT lt.*, ddlt.mo_ta, ddlt.dia_diem_id, dd.ten as ten_dia_diem 
@@ -291,7 +291,7 @@ class AdminDanhMuc
         $stmt->execute(['tour_id' => $tourId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     public function deleteLichTrinhByTour($tourId)
     {
         try {
@@ -301,7 +301,7 @@ class AdminDanhMuc
                      WHERE lt.tour_id = :tour_id";
             $stmt1 = $this->conn->prepare($sql1);
             $stmt1->execute(['tour_id' => $tourId]);
-            
+
             // Xóa lich_trinh
             $sql2 = "DELETE FROM lich_trinh WHERE tour_id = :tour_id";
             $stmt2 = $this->conn->prepare($sql2);
