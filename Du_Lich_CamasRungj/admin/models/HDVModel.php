@@ -6,7 +6,7 @@ class HDVModel {
     // Lấy danh sách tour HDV được phân công
     public static function getToursByHDV($hdv_id) {
         $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten AS ten_tour, 
-                       l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai,
+                       l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
                        p.hdv_id, hdv.ho_ten AS hdv_ten
                 FROM phan_cong_hdv p
                 JOIN lich_khoi_hanh l ON p.lich_id = l.lich_id
@@ -36,7 +36,7 @@ class HDVModel {
         $allTours = db_query($sqlAllTours)->fetchAll();
         
         // Lấy TẤT CẢ lịch khởi hành của tất cả tour (không chỉ lịch được phân công)
-        $sqlAllSchedules = "SELECT l.lich_id, l.tour_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai,
+        $sqlAllSchedules = "SELECT l.lich_id, l.tour_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
                                    t.ten AS ten_tour
                             FROM lich_khoi_hanh l
                             JOIN tour t ON l.tour_id = t.tour_id
