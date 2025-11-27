@@ -59,23 +59,23 @@ class HDVController {
     }
 
     public static function quanLyHDV($hdv_id) {
-        $lich_id = $_GET['lich_id'] ?? null;
-        $search_hdv = $_GET['search_hdv'] ?? null;
+        $tab = $_GET['tab'] ?? 'thong-tin';
+        
+        // Lấy danh sách tất cả HDV
+        $allHDV = HDVModel::getAllHDV();
         
         // Xử lý hdv_id: nếu là "all" hoặc rỗng, lấy tất cả
         if ($hdv_id === 'all' || $hdv_id === '' || $hdv_id === null) {
             $hdv_id = 'all';
             $hdvInfo = null;
+            $lichLamViec = [];
         } else {
-            // Lấy thông tin HDV
+            // Lấy thông tin HDV từ bảng huong_dan_vien
             $hdvInfo = HDVModel::getHDVById($hdv_id);
+            
+            // Lấy lịch làm việc từ bảng phan_cong_hdv
+            $lichLamViec = HDVModel::getLichLamViecByHDV($hdv_id);
         }
-        
-        // Lấy danh sách tất cả HDV để chọn
-        $allHDV = HDVModel::getAllHDV();
-        
-        // Lấy dữ liệu cho tab lịch làm việc (nhóm theo tên tour)
-        $lichLamViecData = HDVModel::getToursByHDVGrouped($hdv_id, $search_hdv);
         
         include './views/layout/header.php';
         include './views/layout/navbar.php';

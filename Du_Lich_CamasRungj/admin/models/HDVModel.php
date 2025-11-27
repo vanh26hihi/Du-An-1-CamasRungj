@@ -172,4 +172,17 @@ class HDVModel {
         return db_query($sql)->fetchAll();
     }
 
+    // Lấy lịch làm việc của HDV từ bảng phan_cong_hdv
+    public static function getLichLamViecByHDV($hdv_id) {
+        $sql = "SELECT phan_cong_hdv.phan_cong_id, phan_cong_hdv.lich_id, phan_cong_hdv.vai_tro,
+                       lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, lich_khoi_hanh.trang_thai_id,
+                       tour.tour_id, tour.ten ten_tour
+                FROM phan_cong_hdv
+                JOIN lich_khoi_hanh ON phan_cong_hdv.lich_id = lich_khoi_hanh.lich_id
+                JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                WHERE phan_cong_hdv.hdv_id = ?
+                ORDER BY lich_khoi_hanh.ngay_bat_dau DESC";
+        return db_query($sql, [$hdv_id])->fetchAll();
+    }
+
 }

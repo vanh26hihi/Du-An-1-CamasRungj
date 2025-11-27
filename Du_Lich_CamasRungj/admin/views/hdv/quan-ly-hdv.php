@@ -1,5 +1,6 @@
 <?php
 $hdv_id = $_GET['hdv_id'] ?? 'all';
+$tab = $_GET['tab'] ?? 'thong-tin';
 ?>
 <div class="content-wrapper">
     <div class="content-header">
@@ -20,193 +21,209 @@ $hdv_id = $_GET['hdv_id'] ?? 'all';
 
     <div class="content">
         <div class="container-fluid">
-            <div class="card card-primary">
-                <div class="card-body">
-                            <?php 
-                            $selectedTourId = $_GET['tour_id'] ?? null;
-                            ?>
-                            <?php if (!empty($lichLamViecData)): ?>
-                                <!-- Danh sách Tour -->
-                                <div class="row mb-3">
-                                    <?php foreach ($lichLamViecData as $tourKey => $tourData): ?>
-                                        <?php 
-                                        $currentTourId = $tourData['tour_id'] ?? $tourKey;
-                                        $ten_tour = $tourData['ten_tour'] ?? 'Tour';
-                                        $schedules = $tourData['schedules'] ?? [];
-                                        $isActive = $selectedTourId == $currentTourId;
-                                        ?>
-                                        <div class="col-md-4 mb-3">
-                                            <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tour_id=" . $currentTourId ?>" 
-                                               class="card card-info card-hover <?= $isActive ? 'border-primary' : '' ?>" 
+            <!-- Danh sách HDV -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Danh Sách Hướng Dẫn Viên</h3>
+                        </div>
+                        <div class="card-body">
+                            <?php if (!empty($allHDV)): ?>
+                                <div class="row">
+                                    <?php foreach ($allHDV as $hdv): ?>
+                                        <?php $isActive = $hdv_id == $hdv['hdv_id']; ?>
+                                        <div class="col-md-3 mb-3">
+                                            <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv['hdv_id'] . "&tab=thong-tin" ?>" 
+                                               class="card <?= $isActive ? 'border-primary' : '' ?>" 
                                                style="text-decoration: none; cursor: pointer;">
-                                                <div class="card-header">
-                                                    <h3 class="card-title mb-0">
-                                                        <i class="fas fa-map-marked-alt"></i> <?= htmlspecialchars($ten_tour) ?>
-                                                        <span class="badge badge-light ml-2"><?= count($schedules) ?> lịch</span>
-                                                    </h3>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">
+                                                        <i class="fas fa-user-tie"></i> <?= htmlspecialchars($hdv['ho_ten']) ?>
+                                                    </h5>
+                                                    <p class="card-text mb-1">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-phone"></i> <?= htmlspecialchars($hdv['so_dien_thoai']) ?>
+                                                        </small>
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-envelope"></i> <?= htmlspecialchars($hdv['email']) ?>
+                                                        </small>
+                                                    </p>
                                                 </div>
                                             </a>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
+                            <?php else: ?>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> Chưa có hướng dẫn viên nào
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                <!-- Danh sách Lịch của Tour được chọn -->
-                                <?php if ($selectedTourId): ?>
-                                    <?php 
-                                    $selectedTours = null;
-                                    $selectedTourName = '';
-                                    foreach ($lichLamViecData as $tourKey => $tourData) {
-                                        $currentTourId = $tourData['tour_id'] ?? $tourKey;
-                                        if ($currentTourId == $selectedTourId) {
-                                            $selectedTours = $tourData['schedules'] ?? [];
-                                            $selectedTourName = $tourData['ten_tour'] ?? 'Tour';
-                                            break;
-                                        }
-                                    }
-                                    ?>
-                                    <?php if ($selectedTours !== null): ?>
-                                        <div class="card card-primary">
-                                            <div class="card-header">
-                                                <div class="row align-items-center">
-                                                    <div class="col-md-6">
-                                                        <h3 class="card-title mb-0">
-                                                            <i class="fas fa-list"></i> Danh Sách Lịch: <?= htmlspecialchars($selectedTourName) ?>
-                                                        </h3>
-                                                    </div>
-                                                    <div class="col-md-6 text-right">
-                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id ?>" 
-                                                           class="btn btn-sm btn-secondary">
-                                                            <i class="fas fa-arrow-left"></i> Quay lại
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <?php if (!empty($selectedTours)): ?>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-striped table-hover table-bordered">
-                                                            <thead>
+            <!-- Thông tin HDV được chọn -->
+            <?php if ($hdv_id !== 'all' && $hdvInfo): ?>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-primary card-outline card-tabs">
+                            <div class="card-header p-0 pt-1 border-bottom-0">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link <?= $tab == 'thong-tin' ? 'active' : '' ?>" 
+                                           href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tab=thong-tin" ?>">
+                                            <i class="fas fa-user"></i> Thông Tin Cá Nhân
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link <?= $tab == 'lich-lam-viec' ? 'active' : '' ?>" 
+                                           href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tab=lich-lam-viec" ?>">
+                                            <i class="fas fa-calendar-alt"></i> Lịch Làm Việc
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <!-- Tab Thông Tin Cá Nhân -->
+                                <?php if ($tab == 'thong-tin'): ?>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Thông Tin Cá Nhân</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th>Họ Tên</th>
+                                                    <td><?= htmlspecialchars($hdvInfo['ho_ten']) ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Số Điện Thoại</th>
+                                                    <td><?= htmlspecialchars($hdvInfo['so_dien_thoai']) ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Email</th>
+                                                    <td><?= htmlspecialchars($hdvInfo['email']) ?></td>
+                                                </tr>
+                                                <?php if (!empty($hdvInfo['kinh_nghiem'])): ?>
+                                                <tr>
+                                                    <th>Kinh Nghiệm</th>
+                                                    <td><?= htmlspecialchars($hdvInfo['kinh_nghiem']) ?></td>
+                                                </tr>
+                                                <?php endif; ?>
+                                                <?php if (!empty($hdvInfo['ngon_ngu'])): ?>
+                                                <tr>
+                                                    <th>Ngôn Ngữ</th>
+                                                    <td><?= htmlspecialchars($hdvInfo['ngon_ngu']) ?></td>
+                                                </tr>
+                                                <?php endif; ?>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Tab Lịch Làm Việc -->
+                                <?php if ($tab == 'lich-lam-viec'): ?>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Lịch Làm Việc</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <?php if (!empty($lichLamViec)): ?>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>STT</th>
+                                                                <th>Tên Tour</th>
+                                                                <th>Ngày Bắt Đầu</th>
+                                                                <th>Ngày Kết Thúc</th>
+                                                                <th>Vai Trò</th>
+                                                                <th>Hành Động</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php $stt = 1; foreach ($lichLamViec as $lich): ?>
                                                                 <tr>
-                                                                    <th style="width: 5%;">STT</th>
-                                                                    <th style="width: 15%;">Ngày Bắt Đầu</th>
-                                                                    <th style="width: 15%;">Ngày Kết Thúc</th>
-                                                                    <th style="width: 15%;">Hướng Dẫn Viên</th>
-                                                                    <th style="width: 10%;">Trạng Thái</th>
-                                                                    <th style="width: 40%;">Hành Động</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php 
-                                                                $stt = 1;
-                                                                foreach ($selectedTours as $row): 
-                                                                ?>
-                                                                <tr>
-                                                                    <td class="text-center"><strong><?php echo $stt++; ?></strong></td>
-                                                                    <td><?php echo date('d/m/Y', strtotime($row['ngay_bat_dau'])); ?></td>
-                                                                    <td><?php echo date('d/m/Y', strtotime($row['ngay_ket_thuc'])); ?></td>
-                                                                    <td>
-                                                                        <?php 
-                                                                        // Lấy danh sách HDV được phân công cho lịch này
-                                                                        $hdvList = HDVModel::getHDVByLich($row['lich_id']);
-                                                                        if (!empty($hdvList)): 
-                                                                            foreach ($hdvList as $index => $hdvItem): 
-                                                                                if ($index > 0) echo ', ';
-                                                                        ?>
-                                                                            <span class="badge badge-info">
-                                                                                <?= htmlspecialchars($hdvItem['ho_ten']) ?>
-                                                                            </span>
-                                                                        <?php 
-                                                                            endforeach;
-                                                                        else: 
-                                                                        ?>
-                                                                            <span class="text-muted">Chưa phân công</span>
-                                                                        <?php endif; ?>
-                                                                    </td>
+                                                                    <td class="text-center"><?= $stt++ ?></td>
+                                                                    <td><?= htmlspecialchars($lich['ten_tour']) ?></td>
+                                                                    <td><?= date('d/m/Y', strtotime($lich['ngay_bat_dau'])) ?></td>
+                                                                    <td><?= date('d/m/Y', strtotime($lich['ngay_ket_thuc'])) ?></td>
                                                                     <td class="text-center">
-                                                                        <span class="badge <?php echo ($row['trang_thai'] == 'Đã hoàn thành' || $row['trang_thai'] == 'da_hoan_thanh') ? 'badge-success' : 'badge-warning'; ?>">
-                                                                            <?php echo $row['trang_thai']; ?>
+                                                                        <span class="badge <?= $lich['vai_tro'] == 'main' ? 'badge-success' : 'badge-info' ?>">
+                                                                            <?= $lich['vai_tro'] == 'main' ? 'Chính' : 'Hỗ Trợ' ?>
                                                                         </span>
                                                                     </td>
                                                                     <td class="text-center">
-                                                                        <?php 
-                                                                        $firstHDVId = !empty($hdvList) ? $hdvList[0]['hdv_id'] : ($hdv_id !== 'all' ? $hdv_id : null);
-                                                                        if ($firstHDVId): 
-                                                                        ?>
-                                                                            <a href="<?= BASE_URL_ADMIN . "?act=hdv-diem-danh&lich_id=" . $row['lich_id'] . "&hdv_id=" . $firstHDVId ?>" 
-                                                                               class="btn btn-sm btn-primary" title="Danh sách hành khách & Điểm danh">
-                                                                                <i class="fas fa-users"></i> Hành Khách & Điểm Danh
-                                                                            </a>
-                                                                        <?php else: ?>
-                                                                            <span class="text-muted">Chưa có HDV</span>
-                                                                        <?php endif; ?>
+                                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-diem-danh&lich_id=" . $lich['lich_id'] . "&hdv_id=" . $hdv_id ?>" 
+                                                                           class="btn btn-sm btn-primary">
+                                                                            <i class="fas fa-users"></i> Hành Khách & Điểm Danh
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
-                                                                <?php endforeach; ?>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                <?php else: ?>
-                                                    <div class="alert alert-info" role="alert">
-                                                        <i class="fas fa-info-circle"></i> Tour này chưa có lịch khởi hành.
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="alert alert-info">
+                                                    <i class="fas fa-info-circle"></i> HDV này chưa có lịch làm việc nào
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    <div class="alert alert-info" role="alert">
-                                        <i class="fas fa-info-circle"></i> Vui lòng chọn một tour để xem danh sách lịch làm việc.
                                     </div>
                                 <?php endif; ?>
-                            <?php else: ?>
-                                <div class="alert alert-info" role="alert">
-                                    <i class="fas fa-info-circle"></i> Chưa có lịch làm việc nào
-                                </div>
-                            <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php elseif ($hdv_id !== 'all'): ?>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Không tìm thấy thông tin hướng dẫn viên
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
 <style>
-.card-hover {
-    transition: all 0.3s ease;
+/* CSS cho tab - đơn giản, dễ nhìn */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
 }
 
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.nav-tabs .nav-link {
+    color: #495057;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+    padding: 10px 20px;
+    margin-right: 5px;
 }
 
-.card-hover.border-primary {
-    border-width: 2px !important;
+.nav-tabs .nav-link:hover {
+    background-color: #ffffff;
+    color: #007bff;
 }
 
-.table td .btn {
-    white-space: nowrap !important;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.875rem;
-    padding: 0.375rem 0.75rem;
-    line-height: 1.5;
-    min-width: fit-content;
-    width: auto;
+.nav-tabs .nav-link.active {
+    background-color: #ffffff;
+    color: #007bff;
+    border-bottom: 2px solid #ffffff;
+    font-weight: bold;
 }
 
-.table td {
-    white-space: nowrap;
-    overflow: visible;
+/* Card HDV */
+.card:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.table td:last-child {
-    white-space: nowrap !important;
-    text-align: center;
-}
-
-.table {
-    table-layout: auto;
-    width: 100%;
+.border-primary {
+    border: 2px solid #007bff !important;
 }
 </style>
+
