@@ -38,6 +38,9 @@
                       <li class="nav-item">
                         <a class="nav-link" data-toggle="pill" href="#tab-customer" role="tab">Chọn Địa Điểm Tour</a>
                       </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#tab-lich-trinh" role="tab"><i class="fas fa-route"></i> Lịch Trình</a>
+                      </li>
                     </ul>
                   </div>
 
@@ -146,6 +149,18 @@
                           <?php if (!empty($error['dia_diem'])): ?>
                             <p class="text-danger mt-2"><?= $error['dia_diem'] ?></p>
                           <?php endif; ?>
+                        </div>
+                      </div>
+
+                      <!-- TAB 3: LỊCH TRÌNH -->
+                      <div class="tab-pane fade" id="tab-lich-trinh" role="tabpanel">
+                        <h4><i class="fas fa-route"></i> Lịch Trình Tour</h4>
+                        <p class="text-info">Lịch trình sẽ được tạo tự động theo số ngày và địa điểm bạn đã chọn ở Tab 2.</p>
+
+                        <div class="card-body">
+                          <div id="lich_trinh_container">
+                            <p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Tab 2 để tạo lịch trình tự động</p>
+                          </div>
                         </div>
                       </div>
 
@@ -311,5 +326,66 @@
     diaDiemList.forEach((item, idx) => {
       renderDiaDiem(item, idx);
     });
+
+    // Cập nhật lại lịch trình
+    updateLichTrinh();
   }
+
+  // Hàm tạo lịch trình tự động dựa trên địa điểm đã chọn
+  function updateLichTrinh() {
+    const lichTrinhContainer = document.getElementById('lich_trinh_container');
+
+    // Lọc các địa điểm đã chọn
+    const selectedDiaDiem = diaDiemList.filter(item => item.dia_diem_id);
+
+    if (selectedDiaDiem.length === 0) {
+      lichTrinhContainer.innerHTML = '<p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Tab 2 để tạo lịch trình tự động</p>';
+      return;
+    }
+
+    let html = '';
+    selectedDiaDiem.forEach((item, index) => {
+      const diaDiem = diaDiemData.find(dd => dd.dia_diem_id == item.dia_diem_id);
+      const ngayThu = index + 1;
+
+      html += `
+        <div class="card mb-3 border-primary">
+          <div class="card-header bg-primary text-white">
+            <h5><i class="fas fa-calendar-day"></i> Ngày ${ngayThu}: ${diaDiem ? diaDiem.ten : 'Chưa rõ'}</h5>
+          </div>
+          <div class="card-body">
+            <input type="hidden" name="lich_trinh[${index}][ngay_thu]" value="${ngayThu}">
+            <input type="hidden" name="lich_trinh[${index}][dia_diem_id]" value="${item.dia_diem_id}">
+            
+            <div class="form-group">
+              <label>Tên địa điểm cụ thể</label>
+              <input type="text" class="form-control" name="lich_trinh[${index}][mo_ta]" 
+                placeholder="Ví dụ: Vịnh Hạ Long, Bãi Cháy..." />
+            </div>
+            
+            <div class="form-group">
+              <label>Nội dung lịch trình <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="lich_trinh[${index}][noi_dung]" rows="4" 
+                placeholder="Mô tả hoạt động trong ngày ${ngayThu}..." required></textarea>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    lichTrinhContainer.innerHTML = html;
+  }
+
+  // Cập nhật lịch trình khi thay đổi địa điểm
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('dia-diem-select')) {
+      updateLichTrinh();
+    }
+  });
+
+  // Cập nhật lịch trình khi thêm địa điểm mới
+  const originalBtnAddDiaDiem = document.getElementById('btn-add-dia-diem');
+  originalBtnAddDiaDiem.addEventListener('click', function() {
+    setTimeout(updateLichTrinh, 100);
+  });
 </script>

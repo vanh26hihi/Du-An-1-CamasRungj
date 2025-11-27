@@ -73,10 +73,10 @@
                       <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
 
                       <td class="text-center">
-                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['danh_muc_id'] ?>" class="btn btn-sm btn-outline-primary" title="Sửa">
+                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['tour_id'] ?>" class="btn btn-sm btn-outline-primary" title="Sửa">
                           <i class="fas fa-edit"></i>
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-danh-muc&id=' . $row['danh_muc_id'] ?>" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
+                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&tour_id=' . $row['tour_id'] ?>" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
                           <i class="fas fa-trash-alt"></i>
                         </a>
 

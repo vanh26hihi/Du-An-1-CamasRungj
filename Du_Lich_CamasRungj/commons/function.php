@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 session_start();
 // Kết nối CSDL qua PDO

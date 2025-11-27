@@ -1,4 +1,4 @@
-﻿    <?php
+    <?php
 
     // Biến môi trường, dùng chung toàn hệ thống
     // Khai báo dưới dạng HẰNG SỐ để không phải dùng $GLOBALS

@@ -86,6 +86,9 @@
                         <li class="nav-item">
                           <a class="nav-link" data-toggle="pill" href="#tab-customer" role="tab">Chọn Địa Điểm Tour</a>
                         </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="pill" href="#tab-lich-trinh" role="tab"><i class="fas fa-route"></i> Lịch Trình</a>
+                        </li>
                       </ul>
                     </div>
 
@@ -195,6 +198,18 @@
                             <?php if (!empty($error['dia_diem'])): ?>
                               <p class="text-danger mt-2"><?= $error['dia_diem'] ?></p>
                             <?php endif; ?>
+                          </div>
+                        </div>
+
+                        <!-- TAB 3: LỊCH TRÌNH -->
+                        <div class="tab-pane fade" id="tab-lich-trinh" role="tabpanel">
+                          <h4><i class="fas fa-route"></i> Lịch Trình Tour</h4>
+                          <p class="text-info">Chỉnh sửa lịch trình theo địa điểm đã chọn.</p>
+
+                          <div class="card-body">
+                            <div id="lich_trinh_container">
+                              <!-- Lịch trình sẽ được load từ database hoặc tạo tự động -->
+                            </div>
                           </div>
                         </div>
 
@@ -383,7 +398,75 @@
       diaDiemList.forEach((item, idx) => {
         renderDiaDiem(item, idx);
       });
+
+      // Cập nhật lại lịch trình
+      updateLichTrinh();
     }
+
+    // Hàm tạo/cập nhật lịch trình
+    function updateLichTrinh() {
+      const lichTrinhContainer = document.getElementById('lich_trinh_container');
+
+      // Lọc các địa điểm đã chọn
+      const selectedDiaDiem = diaDiemList.filter(item => item.dia_diem_id);
+
+      if (selectedDiaDiem.length === 0) {
+        lichTrinhContainer.innerHTML = '<p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Tab 2 để tạo lịch trình</p>';
+        return;
+      }
+
+      let html = '';
+      selectedDiaDiem.forEach((item, index) => {
+        const diaDiem = diaDiemData.find(dd => dd.dia_diem_id == item.dia_diem_id);
+        const ngayThu = index + 1;
+
+        // Tìm lịch trình đã có (nếu edit)
+        const existingLichTrinh = lichTrinhData.find(lt => lt.dia_diem_id == item.dia_diem_id && lt.ngay_thu == ngayThu);
+
+        html += `
+          <div class="card mb-3 border-primary">
+            <div class="card-header bg-primary text-white">
+              <h5><i class="fas fa-calendar-day"></i> Ngày ${ngayThu}: ${diaDiem ? diaDiem.ten : 'Chưa rõ'}</h5>
+            </div>
+            <div class="card-body">
+              ${existingLichTrinh ? `<input type="hidden" name="lich_trinh[${index}][lich_trinh_id]" value="${existingLichTrinh.lich_trinh_id}">` : ''}
+              <input type="hidden" name="lich_trinh[${index}][ngay_thu]" value="${ngayThu}">
+              <input type="hidden" name="lich_trinh[${index}][dia_diem_id]" value="${item.dia_diem_id}">
+              
+              <div class="form-group">
+                <label>Tên địa điểm cụ thể</label>
+                <input type="text" class="form-control" name="lich_trinh[${index}][mo_ta]" 
+                  value="${existingLichTrinh ? (existingLichTrinh.mo_ta || '') : ''}"
+                  placeholder="Ví dụ: Vịnh Hạ Long, Bãi Cháy..." />
+              </div>
+              
+              <div class="form-group">
+                <label>Nội dung lịch trình <span class="text-danger">*</span></label>
+                <textarea class="form-control" name="lich_trinh[${index}][noi_dung]" rows="4" 
+                  placeholder="Mô tả hoạt động trong ngày ${ngayThu}..." required>${existingLichTrinh ? (existingLichTrinh.noi_dung || '') : ''}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      lichTrinhContainer.innerHTML = html;
+    }
+
+    // Load lịch trình khi vào trang edit
+    const lichTrinhData = <?php echo !empty($lichTrinhList) ? json_encode($lichTrinhList) : '[]'; ?>;
+
+    // Cập nhật lịch trình khi load trang
+    setTimeout(() => {
+      updateLichTrinh();
+    }, 500);
+
+    // Cập nhật lịch trình khi thay đổi địa điểm
+    document.addEventListener('change', function(e) {
+      if (e.target.classList.contains('dia-diem-select')) {
+        updateLichTrinh();
+      }
+    });
   </script>
 <?php endif; ?>
 

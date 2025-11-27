@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once '../commons/env.php';
 require_once '../commons/function.php';
 
@@ -7,10 +7,12 @@ $conn = connectDB();
 require_once './controllers/AdminBookingController.php';
 require_once './controllers/AdminBaoCaoThongKeController.php';
 require_once './controllers/HDVController.php';
-require_once './controllers/QuanLyTourController.php';
 require_once './controllers/AdminDanhMucController.php';
+require_once './controllers/AdminTourController.php';
+require_once './controllers/AdminTaiKhoanController.php';
 
 require_once './models/AdminBooking.php';
+require_once './models/AdminTour.php';
 
 $act = $_GET['act'] ?? '/';
 
@@ -74,12 +76,11 @@ match ($act) {
     'post-sua-danh-muc' => (new AdminDanhMucController())->postEditDanhMuc(),
     'xoa-danh-muc' => (new AdminDanhMucController())->deleteDanhMuc(),
     // QL Tour
-    'quan-ly-tour' => (new QuanLyTourController())->listTour(),
-    'form-them-tour' => (new QuanLyTourController())->formAddtour(),
-    'post-them-tour' => (new QuanLyTourController())->AddTour(),
-    'form-sua-tour' => (new QuanLyTourController())->EditTour(),
-    'post-sua-tour' => (new QuanLyTourController())->postEdittour(),
-
-
-    'xoa-tour' => (new QuanLyTourController())->deleteTour(),
+    'quan-ly-tour' => (new AdminTourController())->listTour(),
+    'form-them-tour' => (new AdminTourController())->formAddTour(),
+    'post-them-tour' => (new AdminTourController())->postAddTour(),
+    'get-tour-info' => (new AdminTourController())->getTourInfo(), // AJAX endpoint
+    'form-sua-tour' => (new AdminTourController())->formEditTour(),
+    'post-sua-tour' => (new AdminTourController())->postEditTour(),
+    'xoa-tour' => (new AdminTourController())->deleteTour(),
 };
