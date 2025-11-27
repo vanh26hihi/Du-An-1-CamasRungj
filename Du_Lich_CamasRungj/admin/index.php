@@ -30,7 +30,6 @@ match ($act) {
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
-    'hdv-lich-lam-viec' => HDVController::lichLamViec($_GET['hdv_id'] ?? null),
     'hdv-danh-sach-khach' => HDVController::danhSachKhach($_GET['lich_id'] ?? null),
     'hdv-diem-danh' => HDVController::diemDanh($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-diem-danh-action' => HDVController::diemDanhAction($_GET['hanh_khach_id'] ?? null, $_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),

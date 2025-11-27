@@ -1,5 +1,4 @@
 <?php
-$tab = $_GET['tab'] ?? 'lich-lam-viec';
 $hdv_id = $_GET['hdv_id'] ?? 'all';
 ?>
 <div class="content-wrapper">
@@ -21,24 +20,8 @@ $hdv_id = $_GET['hdv_id'] ?? 'all';
 
     <div class="content">
         <div class="container-fluid">
-            <!-- Nav tabs -->
-            <div class="card card-primary card-outline card-tabs">
-                <div class="card-header p-0 pt-1 border-bottom-0">
-                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link <?= $tab == 'lich-lam-viec' ? 'active' : '' ?>" 
-                               href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tab=lich-lam-viec" ?>" 
-                               role="tab">
-                                <i class="fas fa-calendar-alt"></i> Lịch Làm Việc
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="card card-primary">
                 <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-three-tabContent">
-                        <!-- Tab Lịch Làm Việc -->
-                        <div class="tab-pane fade <?= $tab == 'lich-lam-viec' ? 'show active' : '' ?>" 
-                             id="custom-tabs-three-lich-lam-viec" role="tabpanel">
                             <?php 
                             $selectedTourId = $_GET['tour_id'] ?? null;
                             ?>
@@ -53,7 +36,7 @@ $hdv_id = $_GET['hdv_id'] ?? 'all';
                                         $isActive = $selectedTourId == $currentTourId;
                                         ?>
                                         <div class="col-md-4 mb-3">
-                                            <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tab=lich-lam-viec&tour_id=" . $currentTourId ?>" 
+                                            <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tour_id=" . $currentTourId ?>" 
                                                class="card card-info card-hover <?= $isActive ? 'border-primary' : '' ?>" 
                                                style="text-decoration: none; cursor: pointer;">
                                                 <div class="card-header">
@@ -91,7 +74,7 @@ $hdv_id = $_GET['hdv_id'] ?? 'all';
                                                         </h3>
                                                     </div>
                                                     <div class="col-md-6 text-right">
-                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id . "&tab=lich-lam-viec" ?>" 
+                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-quan-ly&hdv_id=" . $hdv_id ?>" 
                                                            class="btn btn-sm btn-secondary">
                                                             <i class="fas fa-arrow-left"></i> Quay lại
                                                         </a>
@@ -180,92 +163,13 @@ $hdv_id = $_GET['hdv_id'] ?? 'all';
                                     <i class="fas fa-info-circle"></i> Chưa có lịch làm việc nào
                                 </div>
                             <?php endif; ?>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-// Auto-sync tour_id when lich_id changes
-document.addEventListener('DOMContentLoaded', function() {
-    const tourSelect = document.getElementById('tour_id');
-    const lichSelect = document.getElementById('lich_id');
-    
-    if (lichSelect && tourSelect) {
-        lichSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const tourId = selectedOption.getAttribute('data-tour-id');
-            if (tourId) {
-                tourSelect.value = tourId;
-            }
-        });
-    }
-});
-</script>
-
 <style>
-.card-tabs .nav-tabs {
-    border-bottom: 2px solid #dee2e6;
-    background-color: #ffffff;
-    padding: 0;
-}
-
-.card-tabs .nav-tabs .nav-link {
-    border: none;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-    color: #6c757d;
-    font-weight: 500;
-    padding: 0.875rem 1.5rem;
-    margin-right: 0.25rem;
-    transition: all 0.2s ease;
-    background-color: transparent;
-    border-bottom: 3px solid transparent;
-}
-
-.card-tabs .nav-tabs .nav-link:hover {
-    color: #495057;
-    background-color: #f8f9fa;
-    border-bottom-color: #adb5bd;
-}
-
-.card-tabs .nav-tabs .nav-link.active {
-    color: #007bff;
-    background-color: #ffffff;
-    border-bottom: 3px solid #007bff;
-    font-weight: 600;
-    position: relative;
-}
-
-.card-tabs .nav-tabs .nav-link.active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
-}
-
-.card-tabs .nav-tabs .nav-link i {
-    margin-right: 8px;
-    font-size: 1.05rem;
-    opacity: 0.8;
-}
-
-.card-tabs .nav-tabs .nav-link.active i {
-    opacity: 1;
-    color: #007bff;
-}
-
-.text-danger {
-    color: #dc3545;
-}
-
 .card-hover {
     transition: all 0.3s ease;
 }
@@ -279,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
     border-width: 2px !important;
 }
 
-/* Sửa nút không bị xuống dòng */
 .table td .btn {
     white-space: nowrap !important;
     display: inline-flex;
@@ -307,5 +210,3 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 100%;
 }
 </style>
-
-

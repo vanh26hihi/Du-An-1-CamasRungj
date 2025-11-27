@@ -68,7 +68,6 @@ class HDVController {
     }
 
     public static function quanLyHDV($hdv_id) {
-        $tab = $_GET['tab'] ?? 'lich-lam-viec';
         $lich_id = $_GET['lich_id'] ?? null;
         $search_hdv = $_GET['search_hdv'] ?? null;
         
