@@ -4,15 +4,6 @@ require_once './models/DiemDanhModel.php';
 
 class HDVController {
 
-    public static function lichLamViec($hdv_id) {
-        $data = HDVModel::getToursByHDV($hdv_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/lichlamviec.php';
-        include './views/layout/footer.php';
-    }
-
     public static function danhSachKhach($lich_id) {
         $data = HDVModel::getPassengersByLich($lich_id);
         include './views/layout/header.php';
