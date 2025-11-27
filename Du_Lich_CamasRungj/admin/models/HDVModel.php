@@ -8,7 +8,7 @@ class HDVModel
     public static function getToursByHDV($hdv_id)
     {
         $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten AS ten_tour, 
-                       l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai,
+                       l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
                        p.hdv_id, hdv.ho_ten AS hdv_ten
                 FROM phan_cong_hdv p
                 JOIN lich_khoi_hanh l ON p.lich_id = l.lich_id
