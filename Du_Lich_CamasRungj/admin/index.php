@@ -29,6 +29,8 @@ match ($act) {
     'xoa-booking' => (new AdminBookingController())->deleteBooking(),
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
+    'hdv-form-them' => HDVController::formAddHDV(),
+    'hdv-them' => HDVController::postAddHDV(),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
     'hdv-danh-sach-khach' => HDVController::danhSachKhach($_GET['lich_id'] ?? null),
     'hdv-diem-danh' => HDVController::diemDanh($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),

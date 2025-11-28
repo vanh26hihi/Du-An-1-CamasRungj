@@ -84,4 +84,36 @@ class HDVController {
         include './views/layout/footer.php';
     }
 
+    // Hiển thị form thêm HDV
+    public static function formAddHDV() {
+        include './views/layout/header.php';
+        include './views/layout/navbar.php';
+        include './views/layout/sidebar.php';
+        include './views/hdv/form-them-hdv.php';
+        include './views/layout/footer.php';
+    }
+
+    // Xử lý thêm HDV
+    public static function postAddHDV() {
+        $ho_ten = $_POST['ho_ten'] ?? '';
+        $so_dien_thoai = $_POST['so_dien_thoai'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $kinh_nghiem = $_POST['kinh_nghiem'] ?? '';
+        $ngon_ngu = $_POST['ngon_ngu'] ?? '';
+        
+        // Kiểm tra họ tên
+        if ($ho_ten == '') {
+            $_SESSION['error'] = "Họ tên không được để trống";
+            header("Location: ?act=hdv-form-them");
+            exit;
+        }
+        
+        // Thêm HDV
+        HDVModel::insertHDV($ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu);
+        
+        $_SESSION['success'] = "Thêm hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=all");
+        exit;
+    }
+
 }

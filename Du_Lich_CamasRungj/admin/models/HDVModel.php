@@ -185,4 +185,12 @@ class HDVModel {
         return db_query($sql, [$hdv_id])->fetchAll();
     }
 
+    // Thêm hướng dẫn viên mới
+    public static function insertHDV($ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu) {
+        $ngay_tao = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO huong_dan_vien (ho_ten, so_dien_thoai, email, kinh_nghiem, ngon_ngu, ngay_tao)
+                VALUES (?, ?, ?, ?, ?, ?)";
+        return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $ngay_tao]);
+    }
+
 }
