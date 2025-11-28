@@ -9,11 +9,11 @@ class HDVModel
     {
         $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten AS ten_tour, 
                        l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
-                       p.hdv_id, hdv.ho_ten AS hdv_ten
+                       p.hdv_id, hdv.ho_ten hdv_ten
                 FROM phan_cong_hdv p
                 JOIN lich_khoi_hanh l ON p.lich_id = l.lich_id
                 JOIN tour t ON l.tour_id = t.tour_id
-                LEFT JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id
+                JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id
                 WHERE p.hdv_id = ?
                 ORDER BY t.ten, l.ngay_bat_dau";
         return db_query($sql, [$hdv_id])->fetchAll();
@@ -34,21 +34,21 @@ class HDVModel
     public static function getToursByHDVGrouped($hdv_id = null, $search_hdv_name = null)
     {
         // Lấy tất cả tour trong DB
-        $sqlAllTours = "SELECT t.tour_id, t.ten AS ten_tour
+        $sqlAllTours = "SELECT t.tour_id, t.ten ten_tour
                         FROM tour t
                         ORDER BY t.ten";
         $allTours = db_query($sqlAllTours)->fetchAll();
 
         // Lấy TẤT CẢ lịch khởi hành của tất cả tour (không chỉ lịch được phân công)
         $sqlAllSchedules = "SELECT l.lich_id, l.tour_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
-                                   t.ten AS ten_tour
+                                   t.ten ten_tour
                             FROM lich_khoi_hanh l
                             JOIN tour t ON l.tour_id = t.tour_id
                             ORDER BY t.ten, l.ngay_bat_dau";
         $allSchedules = db_query($sqlAllSchedules)->fetchAll();
 
         // Lấy thông tin phân công HDV cho các lịch (để hiển thị HDV được phân công)
-        $sqlPhanCong = "SELECT p.lich_id, p.hdv_id, hdv.ho_ten AS hdv_ten, p.vai_tro
+        $sqlPhanCong = "SELECT p.lich_id, p.hdv_id, hdv.ho_ten hdv_ten, p.vai_tro
                         FROM phan_cong_hdv p
                         LEFT JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id";
 
