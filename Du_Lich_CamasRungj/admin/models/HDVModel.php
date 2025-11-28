@@ -5,52 +5,52 @@ class HDVModel {
 
     // Lấy danh sách tour HDV được phân công
     public static function getToursByHDV($hdv_id) {
-        $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten ten_tour, 
-                       l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
-                       p.hdv_id, hdv.ho_ten hdv_ten
-                FROM phan_cong_hdv p
-                JOIN lich_khoi_hanh l ON p.lich_id = l.lich_id
-                JOIN tour t ON l.tour_id = t.tour_id
-                JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id
-                WHERE p.hdv_id = ?
-                ORDER BY t.ten, l.ngay_bat_dau";
+        $sql = "SELECT phan_cong_hdv.phan_cong_id, tour.tour_id, tour.ten ten_tour, 
+                       lich_khoi_hanh.lich_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, lich_khoi_hanh.trang_thai_id,
+                       phan_cong_hdv.hdv_id, huong_dan_vien.ho_ten hdv_ten
+                FROM phan_cong_hdv
+                JOIN lich_khoi_hanh ON phan_cong_hdv.lich_id = lich_khoi_hanh.lich_id
+                JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                JOIN huong_dan_vien ON phan_cong_hdv.hdv_id = huong_dan_vien.hdv_id
+                WHERE phan_cong_hdv.hdv_id = ?
+                ORDER BY tour.ten, lich_khoi_hanh.ngay_bat_dau";
         return db_query($sql, [$hdv_id])->fetchAll();
     }
     
     // Lấy danh sách HDV được phân công cho một lịch cụ thể
     public static function getHDVByLich($lich_id) {
-        $sql = "SELECT p.hdv_id, hdv.ho_ten, hdv.so_dien_thoai, hdv.email, p.vai_tro
-                FROM phan_cong_hdv p
-                JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id
-                WHERE p.lich_id = ?
-                ORDER BY p.vai_tro DESC, hdv.ho_ten";
+        $sql = "SELECT phan_cong_hdv.hdv_id, huong_dan_vien.ho_ten, huong_dan_vien.so_dien_thoai, huong_dan_vien.email, phan_cong_hdv.vai_tro
+                FROM phan_cong_hdv
+                JOIN huong_dan_vien ON phan_cong_hdv.hdv_id = huong_dan_vien.hdv_id
+                WHERE phan_cong_hdv.lich_id = ?
+                ORDER BY phan_cong_hdv.vai_tro DESC, huong_dan_vien.ho_ten";
         return db_query($sql, [$lich_id])->fetchAll();
     }
 
     // Lấy tất cả tour trong DB và nhóm theo tên, hiển thị TẤT CẢ lịch của mỗi tour
     public static function getToursByHDVGrouped($hdv_id = null, $search_hdv_name = null) {
         // Lấy tất cả tour trong DB
-        $sqlAllTours = "SELECT t.tour_id, t.ten ten_tour
-                        FROM tour t
-                        ORDER BY t.ten";
+        $sqlAllTours = "SELECT tour.tour_id, tour.ten ten_tour
+                        FROM tour
+                        ORDER BY tour.ten";
         $allTours = db_query($sqlAllTours)->fetchAll();
         
         // Lấy TẤT CẢ lịch khởi hành của tất cả tour (không chỉ lịch được phân công)
-        $sqlAllSchedules = "SELECT l.lich_id, l.tour_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
-                                   t.ten ten_tour
-                            FROM lich_khoi_hanh l
-                            JOIN tour t ON l.tour_id = t.tour_id
-                            ORDER BY t.ten, l.ngay_bat_dau";
+        $sqlAllSchedules = "SELECT lich_khoi_hanh.lich_id, lich_khoi_hanh.tour_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, lich_khoi_hanh.trang_thai_id,
+                                   tour.ten ten_tour
+                            FROM lich_khoi_hanh
+                            JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                            ORDER BY tour.ten, lich_khoi_hanh.ngay_bat_dau";
         $allSchedules = db_query($sqlAllSchedules)->fetchAll();
         
         // Lấy thông tin phân công HDV cho các lịch (để hiển thị HDV được phân công)
-        $sqlPhanCong = "SELECT p.lich_id, p.hdv_id, hdv.ho_ten hdv_ten, p.vai_tro
-                        FROM phan_cong_hdv p
-                        JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id";
+        $sqlPhanCong = "SELECT phan_cong_hdv.lich_id, phan_cong_hdv.hdv_id, huong_dan_vien.ho_ten hdv_ten, phan_cong_hdv.vai_tro
+                        FROM phan_cong_hdv
+                        JOIN huong_dan_vien ON phan_cong_hdv.hdv_id = huong_dan_vien.hdv_id";
         
         $paramsPhanCong = [];
         if (!empty($search_hdv_name)) {
-            $sqlPhanCong .= " WHERE hdv.ho_ten LIKE ?";
+            $sqlPhanCong .= " WHERE huong_dan_vien.ho_ten LIKE ?";
             $paramsPhanCong[] = '%' . $search_hdv_name . '%';
         }
         
@@ -127,16 +127,16 @@ class HDVModel {
     public static function getPassengersByLich($lich_id) {
         if (empty($lich_id)) {
             // Nếu không truyền lich_id, trả về toàn bộ hành khách
-            $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
-                FROM hanh_khach_list hk
-                ORDER BY hk.ho_ten";
+            $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+                FROM hanh_khach_list
+                ORDER BY hanh_khach_list.ho_ten";
             return db_query($sql)->fetchAll();
         }
 
-        $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
-            FROM dat_tour dt
-            JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
-            WHERE dt.lich_id = ?";
+        $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+            FROM dat_tour
+            JOIN hanh_khach_list ON hanh_khach_list.dat_tour_id = dat_tour.dat_tour_id
+            WHERE dat_tour.lich_id = ?";
         return db_query($sql, [$lich_id])->fetchAll();
     }
 
@@ -191,6 +191,20 @@ class HDVModel {
         $sql = "INSERT INTO huong_dan_vien (ho_ten, so_dien_thoai, email, kinh_nghiem, ngon_ngu, ngay_tao)
                 VALUES (?, ?, ?, ?, ?, ?)";
         return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $ngay_tao]);
+    }
+
+    // Sửa hướng dẫn viên
+    public static function updateHDV($hdv_id, $ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu) {
+        $sql = "UPDATE huong_dan_vien 
+                SET ho_ten = ?, so_dien_thoai = ?, email = ?, kinh_nghiem = ?, ngon_ngu = ?
+                WHERE hdv_id = ?";
+        return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $hdv_id]);
+    }
+
+    // Xóa hướng dẫn viên
+    public static function deleteHDV($hdv_id) {
+        $sql = "DELETE FROM huong_dan_vien WHERE hdv_id = ?";
+        return db_query($sql, [$hdv_id]);
     }
 
 }

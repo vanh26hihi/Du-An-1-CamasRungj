@@ -24,6 +24,18 @@ class NhatKyTourModel {
                 ORDER BY nk.ngay_thuc_hien DESC";
         return db_query($sql, [$hdv_id])->fetchAll();
     }
+
+    // Lấy nhật ký tour theo lich_id
+    public static function getByLich($lich_id) {
+        $sql = "SELECT nhat_ky_tour.nhat_ky_tour_id, nhat_ky_tour.ngay_thuc_hien, nhat_ky_tour.noi_dung, nhat_ky_tour.anh_tour,
+                       dia_diem.ten dia_diem, tour.ten tour
+                FROM nhat_ky_tour
+                JOIN dia_diem ON dia_diem.dia_diem_id = nhat_ky_tour.dia_diem_id
+                JOIN tour ON tour.tour_id = nhat_ky_tour.tour_id
+                WHERE nhat_ky_tour.lich_id = ?
+                ORDER BY nhat_ky_tour.ngay_thuc_hien DESC";
+        return db_query($sql, [$lich_id])->fetchAll();
+    }
     
     // Lấy tất cả nhật ký tour (của tất cả HDV)
     public static function getAll() {
@@ -66,9 +78,20 @@ class NhatKyTourModel {
 
         // Xóa file ảnh trên đĩa nếu tồn tại và có đường dẫn
         if (!empty($row['anh_tour'])) {
-            // trong DB lưu dạng '../img/nhatky/filename'
-            $relative = str_replace('../', '', $row['anh_tour']);
-            $filePath = PATH_ROOT . $relative;
+            $anh_path = $row['anh_tour'];
+            // Bỏ ../ nếu có
+            if (strpos($anh_path, '../') === 0) {
+                $anh_path = str_replace('../', '', $anh_path);
+            }
+            // Nếu không có assets/ thì thêm vào
+            if (strpos($anh_path, 'assets/') !== 0) {
+                if (strpos($anh_path, 'img/nhatky/') === 0) {
+                    $anh_path = 'assets/' . $anh_path;
+                } else {
+                    $anh_path = 'assets/img/nhatky/' . basename($anh_path);
+                }
+            }
+            $filePath = PATH_ROOT . $anh_path;
             if (file_exists($filePath)) {
                 @unlink($filePath);
             }
