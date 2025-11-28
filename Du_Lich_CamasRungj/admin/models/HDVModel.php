@@ -48,17 +48,13 @@ class HDVModel {
                         FROM phan_cong_hdv
                         JOIN huong_dan_vien ON phan_cong_hdv.hdv_id = huong_dan_vien.hdv_id";
         
-        $paramsPhanCong = [];
         if (!empty($search_hdv_name)) {
             $sqlPhanCong .= " WHERE huong_dan_vien.ho_ten LIKE ?";
-            $paramsPhanCong[] = '%' . $search_hdv_name . '%';
+            $phanCongData = db_query($sqlPhanCong, ['%' . $search_hdv_name . '%'])->fetchAll();
+        } else {
+            $phanCongData = db_query($sqlPhanCong)->fetchAll();
         }
         
-        $phanCongData = !empty($paramsPhanCong) 
-            ? db_query($sqlPhanCong, $paramsPhanCong)->fetchAll() 
-            : db_query($sqlPhanCong)->fetchAll();
-        
-        // Tạo map phân công theo lich_id
         $phanCongByLich = [];
         foreach ($phanCongData as $pc) {
             $lichId = $pc['lich_id'];
@@ -68,56 +64,28 @@ class HDVModel {
             $phanCongByLich[$lichId][] = $pc;
         }
         
-        // Nhóm lịch theo tour_id - LUÔN lấy TẤT CẢ lịch (không lọc theo HDV)
         $schedulesByTour = [];
         foreach ($allSchedules as $schedule) {
             $tourId = $schedule['tour_id'];
             if (!isset($schedulesByTour[$tourId])) {
                 $schedulesByTour[$tourId] = [];
             }
-            
-            // Thêm thông tin HDV được phân công cho lịch này (nếu có)
-            $lichId = $schedule['lich_id'];
-            $schedule['hdv_list'] = $phanCongByLich[$lichId] ?? [];
-            
-            // LUÔN thêm lịch vào danh sách (không lọc theo HDV)
+            $schedule['hdv_list'] = $phanCongByLich[$schedule['lich_id']] ?? [];
             $schedulesByTour[$tourId][] = $schedule;
         }
         
-        // Nhóm tất cả tour theo tour_id (hiển thị tất cả tour, kể cả không có lịch)
         $grouped = [];
         foreach ($allTours as $tour) {
-            $ten_tour = $tour['ten_tour'];
             $tourId = $tour['tour_id'];
-            
-            // Sử dụng tour_id làm key để đảm bảo mỗi tour được hiển thị riêng
-            $tourKey = $tourId;
-            
-            if (!isset($grouped[$tourKey])) {
-                $grouped[$tourKey] = [
-                    'tour_id' => $tourId,
-                    'ten_tour' => $ten_tour,
-                    'schedules' => []
-                ];
-            }
-            
-            // Thêm tất cả lịch của tour này
-            if (isset($schedulesByTour[$tourId]) && !empty($schedulesByTour[$tourId])) {
-                foreach ($schedulesByTour[$tourId] as $schedule) {
-                    $grouped[$tourKey]['schedules'][] = $schedule;
-                }
-            }
-            // Nếu tour không có lịch, vẫn giữ trong danh sách (mảng schedules rỗng)
+            $grouped[$tourId] = [
+                'tour_id' => $tourId,
+                'ten_tour' => $tour['ten_tour'],
+                'schedules' => $schedulesByTour[$tourId] ?? []
+            ];
         }
         
-        // Sắp xếp theo số lượng lịch giảm dần (tour có nhiều lịch nhất lên đầu)
         uasort($grouped, function($a, $b) {
-            $countA = count($a['schedules']);
-            $countB = count($b['schedules']);
-            if ($countA == $countB) {
-                return 0;
-            }
-            return ($countA > $countB) ? -1 : 1;
+            return count($b['schedules']) - count($a['schedules']);
         });
         
         return $grouped;

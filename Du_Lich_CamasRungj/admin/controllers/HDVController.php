@@ -164,7 +164,6 @@ class HDVController {
 
     // Xóa hướng dẫn viên
     public static function deleteHDV($hdv_id) {
-        // Kiểm tra HDV có tồn tại không
         $hdvInfo = HDVModel::getHDVById($hdv_id);
         if (!$hdvInfo) {
             $_SESSION['error'] = "Không tìm thấy hướng dẫn viên";
@@ -172,9 +171,7 @@ class HDVController {
             exit;
         }
         
-        // Xóa HDV
         HDVModel::deleteHDV($hdv_id);
-        
         $_SESSION['success'] = "Xóa hướng dẫn viên thành công";
         header("Location: ?act=hdv-quan-ly&hdv_id=all");
         exit;
@@ -187,7 +184,6 @@ class HDVController {
         
         $tab = $_GET['tab'] ?? 'khach-hang';
         
-        // Lấy thông tin lịch
         $sql = "SELECT lich_khoi_hanh.lich_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, tour.tour_id, tour.ten ten_tour
                 FROM lich_khoi_hanh
                 JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
@@ -199,13 +195,8 @@ class HDVController {
             exit;
         }
         
-        // Tab 1: Danh sách khách hàng
         $danhSachKhach = HDVModel::getPassengersByLich($lich_id);
-        
-        // Tab 2: Điểm danh
         $diemDanh = DiemDanhModel::getCustomersForAttendance($lich_id);
-        
-        // Tab 3: Nhật ký tour
         $nhatKy = NhatKyTourModel::getByLich($lich_id);
         
         include './views/layout/header.php';

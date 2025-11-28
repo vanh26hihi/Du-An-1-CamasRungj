@@ -178,21 +178,15 @@
                                                     <div class="card">
                                                         <?php if (!empty($nk['anh_tour'])): ?>
                                                             <?php 
-                                                            $anh_path = $nk['anh_tour'];
-                                                            // Bỏ ../ nếu có
-                                                            if (strpos($anh_path, '../') === 0) {
-                                                                $anh_path = str_replace('../', '', $anh_path);
+                                                            $anh = $nk['anh_tour'];
+                                                            if (strpos($anh, '../') === 0) {
+                                                                $anh = str_replace('../', '', $anh);
                                                             }
-                                                            // Nếu không có assets/ thì thêm vào
-                                                            if (strpos($anh_path, 'assets/') !== 0) {
-                                                                if (strpos($anh_path, 'img/nhatky/') === 0) {
-                                                                    $anh_path = 'assets/' . $anh_path;
-                                                                } else {
-                                                                    $anh_path = 'assets/img/nhatky/' . basename($anh_path);
-                                                                }
+                                                            if (strpos($anh, 'assets/') !== 0) {
+                                                                $anh = 'assets/img/nhatky/' . basename($anh);
                                                             }
                                                             ?>
-                                                            <img src="<?= BASE_URL . htmlspecialchars($anh_path) ?>" class="card-img-top" alt="Ảnh tour" style="max-height: 200px; object-fit: cover;">
+                                                            <img src="<?= BASE_URL . htmlspecialchars($anh) ?>" class="card-img-top" alt="Ảnh tour" style="max-height: 200px; object-fit: cover;">
                                                         <?php endif; ?>
                                                         <div class="card-body">
                                                             <h5 class="card-title"><?= htmlspecialchars($nk['dia_diem']) ?></h5>

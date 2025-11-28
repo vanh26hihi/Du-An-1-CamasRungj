@@ -78,20 +78,14 @@ class NhatKyTourModel {
 
         // Xóa file ảnh trên đĩa nếu tồn tại và có đường dẫn
         if (!empty($row['anh_tour'])) {
-            $anh_path = $row['anh_tour'];
-            // Bỏ ../ nếu có
-            if (strpos($anh_path, '../') === 0) {
-                $anh_path = str_replace('../', '', $anh_path);
+            $anh = $row['anh_tour'];
+            if (strpos($anh, '../') === 0) {
+                $anh = str_replace('../', '', $anh);
             }
-            // Nếu không có assets/ thì thêm vào
-            if (strpos($anh_path, 'assets/') !== 0) {
-                if (strpos($anh_path, 'img/nhatky/') === 0) {
-                    $anh_path = 'assets/' . $anh_path;
-                } else {
-                    $anh_path = 'assets/img/nhatky/' . basename($anh_path);
-                }
+            if (strpos($anh, 'assets/') !== 0) {
+                $anh = 'assets/img/nhatky/' . basename($anh);
             }
-            $filePath = PATH_ROOT . $anh_path;
+            $filePath = PATH_ROOT . $anh;
             if (file_exists($filePath)) {
                 @unlink($filePath);
             }
