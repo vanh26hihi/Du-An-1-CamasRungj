@@ -4,6 +4,7 @@
     // Khai báo dưới dạng HẰNG SỐ để không phải dùng $GLOBALS
 
     define('BASE_URL_ADMIN', 'http://localhost/CamasRungj/Du-An-1-CamasRungj/Du_Lich_CamasRungj/admin/');
+    define('BASE_URL', 'http://localhost/CamasRungj/Du-An-1-CamasRungj/Du_Lich_CamasRungj/');
 
     define('DB_HOST', 'localhost');
     define('DB_PORT', 3306);

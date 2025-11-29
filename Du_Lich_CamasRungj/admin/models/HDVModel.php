@@ -5,7 +5,8 @@ require_once '../commons/env.php';
 class HDVModel
 {
     // Lấy danh sách lịch khởi hành mà HDV được phân công
-    public static function getLichLamViecByHDV($hdv_id) {
+    public static function getLichLamViecByHDV($hdv_id)
+    {
         $sql = "SELECT lkh.*, t.ten AS ten_tour, pch.vai_tro
             FROM phan_cong_hdv pch
             JOIN lich_khoi_hanh lkh ON pch.lich_id = lkh.lich_id
@@ -18,7 +19,7 @@ class HDVModel
     // Lấy danh sách tour HDV được phân công
     public static function getToursByHDV($hdv_id)
     {
-        $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten AS ten_tour, 
+        $sql = "SELECT p.phan_cong_id, t.tour_id, t.ten ten_tour, 
                        l.lich_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
                        p.hdv_id, hdv.ho_ten hdv_ten
                 FROM phan_cong_hdv p
@@ -45,23 +46,23 @@ class HDVModel
     public static function getToursByHDVGrouped($hdv_id = null, $search_hdv_name = null)
     {
         // Lấy tất cả tour trong DB
-        $sqlAllTours = "SELECT t.tour_id, t.ten ten_tour
-                        FROM tour t
-                        ORDER BY t.ten";
+        $sqlAllTours = "SELECT tour.tour_id, tour.ten ten_tour
+                        FROM tour
+                        ORDER BY tour.ten";
         $allTours = db_query($sqlAllTours)->fetchAll();
 
         // Lấy TẤT CẢ lịch khởi hành của tất cả tour (không chỉ lịch được phân công)
-        $sqlAllSchedules = "SELECT l.lich_id, l.tour_id, l.ngay_bat_dau, l.ngay_ket_thuc, l.trang_thai_id,
-                                   t.ten ten_tour
-                            FROM lich_khoi_hanh l
-                            JOIN tour t ON l.tour_id = t.tour_id
-                            ORDER BY t.ten, l.ngay_bat_dau";
+        $sqlAllSchedules = "SELECT lich_khoi_hanh.lich_id, lich_khoi_hanh.tour_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, lich_khoi_hanh.trang_thai_id,
+                                   tour.ten ten_tour
+                            FROM lich_khoi_hanh
+                            JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                            ORDER BY tour.ten, lich_khoi_hanh.ngay_bat_dau";
         $allSchedules = db_query($sqlAllSchedules)->fetchAll();
 
         // Lấy thông tin phân công HDV cho các lịch (để hiển thị HDV được phân công)
         $sqlPhanCong = "SELECT p.lich_id, p.hdv_id, hdv.ho_ten hdv_ten, p.vai_tro
                         FROM phan_cong_hdv p
-                        LEFT JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id";
+                        JOIN huong_dan_vien hdv ON p.hdv_id = hdv.hdv_id";
 
         $paramsPhanCong = [];
         if (!empty($search_hdv_name)) {
@@ -102,7 +103,6 @@ class HDVModel
         // Nhóm tất cả tour theo tour_id (hiển thị tất cả tour, kể cả không có lịch)
         $grouped = [];
         foreach ($allTours as $tour) {
-            $ten_tour = $tour['ten_tour'];
             $tourId = $tour['tour_id'];
 
             // Sử dụng tour_id làm key để đảm bảo mỗi tour được hiển thị riêng
@@ -143,16 +143,16 @@ class HDVModel
     {
         if (empty($lich_id)) {
             // Nếu không truyền lich_id, trả về toàn bộ hành khách
-            $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
-                FROM hanh_khach_list hk
-                ORDER BY hk.ho_ten";
+            $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+                FROM hanh_khach_list
+                ORDER BY hanh_khach_list.ho_ten";
             return db_query($sql)->fetchAll();
         }
 
-        $sql = "SELECT hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu
-            FROM dat_tour dt
-            JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
-            WHERE dt.lich_id = ?";
+        $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+            FROM dat_tour
+            JOIN hanh_khach_list ON hanh_khach_list.dat_tour_id = dat_tour.dat_tour_id
+            WHERE dat_tour.lich_id = ?";
         return db_query($sql, [$lich_id])->fetchAll();
     }
 
@@ -218,5 +218,14 @@ class HDVModel
                 FROM huong_dan_vien 
                 ORDER BY ho_ten";
         return db_query($sql)->fetchAll();
+    }
+
+    // Thêm hướng dẫn viên mới
+    public static function insertHDV($ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu)
+    {
+        $ngay_tao = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO huong_dan_vien (ho_ten, so_dien_thoai, email, kinh_nghiem, ngon_ngu, ngay_tao)
+                VALUES (?, ?, ?, ?, ?, ?)";
+        return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $ngay_tao]);
     }
 }

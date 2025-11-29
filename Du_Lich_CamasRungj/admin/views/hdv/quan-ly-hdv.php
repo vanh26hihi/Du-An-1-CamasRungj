@@ -102,6 +102,16 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="card-title">Thông Tin Cá Nhân</h3>
+                                            <div class="card-tools">
+                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-sua&hdv_id=" . $hdv_id ?>" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i> Sửa
+                                                </a>
+                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa&hdv_id=" . $hdv_id ?>" 
+                                                   class="btn btn-sm btn-danger"
+                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa hướng dẫn viên <?= htmlspecialchars($hdvInfo['ho_ten']) ?>?');">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </a>
+                                            </div>
                                         </div>
                                         <div class="card-body">
                                             <table class="table table-bordered">
@@ -167,9 +177,19 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                                                                         </span>
                                                                     </td>
                                                                     <td class="text-center">
-                                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-diem-danh&lich_id=" . $lich['lich_id'] . "&hdv_id=" . $hdv_id ?>" 
-                                                                           class="btn btn-sm btn-primary">
-                                                                            <i class="fas fa-users"></i> Hành Khách & Điểm Danh
+                                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-chi-tiet-lich&lich_id=" . $lich['lich_id'] . "&hdv_id=" . $hdv_id . "&tab=khach-hang" ?>" 
+                                                                           class="btn btn-sm btn-info mb-1" title="Thông Tin Khách Hàng">
+                                                                            <i class="fas fa-users"></i> Khách Hàng
+                                                                        </a>
+                                                                        <br>
+                                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-chi-tiet-lich&lich_id=" . $lich['lich_id'] . "&hdv_id=" . $hdv_id . "&tab=diem-danh" ?>" 
+                                                                           class="btn btn-sm btn-success mb-1" title="Điểm Danh">
+                                                                            <i class="fas fa-check-circle"></i> Điểm Danh
+                                                                        </a>
+                                                                        <br>
+                                                                        <a href="<?= BASE_URL_ADMIN . "?act=hdv-chi-tiet-lich&lich_id=" . $lich['lich_id'] . "&hdv_id=" . $hdv_id . "&tab=nhat-ky" ?>" 
+                                                                           class="btn btn-sm btn-warning" title="Nhật Ký Tour">
+                                                                            <i class="fas fa-book"></i> Nhật Ký
                                                                         </a>
                                                                     </td>
                                                                 </tr>

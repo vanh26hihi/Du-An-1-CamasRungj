@@ -55,7 +55,15 @@ class HDVController {
     public static function diemDanhAction($hanh_khach_id, $lich_id, $hdv_id) {
         // Toggle trạng thái điểm danh
         DiemDanhModel::toggleAttendance($hanh_khach_id, $lich_id, $hdv_id);
-        header('Location: ?act=hdv-diem-danh&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id);
+        
+        // Kiểm tra redirect
+        $redirect = $_GET['redirect'] ?? '';
+        if ($redirect == 'chi-tiet-lich') {
+            $tab = $_GET['tab'] ?? 'diem-danh';
+            header('Location: ?act=hdv-chi-tiet-lich&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id . '&tab=' . $tab);
+        } else {
+            header('Location: ?act=hdv-diem-danh&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id);
+        }
     }
 
     public static function quanLyHDV($hdv_id) {
@@ -114,6 +122,88 @@ class HDVController {
         $_SESSION['success'] = "Thêm hướng dẫn viên thành công";
         header("Location: ?act=hdv-quan-ly&hdv_id=all");
         exit;
+    }
+
+    // Hiển thị form sửa HDV
+    public static function formEditHDV($hdv_id) {
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        if (!$hdvInfo) {
+            header("Location: ?act=hdv-quan-ly&hdv_id=all");
+            exit;
+        }
+        include './views/layout/header.php';
+        include './views/layout/navbar.php';
+        include './views/layout/sidebar.php';
+        include './views/hdv/form-sua-hdv.php';
+        include './views/layout/footer.php';
+    }
+
+    // Xử lý sửa HDV
+    public static function postEditHDV($hdv_id) {
+        $ho_ten = $_POST['ho_ten'] ?? '';
+        $so_dien_thoai = $_POST['so_dien_thoai'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $kinh_nghiem = $_POST['kinh_nghiem'] ?? '';
+        $ngon_ngu = $_POST['ngon_ngu'] ?? '';
+        
+        // Kiểm tra họ tên
+        if ($ho_ten == '') {
+            $_SESSION['error'] = "Họ tên không được để trống";
+            $_SESSION['old'] = $_POST;
+            header("Location: ?act=hdv-form-sua&hdv_id=" . $hdv_id);
+            exit;
+        }
+        
+        // Sửa HDV
+        HDVModel::updateHDV($hdv_id, $ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu);
+        
+        $_SESSION['success'] = "Sửa hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=" . $hdv_id);
+        exit;
+    }
+
+    // Xóa hướng dẫn viên
+    public static function deleteHDV($hdv_id) {
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = "Không tìm thấy hướng dẫn viên";
+            header("Location: ?act=hdv-quan-ly&hdv_id=all");
+            exit;
+        }
+        
+        HDVModel::deleteHDV($hdv_id);
+        $_SESSION['success'] = "Xóa hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=all");
+        exit;
+    }
+
+    // Chi tiết lịch làm việc (3 tab: Khách hàng, Điểm danh, Nhật ký)
+    public static function chiTietLich($lich_id, $hdv_id) {
+        require_once './models/NhatKyTourModel.php';
+        require_once '../commons/env.php';
+        
+        $tab = $_GET['tab'] ?? 'khach-hang';
+        
+        $sql = "SELECT lich_khoi_hanh.lich_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, tour.tour_id, tour.ten ten_tour
+                FROM lich_khoi_hanh
+                JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                WHERE lich_khoi_hanh.lich_id = ?";
+        $lichInfo = db_query($sql, [$lich_id])->fetch();
+        
+        if (!$lichInfo) {
+            header("Location: ?act=hdv-quan-ly&hdv_id=" . $hdv_id);
+            exit;
+        }
+        
+        $danhSachKhach = HDVModel::getPassengersByLich($lich_id);
+        $diemDanh = DiemDanhModel::getCustomersForAttendance($lich_id);
+        $nhatKy = NhatKyTourModel::getByLich($lich_id);
+        
+        include './views/layout/header.php';
+        include './views/layout/navbar.php';
+        include './views/layout/sidebar.php';
+        include './views/hdv/chi-tiet-lich.php';
+        include './views/layout/footer.php';
     }
 
 }
