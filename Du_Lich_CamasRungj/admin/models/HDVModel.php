@@ -1,8 +1,19 @@
+
 <?php
 require_once '../commons/env.php';
 
 class HDVModel
 {
+    // Lấy danh sách lịch khởi hành mà HDV được phân công
+    public static function getLichLamViecByHDV($hdv_id) {
+        $sql = "SELECT lkh.*, t.ten AS ten_tour, pch.vai_tro
+            FROM phan_cong_hdv pch
+            JOIN lich_khoi_hanh lkh ON pch.lich_id = lkh.lich_id
+            JOIN tour t ON lkh.tour_id = t.tour_id
+            WHERE pch.hdv_id = ?
+            ORDER BY lkh.ngay_bat_dau DESC";
+        return db_query($sql, [$hdv_id])->fetchAll();
+    }
 
     // Lấy danh sách tour HDV được phân công
     public static function getToursByHDV($hdv_id)
