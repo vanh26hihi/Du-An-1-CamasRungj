@@ -135,8 +135,8 @@ class AdminTaiKhoanCaNhanController
                 exit();
             }
 
-            // Kiểm tra mật khẩu cũ
-            $verify_result = password_verify($old_pass, $user['mat_khau']);
+            // Kiểm tra mật khẩu cũ (hỗ trợ cả mật khẩu đã hash và chưa hash)
+            $verify_result = password_verify($old_pass, $user['mat_khau']) || $old_pass === $user['mat_khau'];
             
             if (!$verify_result) {
                 $_SESSION['error_pass'] = "Mật khẩu cũ không chính xác";

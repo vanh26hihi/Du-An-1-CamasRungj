@@ -1,6 +1,6 @@
 # Copilot Instructions for Du-An-1-CamasRungj
 
-PHP travel booking system using **procedural MVC** with Laragon + MySQL. All operations use raw PDO queries returning arrays (no ORM).
+PHP travel booking system using **procedural MVC** with Laragon + MySQL. All operations use raw PDO queries returning arrays (no ORM). No class inheritance - models are plain PHP classes with PDO connections.
 
 ## Architecture Overview
 
@@ -14,6 +14,7 @@ Du_Lich_CamasRungj/
 │   ├── models/              # PDO query methods (AdminBooking, HDVModel, etc.)
 │   ├── views/{feature}/     # PHP templates (booking/, hdv/, tour/, taikhoan/, etc.)
 │   └── assets/              # AdminLTE, DataTables, Select2, custom CSS
+│       └── tour_du_lich.sql # Database schema (import this for setup)
 ├── commons/
 │   ├── env.php              # DB constants, BASE_URL_ADMIN, PATH_ROOT
 │   └── function.php         # connectDB(), formatDate(), uploadFile(), session helpers
@@ -22,53 +23,89 @@ Du_Lich_CamasRungj/
 
 ### Router Pattern (`admin/index.php`)
 
-Single entry point with **match() statement**:
+**Single entry point** using PHP 8 match() statement with query parameter routing:
 
 ```php
+$act = $_GET['act'] ?? '/';
+
+// Authentication check (all routes except public)
+$publicRoutes = ['login-admin', 'check-login-admin'];
+if (!in_array($act, $publicRoutes) && empty($_SESSION['user_admin'])) {
+    header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
+    exit();
+}
+
 match ($act) {
+    '/' => (new AdminBaoCaoThongKeController())->home(),
     'booking' => (new AdminBookingController())->danhSachBooking(),
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
-    'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'), // Static methods
+    'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
+    'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null), // AJAX endpoint
+    'get-tour-info' => (new AdminTourController())->getTourInfo(), // AJAX endpoint
 };
 ```
 
-- URL: `?act=form-them-booking` routes to `AdminBookingController::formAddBooking()`
-- Naming: `them-` (add), `sua-` (edit), `xoa-` (delete), `form-` (show form)
-- **Mixed patterns**: Some controllers use instance methods `(new Class())->method()`, HDVController uses **static methods** `HDVController::method()`
+**Route conventions**:
+
+- URL pattern: `?act=form-them-booking` → `AdminBookingController::formAddBooking()`
+- Naming: `form-` (show form), `them-` (add), `sua-` (edit), `xoa-` (delete), `post-` (POST handler)
+- **Mixed patterns**: Most controllers use instance methods `(new Class())->method()`, but `HDVController` uses **static methods only** `HDVController::method()`
+- **AJAX endpoints**: Named with `-get-` or return JSON directly (see HDVController::getToursByHDVAjax)
 
 ### Database Connection
 
+**Two patterns coexist** - no inheritance, just composition:
+
 ```php
-// commons/function.php
+// commons/function.php - Core connection factory
 function connectDB() {
     $conn = new PDO("mysql:host=$host;port=$port;dbname=$dbname", DB_USERNAME, DB_PASSWORD);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Returns arrays, not objects
+    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Always returns arrays
     return $conn;
+}
+
+// Helper for static models
+function db_query($sql, $params = []) {
+    $conn = connectDB();
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+    return $stmt; // Return PDOStatement for chaining ->fetch() or ->fetchAll()
 }
 ```
 
-**Models inherit connection**:
+**Instance models** (most common):
 
 ```php
 class AdminBooking {
     public $conn;
     public function __construct() {
-        $this->conn = connectDB();
+        $this->conn = connectDB(); // Fresh connection per instance
+    }
+
+    public function getAllBooking() {
+        $sql = 'SELECT dat_tour.*, lich_khoi_hanh.ngay_bat_dau FROM dat_tour
+                JOIN lich_khoi_hanh ON dat_tour.lich_id = lich_khoi_hanh.lich_id';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(); // Always returns array of arrays
     }
 }
 ```
 
-**Static models use helper**:
+**Static models** (HDVModel, DiemDanhModel, NhatKyTourModel):
 
 ```php
 class HDVModel {
     public static function getLichLamViecByHDV($hdv_id) {
-        return db_query($sql, [$hdv_id])->fetchAll(); // db_query() wraps PDO prepare/execute
+        $sql = 'SELECT * FROM phan_cong_hdv WHERE hdv_id = ?';
+        return db_query($sql, [$hdv_id])->fetchAll();
     }
 }
 ```
+
+**Critical**: Never use ORM methods or object hydration. All queries return `array` (single row) or `array[]` (multiple rows).
 
 ## Form Validation & Error Handling
 
@@ -122,22 +159,98 @@ const errName = serverErrors[`ds_khach_${i}_ho_ten`] ?? "";
 
 ### CRUD Workflow (Adding a Feature)
 
+**Step-by-step process for new functionality**:
+
 1. **Route**: Add to `admin/index.php` match statement
-2. **Controller**: Create `formAdd()`, `postAdd()`, `formEdit()`, `postEdit()`, `deleteXXX()`
-3. **Model**: Add query methods using `$this->conn->prepare()` + `execute()`
-4. **View**: Create form in `views/{feature}/` with session error/old pattern
+
+   ```php
+   'form-them-nhat-ky' => (new NhatKyController())->formAdd(),
+   'them-nhat-ky' => (new NhatKyController())->postAdd(),
+   ```
+
+2. **Controller**: Create `controllers/NhatKyController.php`
+
+   ```php
+   class NhatKyController {
+       public $model;
+       public function __construct() {
+           $this->model = new NhatKyModel();
+       }
+
+       public function formAdd() {
+           require_once './views/nhatky/addNhatKy.php';
+       }
+
+       public function postAdd() {
+           // Validation → Session errors → Model insert → Redirect
+       }
+   }
+   ```
+
+3. **Model**: Create `models/NhatKyModel.php`
+
+   ```php
+   class NhatKyModel {
+       public $conn;
+       public function __construct() {
+           $this->conn = connectDB();
+       }
+
+       public function insert($data) {
+           $sql = 'INSERT INTO nhat_ky (lich_id, noi_dung) VALUES (:lich_id, :noi_dung)';
+           $stmt = $this->conn->prepare($sql);
+           return $stmt->execute($data); // Returns boolean
+       }
+   }
+   ```
+
+4. **View**: Create `views/nhatky/addNhatKy.php`
+   ```php
+   <?php require_once './views/layout/header.php'; ?>
+   <?php
+   $error = $_SESSION['error'] ?? [];
+   $old = $_SESSION['old'] ?? [];
+   unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
+   ?>
+   <!-- Form with error display pattern -->
+   <?php require_once './views/layout/footer.php'; ?>
+   ```
 
 ### Database Query Standard
 
-```php
-// Instance models
-$sql = 'SELECT t.*, l.ngay_bat_dau FROM tour t JOIN lich_khoi_hanh l ON t.tour_id = l.tour_id WHERE t.tour_id = :id';
-$stmt = $this->conn->prepare($sql);
-$stmt->execute([':id' => $tour_id]);
-return $stmt->fetch(); // Single row or fetchAll() for multiple
+**Always use prepared statements** with positional or named parameters:
 
-// Static models
-return db_query($sql, [$param1, $param2])->fetchAll();
+```php
+// Instance models - named parameters (preferred for clarity)
+$sql = 'SELECT t.*, l.ngay_bat_dau FROM tour t
+        JOIN lich_khoi_hanh l ON t.tour_id = l.tour_id
+        WHERE t.tour_id = :id AND t.trang_thai = :status';
+$stmt = $this->conn->prepare($sql);
+$stmt->execute([':id' => $tour_id, ':status' => 1]);
+return $stmt->fetch(); // Single row
+
+// Static models - positional parameters (shorter)
+$sql = 'SELECT * FROM phan_cong_hdv WHERE hdv_id = ? AND lich_id = ?';
+return db_query($sql, [$hdv_id, $lich_id])->fetchAll(); // Multiple rows
+```
+
+**JOIN pattern** (very common in this codebase):
+
+```php
+// Example from AdminBooking::getAllBooking()
+$sql = 'SELECT
+    dat_tour.*,
+    lich_khoi_hanh.ngay_bat_dau,
+    lich_khoi_hanh.ngay_ket_thuc,
+    trang_thai_booking.ten_trang_thai,
+    khach_hang.ho_ten as ten_khach_hang,
+    tour.ten as ten_tour
+FROM dat_tour
+JOIN lich_khoi_hanh ON lich_khoi_hanh.lich_id = dat_tour.lich_id
+JOIN khach_hang ON khach_hang.khach_hang_id = dat_tour.khach_hang_id
+JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+JOIN trang_thai_booking ON trang_thai_booking.trang_thai_id = dat_tour.trang_thai_id
+ORDER BY dat_tour.dat_tour_id DESC';
 ```
 
 ### Validation Rules
@@ -161,17 +274,52 @@ if (!in_array($act, $publicRoutes) && empty($_SESSION['user_admin'])) {
 
 ### File Upload Pattern
 
+**Standard upload with timestamp prefix**:
+
 ```php
 // commons/function.php
 function uploadFile($file, $folderUpload) {
+    if (!isset($file['tmp_name']) || $file['error'] !== 0) {
+        return null;
+    }
     $safeName = time() . '-' . basename($file['ten']);
     $pathStorage = $folderUpload . $safeName;
-    move_uploaded_file($file['tmp_name'], PATH_ROOT . $pathStorage);
-    return $pathStorage; // Store relative path in DB
+    $to = PATH_ROOT . $pathStorage;
+
+    if (move_uploaded_file($file['tmp_name'], $to)) {
+        return $pathStorage; // Store relative path in DB
+    }
+    return null;
 }
 
 // Usage in controller
-$hinh_anh = uploadFile($_FILES['hinh_anh'], 'uploads/tour/');
+if (!empty($_FILES['hinh_anh']['tmp_name'])) {
+    $hinh_anh = uploadFile($_FILES['hinh_anh'], 'uploads/tour/');
+}
+
+// For updates with existing file
+if (!empty($_FILES['hinh_anh']['tmp_name'])) {
+    $new_file = uploadFile($_FILES['hinh_anh'], 'uploads/tour/');
+    if ($new_file) {
+        deleteFile($old_hinh_anh); // Remove old file
+        $hinh_anh = $new_file;
+    }
+}
+```
+
+**Album upload** (multiple files with indices):
+
+```php
+function uploadFileAlbum($file, $folderUpload, $key) {
+    $pathStorage = $folderUpload . time() . $file['ten'][$key];
+    $from = $file['tmp_name'][$key];
+    $to = PATH_ROOT . $pathStorage;
+
+    if (move_uploaded_file($from, $to)) {
+        return $pathStorage;
+    }
+    return null;
+}
 ```
 
 ## Database Schema (Key Tables)
@@ -227,6 +375,48 @@ Views use **require_once** to assemble layout:
 
 - **AdminLTE template**: jQuery, Bootstrap 4, DataTables, Select2
 - **Custom CSS**: `assets/css/style-hdv.css`, `style-header.css`, `style-footer.css`
+
+### Common Frontend Patterns
+
+**DataTables initialization**:
+
+```javascript
+$("#example1")
+  .DataTable({
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+  })
+  .buttons()
+  .container()
+  .appendTo("#example1_wrapper .col-md-6:eq(0)");
+```
+
+**AJAX data loading** (fetch API):
+
+```javascript
+// View fetches tour info via AJAX endpoint
+fetch("<?= BASE_URL_ADMIN ?>?act=get-tour-info&tour_id=" + tourId)
+  .then((response) => response.json())
+  .then((data) => {
+    document.getElementById("ten_tour").value = data.ten;
+    document.getElementById("gia_co_ban").value = data.gia_co_ban;
+  });
+```
+
+**Dynamic form fields with server errors**:
+
+```javascript
+// Reconstruct dynamic rows from session data
+const oldData = <?= json_encode($_SESSION['old'] ?? []) ?>;
+const serverErrors = <?= json_encode($_SESSION['error'] ?? []) ?>;
+
+oldData.ds_khach?.forEach((khach, i) => {
+    const errName = serverErrors[`ds_khach_${i}_ho_ten`] ?? "";
+    // Display error for each field
+});
+```
 
 ## Git Workflow
 
