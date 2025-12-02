@@ -58,7 +58,7 @@
               <?php endif; ?>
               <div class="content-header">
                 <a href="<?= BASE_URL_ADMIN . "?act=form-them-tour" ?>">
-                  <button class="btn btn-success">Thêm tour</button>
+                  <button class="btn btn-success"><i class="fas fa-plus"></i> Thêm tour</button>
                 </a>
               </div>
               <table id="example1" class="table table-bordered table-striped table-hover">
@@ -95,14 +95,14 @@
                       </td>
                       <td class="text-center">
                         <a href="<?= BASE_URL_ADMIN . '?act=copy-tour&tour_id=' . $tour['tour_id'] ?>" class="mb-1">
-                          <button class="btn btn-secondary btn-sm" title="Tạo lịch mới cho tour">Lịch mới</button>
+                          <button class="btn btn-info btn-sm" title="Tạo lịch mới cho tour"><i class="fas fa-calendar-plus"></i> Lịch mới</button>
                         </a>
                         <?php if (!empty($tour['lich_id'])): ?>
                           <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&lich_id=' . $tour['lich_id'] ?>" class="mb-1">
-                            <button class="btn btn-primary btn-sm">Sửa</button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
                           </a>
                           <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa lịch khởi hành này không?');" class="mb-1">
-                            <button class="btn btn-danger btn-sm">Xóa</button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
                           </a>
                         <?php else: ?>
                           <span class="text-muted">Chưa có lịch</span>

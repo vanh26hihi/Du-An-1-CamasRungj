@@ -45,7 +45,7 @@
               <?php endif; ?>
               <div class="content-header">
                 <a href="<?= BASE_URL_ADMIN . "?act=form-them-booking" ?>">
-                  <button class="btn btn-success">Thêm Booking</button>
+                  <button class="btn btn-success"><i class="fas fa-plus"></i> Thêm Booking</button>
                 </a>
               </div>
               <table id="example1" class="table table-bordered table-striped table-hover">
@@ -77,10 +77,10 @@
                       <td><?= htmlspecialchars($Booking['ten_trang_thai']) ?></td>
                       <td class="text-center">
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
-                          <button class="btn btn-primary btn-sm">Sửa</button>
+                          <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
                         </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Booking này không?');">
-                          <button class="btn btn-danger btn-sm">Xóa</button>
+                          <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
                         </a>
                       </td>
                     </tr>

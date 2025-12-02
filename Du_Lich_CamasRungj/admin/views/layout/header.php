@@ -202,11 +202,37 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
-  /* Cân đều nút sửa xóa */
-  .btn-primary,
-  .btn-danger {
-    width: 60px;
-    margin-bottom: 5px;
+  /* Chuẩn hóa buttons trong table và action buttons */
+  .btn {
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+  }
+
+  .btn-sm {
+    padding: 4px 10px;
+    font-size: 13px;
+    min-width: 70px; /* Đảm bảo nút có độ rộng tối thiểu */
+  }
+
+  .btn i {
+    margin-right: 5px;
+  }
+
+  /* Buttons trong table action column */
+  table .btn-sm {
+    margin: 2px;
+    display: inline-block;
+  }
+
+  /* Content header action buttons */
+  .content-header .btn, 
+  .card-header .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   /* Cho phép text trong các cột dài xuống dòng */

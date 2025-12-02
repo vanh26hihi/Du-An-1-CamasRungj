@@ -197,7 +197,7 @@
                   </div>
 
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary" id="btnSubmitForm">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmitForm"><i class="fas fa-save"></i> Lưu Danh Mục</button>
                   </div>
 
                 </div>

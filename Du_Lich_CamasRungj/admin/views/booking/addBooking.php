@@ -450,7 +450,7 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
                   </div>
 
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu Booking</button>
                   </div>
 
                 </div>

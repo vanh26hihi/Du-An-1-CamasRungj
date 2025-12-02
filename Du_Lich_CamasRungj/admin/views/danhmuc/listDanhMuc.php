@@ -45,7 +45,7 @@
               <!-- ==================== ACTION BUTTONS ==================== -->
               <div class="content-header">
                 <a href="<?= BASE_URL_ADMIN . "?act=form-them-danh-muc" ?>">
-                  <button class="btn btn-success">Thêm danh mục tour</button>
+                  <button class="btn btn-success"><i class="fas fa-plus"></i> Thêm danh mục tour</button>
                 </a>
               </div>
 
@@ -75,13 +75,13 @@
                       <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
                       <td class="text-center">
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['tour_id'] ?>" 
-                           class="btn btn-sm btn-outline-primary" title="Sửa">
+                           class="btn btn-sm btn-warning" title="Sửa">
                           <i class="fas fa-edit"></i>
                         </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&tour_id=' . $row['tour_id'] ?>" 
-                           class="btn btn-sm btn-outline-danger" title="Xóa" 
+                           class="btn btn-sm btn-danger" title="Xóa" 
                            onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
-                          <i class="fas fa-trash-alt"></i>
+                          <i class="fas fa-trash"></i>
                         </a>
                       </td>
                     </tr>

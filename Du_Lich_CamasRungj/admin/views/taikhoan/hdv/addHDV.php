@@ -112,8 +112,8 @@ $old = $_SESSION['old'] ?? [];
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Thêm Tài Khoản HDV
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu Tài Khoản HDV
                                 </button>
                                 <a href="<?= BASE_URL_ADMIN . "?act=danh-sach-hdv" ?>" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left"></i> Quay Lại

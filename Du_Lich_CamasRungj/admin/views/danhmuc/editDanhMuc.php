@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                  <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
                 </div>
               </form>
             </div>
