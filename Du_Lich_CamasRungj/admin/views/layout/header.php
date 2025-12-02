@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -217,14 +217,31 @@
     min-height: auto !important;
   }
 
-  html,
-  body {
-    height: auto !important;
+  /* Fix layout to push footer to bottom */
+  html {
+    height: 100%;
   }
 
-  /* Footer tránh đè nội dung */
+  body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content-wrapper {
+    flex: 1;
+    min-height: calc(100vh - 57px - 60px) !important; /* navbar height - footer height */
+  }
+
+  /* Footer always at bottom */
   .main-footer {
-    position: relative !important;
+    margin-top: auto !important;
   }
 
   /* DataTables Pagination */

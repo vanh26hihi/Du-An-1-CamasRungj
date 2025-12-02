@@ -85,6 +85,20 @@ class AdminTaiKhoan
         }
     }
 
+    // Lấy tất cả tài khoản theo vai trò (alias mới)
+    public function getAllTaiKhoanByVaiTro($vai_tro_id)
+    {
+        try {
+            $sql = "SELECT * FROM nguoi_dung WHERE vai_tro_id = :vai_tro_id ORDER BY nguoi_dung_id DESC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':vai_tro_id' => $vai_tro_id]);
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+            return [];
+        }
+    }
+
     // Lấy chi tiết tài khoản
     public function getDetailTaiKhoan($id)
     {
@@ -111,7 +125,35 @@ class AdminTaiKhoan
         }
     }
 
-    // Thêm tài khoản mới
+    // Kiểm tra email đã tồn tại chưa
+    public function checkEmailExists($email)
+    {
+        try {
+            $sql = "SELECT COUNT(*) FROM nguoi_dung WHERE email = :email";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            return $stmt->fetchColumn() > 0;
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Kiểm tra email đã tồn tại chưa (trừ ID hiện tại)
+    public function checkEmailExistsExcept($email, $id)
+    {
+        try {
+            $sql = "SELECT COUNT(*) FROM nguoi_dung WHERE email = :email AND nguoi_dung_id != :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':email' => $email, ':id' => $id]);
+            return $stmt->fetchColumn() > 0;
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Thêm tài khoản mới (cũ - tương thích ngược)
     public function insertTaiKhoan($ho_ten, $email, $password, $vai_tro_id)
     {
         try {
@@ -131,7 +173,29 @@ class AdminTaiKhoan
         }
     }
 
-    // Cập nhật tài khoản
+    // Thêm tài khoản mới (với mảng dữ liệu)
+    public function insertTaiKhoanArray($data)
+    {
+        try {
+            $sql = "INSERT INTO nguoi_dung (ho_ten, email, mat_khau, so_dien_thoai, vai_tro_id, trang_thai, ngay_tao) 
+                    VALUES (:ho_ten, :email, :mat_khau, :so_dien_thoai, :vai_tro_id, :trang_thai, NOW())";
+            $stmt = $this->conn->prepare($sql);
+            $result = $stmt->execute([
+                ':ho_ten' => $data['ho_ten'],
+                ':email' => $data['email'],
+                ':mat_khau' => $data['mat_khau'], // Already hashed in controller
+                ':so_dien_thoai' => $data['so_dien_thoai'] ?? '',
+                ':vai_tro_id' => $data['vai_tro_id'],
+                ':trang_thai' => $data['trang_thai'] ?? 'active'
+            ]);
+            return $result;
+        } catch (Exception $e) {
+            error_log("Lỗi insertTaiKhoanArray: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Cập nhật tài khoản (cũ - tương thích ngược)
     public function updateTaiKhoan($id, $ho_ten, $email, $so_dien_thoai, $trang_thai)
     {
         try {
@@ -145,6 +209,28 @@ class AdminTaiKhoan
                 ':email' => $email,
                 ':so_dien_thoai' => $so_dien_thoai,
                 ':trang_thai' => $trang_thai
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // Cập nhật tài khoản (với mảng dữ liệu)
+    public function updateTaiKhoanArray($id, $data)
+    {
+        try {
+            $sql = "UPDATE nguoi_dung 
+                    SET ho_ten = :ho_ten, email = :email, so_dien_thoai = :so_dien_thoai, trang_thai = :trang_thai 
+                    WHERE nguoi_dung_id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':id' => $id,
+                ':ho_ten' => $data['ho_ten'],
+                ':email' => $data['email'],
+                ':so_dien_thoai' => $data['so_dien_thoai'],
+                ':trang_thai' => $data['trang_thai']
             ]);
             return true;
         } catch (Exception $e) {
@@ -247,5 +333,19 @@ class AdminTaiKhoan
             ['id' => 2, 'ten_gioi_tinh' => 'Nữ'],
             ['id' => 3, 'ten_gioi_tinh' => 'Khác']
         ];
+    }
+
+    // Xóa tài khoản
+    public function deleteTaiKhoan($id)
+    {
+        try {
+            $sql = "DELETE FROM nguoi_dung WHERE nguoi_dung_id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi: " . $e->getMessage();
+            return false;
+        }
     }
 }

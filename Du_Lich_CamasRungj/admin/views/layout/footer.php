@@ -1,4 +1,4 @@
-﻿ <footer class="main-footer">
+ <footer class="main-footer">
    <div class="float-right d-none d-sm-block">
      <b><i class="fas fa-globe-asia"></i> CamasRungj</b>
    </div>

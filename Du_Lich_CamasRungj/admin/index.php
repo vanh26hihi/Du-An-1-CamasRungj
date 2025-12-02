@@ -11,6 +11,9 @@ require_once './controllers/HDVController.php';
 require_once './controllers/AdminDanhMucController.php';
 require_once './controllers/AdminTourController.php';
 require_once './controllers/AdminTaiKhoanController.php';
+require_once './controllers/AdminTaiKhoanQuanTriController.php';
+require_once './controllers/AdminTaiKhoanHDVController.php';
+require_once './controllers/AdminTaiKhoanCaNhanController.php';
 
 require_once './models/AdminBooking.php';
 require_once './models/AdminTour.php';
@@ -52,22 +55,30 @@ match ($act) {
     'hdv-diem-danh' => HDVController::diemDanh($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-diem-danh-action' => HDVController::diemDanhAction($_GET['hanh_khach_id'] ?? null, $_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
 
-    'list-tai-khoan-quan-tri' => (new AdminTaiKhoanController())->danhSachQuanTri(),
-    'form-them-quan-tri' => (new AdminTaiKhoanController())->formAddQuanTri(),
-    'them-quan-tri' => (new AdminTaiKhoanController())->postAddQuanTri(),
-    'form-sua-quan-tri' => (new AdminTaiKhoanController())->formEditQuanTri(),
-    'sua-quan-tri' => (new AdminTaiKhoanController())->postEditQuanTri(),
-    'reset-password' => (new AdminTaiKhoanController())->resetPassword(),
+    // Quản lý tài khoản quản trị (AdminTaiKhoanQuanTriController)
+    'list-tai-khoan-quan-tri' => (new AdminTaiKhoanQuanTriController())->danhSachQuanTri(),
+    'danh-sach-quan-tri' => (new AdminTaiKhoanQuanTriController())->danhSachQuanTri(),
+    'form-them-quan-tri' => (new AdminTaiKhoanQuanTriController())->formAddQuanTri(),
+    'them-quan-tri' => (new AdminTaiKhoanQuanTriController())->postAddQuanTri(),
+    'form-sua-quan-tri' => (new AdminTaiKhoanQuanTriController())->formEditQuanTri(),
+    'sua-quan-tri' => (new AdminTaiKhoanQuanTriController())->postEditQuanTri(),
+    'reset-password' => (new AdminTaiKhoanQuanTriController())->resetPassword(),
+    'reset-password-quan-tri' => (new AdminTaiKhoanQuanTriController())->resetPassword(),
+    'xoa-quan-tri' => (new AdminTaiKhoanQuanTriController())->deleteQuanTri(),
 
-    'list-tai-khoan-khach-hang' => (new AdminTaiKhoanController())->danhSachKhachHang(),
-    'form-sua-khach-hang' => (new AdminTaiKhoanController())->formEditKhachHang(),
-    'sua-khach-hang' => (new AdminTaiKhoanController())->postEditKhachHang(),
-    'chi-tiet-khach-hang' => (new AdminTaiKhoanController())->detailKhachHang(),
+    // Quản lý tài khoản HDV (AdminTaiKhoanHDVController)
+    'danh-sach-hdv' => (new AdminTaiKhoanHDVController())->danhSachHDV(),
+    'form-them-hdv' => (new AdminTaiKhoanHDVController())->formAddHDV(),
+    'them-hdv' => (new AdminTaiKhoanHDVController())->postAddHDV(),
+    'form-sua-hdv' => (new AdminTaiKhoanHDVController())->formEditHDV(),
+    'sua-hdv' => (new AdminTaiKhoanHDVController())->postEditHDV(),
+    'reset-password-hdv' => (new AdminTaiKhoanHDVController())->resetPassword(),
+    'xoa-hdv' => (new AdminTaiKhoanHDVController())->deleteHDV(),
 
-    'form-sua-thong-tin-ca-nhan-quan-tri' => (new AdminTaiKhoanController())->formEditCaNhanQuanTri(),
-    'post-thong-tin-ca-nhan-quan-tri' => (new AdminTaiKhoanController())->postEditCaNhanQuanTri(),
-
-    'sua-mat-khau-ca-nhan-quan-tri' => (new AdminTaiKhoanController())->postEditMatKhauCaNhanQuanTri(),
+    // Quản lý tài khoản cá nhân (AdminTaiKhoanCaNhanController)
+    'form-sua-thong-tin-ca-nhan-quan-tri' => (new AdminTaiKhoanCaNhanController())->formEditCaNhan(),
+    'post-thong-tin-ca-nhan-quan-tri' => (new AdminTaiKhoanCaNhanController())->postEditCaNhan(),
+    'sua-mat-khau-ca-nhan-quan-tri' => (new AdminTaiKhoanCaNhanController())->postEditMatKhau(),
 
     'login-admin' => (new AdminTaiKhoanController())->formLogin(),
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
