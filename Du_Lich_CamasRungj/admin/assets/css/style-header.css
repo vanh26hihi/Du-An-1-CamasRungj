@@ -1,0 +1,68 @@
+/* ============================
+   CUSTOM HEADER STYLING
+   ============================ */
+
+/* Navbar - Gradient xanh dương sáng */
+.main-header.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-bottom: 3px solid #f39c12;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-header .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  margin: 0 5px;
+  padding: 8px 15px !important;
+}
+
+.main-header .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.main-header .nav-link i {
+  font-size: 1.1rem;
+  margin-right: 5px;
+}
+
+/* Highlight nút WebSide */
+.main-header .nav-item.d-none.d-sm-inline-block .nav-link {
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.main-header .nav-item.d-none.d-sm-inline-block .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Icon logout màu đỏ nhạt */
+.main-header .nav-link[href*="logout"] {
+  background-color: rgba(231, 76, 60, 0.2);
+}
+
+.main-header .nav-link[href*="logout"]:hover {
+  background-color: rgba(231, 76, 60, 0.4);
+}
+
+/* Pushmenu button */
+.main-header .nav-link[data-widget="pushmenu"] {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main-header .nav-link[data-widget="pushmenu"]:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* Fullscreen button */
+.main-header .nav-link[data-widget="fullscreen"] {
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.main-header .nav-link[data-widget="fullscreen"]:hover {
+  background-color: rgba(52, 152, 219, 0.4);
+}

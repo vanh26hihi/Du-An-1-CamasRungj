@@ -19,10 +19,9 @@ class AdminBookingController
 
     public function formAddBooking()
     {
-        $listLichAndTour = $this->modelBooking->getAllLichAndTour();
-        // var_dump($listLichAndTour);
-        // die();
-        // hàm này dùng để nhập form sản phẩm
+        // Cung cấp dữ liệu tách biệt: tour và toàn bộ lịch
+        $listTours   = $this->modelBooking->getAllTours();
+        $listLichAll = $this->modelBooking->getAllLich();
         require_once './views/Booking/addBooking.php';
     }
 
@@ -31,6 +30,7 @@ class AdminBookingController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Gom dữ liệu
+            $tour_id        = $_POST['tour_id'] ?? null;
             $lich_id        = $_POST['lich_id'] ?? null;
             $loai           = $_POST['loai'] ?? null;
             $so_nguoi       = $_POST['so_nguoi'] ?? null;
@@ -52,6 +52,9 @@ class AdminBookingController
             $error = [];
 
             // Validate cơ bản
+            if (empty($tour_id)) {
+                $error['tour_id'] = "Vui lòng chọn tour.";
+            }
             if (empty($lich_id)) {
                 $error['lich_id'] = "Vui lòng chọn lịch tour.";
             }
@@ -141,6 +144,17 @@ class AdminBookingController
             }
 
             // Không lỗi → tiến hành lưu DB
+            // (Optional) Kiểm tra lịch thuộc tour đã chọn
+            if (!empty($tour_id) && !empty($lich_id)) {
+                $schedule = $this->modelBooking->getScheduleById($lich_id);
+                if (!$schedule || (string)$schedule['tour_id'] !== (string)$tour_id) {
+                    $_SESSION['flash'] = true;
+                    $_SESSION['error'] = ['lich_id' => 'Lịch khởi hành không thuộc tour đã chọn.'];
+                    $_SESSION['old']   = $_POST;
+                    header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+                    exit();
+                }
+            }
             $khach_hang_id = $this->modelBooking->insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi);
 
             $dat_tour_id = $this->modelBooking->insertBooking(

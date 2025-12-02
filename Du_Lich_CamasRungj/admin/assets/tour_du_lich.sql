@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 26, 2025 at 11:57 AM
+-- Generation Time: Dec 02, 2025 at 06:37 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -112,7 +112,15 @@ CREATE TABLE `dia_diem` (
 INSERT INTO `dia_diem` (`dia_diem_id`, `ten`, `mo_ta`, `quoc_gia_id`, `ngay_tao`) VALUES
 (1, 'Hà Nội', 'Thủ đô Việt Nam', 1, '2025-11-13 21:06:04'),
 (2, 'Đà Nẵng', 'Thành phố biển miền Trung', 1, '2025-11-13 21:06:04'),
-(3, 'Bangkok', 'Thủ đô Thái Lan sôi động', 2, '2025-11-13 21:06:04');
+(3, 'Bangkok', 'Thủ đô Thái Lan sôi động', 2, '2025-11-13 21:06:04'),
+(4, 'TP.HCM', 'Thành phố Hồ Chí Minh - trung tâm kinh tế sôi động của Việt Nam với nhiều di tích lịch sử, khu phố Tây sầm uất và ẩm thực đường phố phong phú', 1, '2025-11-27 21:06:04'),
+(5, 'Phú Quốc', 'Đảo ngọc của Việt Nam với bãi biển tuyệt đẹp, làn nước trong xanh, rừng nhiệt đới nguyên sinh và các hoạt động thể thao dưới nước hấp dẫn', 1, '2025-11-27 21:06:04'),
+(6, 'Hội An', 'Phố cổ di sản UNESCO với kiến trúc độc đáo, đèn lồng rực rỡ, ẩm thực đặc sắc và bầu không khí yên bình bên dòng sông Thu Bồn', 1, '2025-11-27 21:06:04'),
+(7, 'Nha Trang', 'Thành phố biển xinh đẹp với bãi tắm dài, hoạt động lặn biển ngắm san hô, tháp Chàm cổ kính và khu vui chơi giải trí hiện đại', 1, '2025-11-27 21:06:04'),
+(8, 'Đà Lạt', 'Thành phố ngàn hoa với khí hậu mát mẻ quanh năm, hồ Xuân Hương thơ mộng, đồi chè xanh mướt và các khu vườn hoa đầy màu sắc', 1, '2025-11-27 21:06:04'),
+(9, 'Phuket', 'Hòn đảo lớn nhất Thái Lan nổi tiếng với bãi biển Patong sôi động, đảo Phi Phi tuyệt đẹp và cuộc sống về đêm sầm uất', 2, '2025-11-27 21:06:04'),
+(10, 'Chiang Mai', 'Thành phố cổ kính miền Bắc Thái Lan với hơn 300 ngôi chùa, chợ đêm sầm uất, lễ hội đèn trời Loy Krathong và làng thủ công truyền thống', 2, '2025-11-27 21:06:04'),
+(11, 'Singapore', 'Thành phố đảo quốc hiện đại với Gardens by the Bay, Marina Bay Sands, ẩm thực đa văn hóa tại Hawker Centre và khu phố Tàu sôi động', 3, '2025-11-27 21:06:04');
 
 -- --------------------------------------------------------
 
@@ -135,7 +143,15 @@ CREATE TABLE `dia_diem_lich_trinh` (
 INSERT INTO `dia_diem_lich_trinh` (`dia_diem_lich_id`, `lich_trinh_id`, `dia_diem_id`, `mo_ta`, `thu_tu`) VALUES
 (1, 1, 1, 'Văn Miếu', 1),
 (2, 2, 2, 'Vịnh Hạ Long', 1),
-(3, 3, 3, 'Bà Nà Hills', 1);
+(3, 3, 3, 'Bà Nà Hills', 1),
+(7, 7, 1, 'Văn Miếu', 1),
+(8, 8, 2, 'Vịnh Hạ Long', 2),
+(9, 9, 3, 'Bà Nà Hills', 3),
+(10, 10, 4, 'Bến xe Miền Đông', 1),
+(11, 11, 5, 'Hòn Thơm', 2),
+(12, 12, 8, 'Cao Nguyên Hoa', 3),
+(13, 13, 4, '', 1),
+(14, 13, 4, '', 2);
 
 -- --------------------------------------------------------
 
@@ -161,7 +177,10 @@ INSERT INTO `dia_diem_tour` (`dia_diem_tour_id`, `tour_id`, `dia_diem_id`, `thu_
 (5, 16, 3, 2, 'Điểm Đến Bangkok'),
 (6, 1, 1, 1, 'Điểm xuất phát Hà Nội'),
 (7, 1, 2, 2, 'Đến Đà Nẵng'),
-(8, 1, 3, 3, 'Bay sang Bangkok');
+(8, 1, 3, 3, 'Bay sang Bangkok'),
+(16, 20, 4, 1, 'Điểm Xuất Phát TP.HCM'),
+(17, 20, 6, 2, 'Điểm Đến Hội An'),
+(18, 20, 7, 3, 'Điểm Đến Nha Trang');
 
 -- --------------------------------------------------------
 
@@ -212,7 +231,8 @@ CREATE TABLE `diem_danh_khach` (
 INSERT INTO `diem_danh_khach` (`diem_danh_id`, `hanh_khach_id`, `lich_trinh_id`, `dia_diem_id`, `hdv_id`, `da_den`, `thoi_gian`, `ghi_chu`) VALUES
 (4, 1, 1, 1, 2, 1, '2025-12-01 08:00:00', 'Khách đến đúng giờ'),
 (5, 2, 1, 1, 2, 0, '2025-12-01 08:05:00', 'Khách đến muộn 5 phút'),
-(6, 3, 2, 2, 3, 1, '2025-12-15 09:00:00', 'Khách có yêu cầu đặc biệt');
+(6, 3, 2, 2, 3, 1, '2025-12-15 09:00:00', 'Khách có yêu cầu đặc biệt'),
+(7, 3, 3, NULL, 2, 1, '2025-11-28 14:28:55', '');
 
 -- --------------------------------------------------------
 
@@ -434,7 +454,9 @@ INSERT INTO `lich_khoi_hanh` (`lich_id`, `tour_id`, `ngay_bat_dau`, `ngay_ket_th
 (1, 1, '2025-12-01', '2025-12-03', 1, '2025-11-13 21:19:41', 'Tour khởi hành đầu tháng'),
 (2, 2, '2025-12-05', '2025-12-07', 1, '2025-11-13 21:19:41', 'Tour khởi hành giữa tháng'),
 (3, 3, '2025-12-10', '2025-12-15', 1, '2025-11-13 21:19:41', 'Tour Bangkok'),
-(7, 1, '2025-11-27', '2025-11-30', 1, '2025-11-26 15:41:47', 'Tour Cuối tháng 11');
+(7, 1, '2025-11-27', '2025-11-30', 1, '2025-11-26 15:41:47', 'Tour Cuối tháng 11'),
+(8, 16, '2025-12-06', '2025-12-09', 2, '2025-11-27 09:27:16', 'Tour khởi đầu tháng 12'),
+(9, 1, '2025-12-01', '2025-12-04', 1, '2025-11-27 10:08:22', 'Tour Đầu Tháng Trải Nghiệm Du Lịch Xuyên Quốc Gia');
 
 -- --------------------------------------------------------
 
@@ -446,7 +468,9 @@ CREATE TABLE `lich_trinh` (
   `lich_trinh_id` int NOT NULL,
   `tour_id` int DEFAULT NULL,
   `ngay_thu` int DEFAULT NULL,
-  `tieu_de` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gio_bat_dau` time DEFAULT NULL,
+  `gio_ket_thuc` time DEFAULT NULL,
+  `dia_diem_tour_id` int DEFAULT NULL,
   `noi_dung` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -454,10 +478,17 @@ CREATE TABLE `lich_trinh` (
 -- Dumping data for table `lich_trinh`
 --
 
-INSERT INTO `lich_trinh` (`lich_trinh_id`, `tour_id`, `ngay_thu`, `tieu_de`, `noi_dung`) VALUES
-(1, 1, 1, 'Hà Nội', 'Tham quan Hoàn Kiếm, Văn Miếu'),
-(2, 1, 2, 'Hạ Long', 'Tham quan Vịnh Hạ Long'),
-(3, 2, 1, 'Đà Nẵng', 'Tham quan Bà Nà Hills');
+INSERT INTO `lich_trinh` (`lich_trinh_id`, `tour_id`, `ngay_thu`, `gio_bat_dau`, `gio_ket_thuc`, `dia_diem_tour_id`, `noi_dung`) VALUES
+(1, 1, 1, NULL, NULL, NULL, 'Tham quan Hoàn Kiếm, Văn Miếu'),
+(2, 1, 2, NULL, NULL, NULL, 'Tham quan Vịnh Hạ Long'),
+(3, 2, 1, NULL, NULL, NULL, 'Tham quan Bà Nà Hills'),
+(7, 1, 1, NULL, NULL, NULL, 'Tham quan lăng Bác Hồ'),
+(8, 1, 2, NULL, NULL, NULL, 'Vui chơi tại Vịnh Hạ Long'),
+(9, 1, 3, NULL, NULL, NULL, 'Trải Ngiệm Bangkok'),
+(10, 17, 1, NULL, NULL, NULL, 'Nơi tập trung để lên xe khách di chuyến đến Phú Quốc'),
+(11, 17, 2, NULL, NULL, NULL, 'Trải Nghiệm dịch vụ du lịch tại Hòn THơm'),
+(12, 17, 3, NULL, NULL, NULL, 'Trải Nghiệm vẻ hoang sơ và tĩnh lặng của thiên nhiên Đà Lạt'),
+(13, 20, 1, NULL, NULL, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -559,7 +590,10 @@ INSERT INTO `phan_cong_hdv` (`phan_cong_id`, `lich_id`, `hdv_id`, `vai_tro`, `ng
 (3, 3, 3, 'assistant', '2025-11-13 21:19:41'),
 (7, 7, 3, 'main', '2025-11-26 15:41:47'),
 (8, 7, 1, 'support', '2025-11-26 15:41:47'),
-(9, 7, 2, 'support', '2025-11-26 15:41:47');
+(9, 7, 2, 'support', '2025-11-26 15:41:47'),
+(12, 9, 2, 'main', '2025-11-27 10:08:22'),
+(13, 8, 3, 'support', '2025-11-27 12:36:45'),
+(14, 8, 1, 'main', '2025-11-27 12:36:45');
 
 -- --------------------------------------------------------
 
@@ -636,7 +670,11 @@ INSERT INTO `tour` (`tour_id`, `ten`, `danh_muc_id`, `mo_ta_ngan`, `mo_ta`, `gia
 (1, 'Tour Hà Nội - Đà Nẵng - BangKok 4N3Đ', 2, 'Khám phá miền Trung', 'Trải nghiệm du lịch Hà Nội - Đà Nẵng - Bangkok', 5000000.00, 4, 'Không hoàn vé sau khi đặt cọc', 1, '2025-11-13 21:06:04', 'Hà Nội', 1),
 (2, 'Tour Bangkok 5N4Đ', 2, 'Khám phá Thái Lan', 'Tham quan Bangkok và Pattaya', 9000000.00, 5, 'Thanh toán trước 50%', 1, '2025-11-13 21:06:04', 'TP.HCM', 1),
 (3, 'Tour Đà Lạt 3N2Đ', 1, 'Không khí se lạnh', 'Tham quan các điểm nổi bật ở Đà Lạt', 3500000.00, 3, 'Hủy trước 3 ngày không mất phí', 1, '2025-11-13 21:06:04', 'TP.HCM', 1),
-(16, 'Tour Hà Nội - Bangkok 4N3D', 1, 'Du Lịch xuyên lục địa', 'Khám Phá từ Hà Nội đến Bangkok cùng với HDV chuyên Nghiệp', 2300000.00, 4, 'Thanh toán trước 50%', 1, '2025-11-25 14:21:06', 'Hà Nội', 1);
+(16, 'Tour Hà Nội - Bangkok 4N3D', 1, 'Du Lịch xuyên lục địa', 'Khám Phá từ Hà Nội đến Bangkok cùng với HDV chuyên Nghiệp', 2300000.00, 4, 'Thanh toán trước 50%', 1, '2025-11-25 14:21:06', 'Hà Nội', 1),
+(17, 'Tour Phú Quốc - Đà Lạt', 1, 'Du Lịch Phú Quốc Đến Đà Lạt', 'Du Lịch Trải Nghiệm Phú Quốc Và Đà Lạt cùng với hướng dẫn viên tận tình ', 5600000.00, 3, 'Hủy trước 3 ngày không mất phí', 1, '2025-11-27 12:27:34', 'TP.HCM', 1),
+(18, 'Tour Hà Nội - Bangkok 4N3D (Copy)', 1, 'Du Lịch xuyên lục địa', 'Khám Phá từ Hà Nội đến Bangkok cùng với HDV chuyên Nghiệp', 2300000.00, 4, 'Thanh toán trước 50%', 1, '2025-11-29 13:46:41', 'Hà Nội', 1),
+(19, 'Tour Hà Nội - Bangkok 4N3D (Copy)', 1, 'Du Lịch xuyên lục địa', 'Khám Phá từ Hà Nội đến Bangkok cùng với HDV chuyên Nghiệp', 2300000.00, 4, 'Thanh toán trước 50%', 1, '2025-11-29 13:50:41', 'Hà Nội', 1),
+(20, 'Tour Hội An - Nha Trang', 1, 'Thành Phố Hội AN Và Nha Trang', 'Du Lịch Thành Phố Hội An Cổ Kính và Bờ Biển Nha Trang', 5600000.00, 2, 'Hủy Trước 2 ngày hoàn 100% tiền cọc', 1, '2025-12-01 23:34:17', 'TP.HCM', 1);
 
 -- --------------------------------------------------------
 
@@ -646,7 +684,7 @@ INSERT INTO `tour` (`tour_id`, `ten`, `danh_muc_id`, `mo_ta_ngan`, `mo_ta`, `gia
 
 CREATE TABLE `tour_ncc` (
   `tour_ncc_id` int NOT NULL,
-  `tour_id` int DEFAULT NULL,
+  `lich_id` int DEFAULT NULL,
   `dich_vu_id` int DEFAULT NULL,
   `gia_thoa_thuan` decimal(15,2) DEFAULT NULL,
   `ghi_chu` text COLLATE utf8mb4_unicode_ci,
@@ -657,10 +695,19 @@ CREATE TABLE `tour_ncc` (
 -- Dumping data for table `tour_ncc`
 --
 
-INSERT INTO `tour_ncc` (`tour_ncc_id`, `tour_id`, `dich_vu_id`, `gia_thoa_thuan`, `ghi_chu`, `ma_hop_dong`) VALUES
+INSERT INTO `tour_ncc` (`tour_ncc_id`, `lich_id`, `dich_vu_id`, `gia_thoa_thuan`, `ghi_chu`, `ma_hop_dong`) VALUES
 (1, 1, 1, 4800000.00, 'Xe đưa đón sân bay đã thỏa thuận', 'HD001'),
 (2, 1, 2, 1400000.00, 'Khách sạn 4 sao, giá đã thương lượng', 'HD002'),
-(3, 2, 3, 190000.00, 'Dịch vụ ăn trưa đã được xác nhận', 'HD003');
+(3, 1, 3, 190000.00, 'Dịch vụ ăn trưa đã được xác nhận', 'HD003'),
+(10, 2, 1, 4800000.00, 'Xe đưa đón sân bay đã thỏa thuận', 'HD001'),
+(11, 2, 2, 1400000.00, 'Khách sạn 4 sao, giá đã thương lượng', 'HD002'),
+(12, 2, 3, 190000.00, 'Dịch vụ ăn trưa đã được xác nhận', 'HD003'),
+(16, 9, 1, 5000000.00, '', NULL),
+(17, 9, 2, 1500000.00, '', NULL),
+(18, 9, 3, 200000.00, '', NULL),
+(19, 8, 1, 5000000.00, 'sdsd', NULL),
+(20, 8, 2, 1500000.00, 'dsadsa', NULL),
+(21, 8, 3, 200000.00, 'sdadas', NULL);
 
 -- --------------------------------------------------------
 
@@ -856,7 +903,8 @@ ALTER TABLE `lich_khoi_hanh`
 --
 ALTER TABLE `lich_trinh`
   ADD PRIMARY KEY (`lich_trinh_id`),
-  ADD KEY `tour_id` (`tour_id`);
+  ADD KEY `tour_id` (`tour_id`),
+  ADD KEY `lich_trinh_ibfk_2` (`dia_diem_tour_id`);
 
 --
 -- Indexes for table `nguoi_dung`
@@ -916,8 +964,8 @@ ALTER TABLE `tour`
 --
 ALTER TABLE `tour_ncc`
   ADD PRIMARY KEY (`tour_ncc_id`),
-  ADD KEY `tour_id` (`tour_id`),
-  ADD KEY `dich_vu_id` (`dich_vu_id`);
+  ADD KEY `dich_vu_id` (`dich_vu_id`),
+  ADD KEY `tour_ncc_ibfk_1` (`lich_id`);
 
 --
 -- Indexes for table `trang_thai_booking`
@@ -969,13 +1017,13 @@ ALTER TABLE `dia_diem`
 -- AUTO_INCREMENT for table `dia_diem_lich_trinh`
 --
 ALTER TABLE `dia_diem_lich_trinh`
-  MODIFY `dia_diem_lich_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `dia_diem_lich_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `dia_diem_tour`
 --
 ALTER TABLE `dia_diem_tour`
-  MODIFY `dia_diem_tour_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `dia_diem_tour_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `dich_vu_ncc`
@@ -987,7 +1035,7 @@ ALTER TABLE `dich_vu_ncc`
 -- AUTO_INCREMENT for table `diem_danh_khach`
 --
 ALTER TABLE `diem_danh_khach`
-  MODIFY `diem_danh_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `diem_danh_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `gia_dv`
@@ -1035,13 +1083,13 @@ ALTER TABLE `khach_hang`
 -- AUTO_INCREMENT for table `lich_khoi_hanh`
 --
 ALTER TABLE `lich_khoi_hanh`
-  MODIFY `lich_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `lich_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `lich_trinh`
 --
 ALTER TABLE `lich_trinh`
-  MODIFY `lich_trinh_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `lich_trinh_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `nguoi_dung`
@@ -1065,7 +1113,7 @@ ALTER TABLE `nha_cung_cap`
 -- AUTO_INCREMENT for table `phan_cong_hdv`
 --
 ALTER TABLE `phan_cong_hdv`
-  MODIFY `phan_cong_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `phan_cong_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `phuong_tien_tour`
@@ -1083,13 +1131,13 @@ ALTER TABLE `quoc_gia`
 -- AUTO_INCREMENT for table `tour`
 --
 ALTER TABLE `tour`
-  MODIFY `tour_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `tour_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `tour_ncc`
 --
 ALTER TABLE `tour_ncc`
-  MODIFY `tour_ncc_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `tour_ncc_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `trang_thai_booking`
@@ -1205,7 +1253,8 @@ ALTER TABLE `lich_khoi_hanh`
 -- Constraints for table `lich_trinh`
 --
 ALTER TABLE `lich_trinh`
-  ADD CONSTRAINT `lich_trinh_ibfk_1` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`tour_id`);
+  ADD CONSTRAINT `lich_trinh_ibfk_1` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`tour_id`),
+  ADD CONSTRAINT `lich_trinh_ibfk_2` FOREIGN KEY (`dia_diem_tour_id`) REFERENCES `dia_diem_tour` (`dia_diem_tour_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `nguoi_dung`
@@ -1246,7 +1295,7 @@ ALTER TABLE `tour`
 -- Constraints for table `tour_ncc`
 --
 ALTER TABLE `tour_ncc`
-  ADD CONSTRAINT `tour_ncc_ibfk_1` FOREIGN KEY (`tour_id`) REFERENCES `tour` (`tour_id`),
+  ADD CONSTRAINT `tour_ncc_ibfk_1` FOREIGN KEY (`lich_id`) REFERENCES `lich_khoi_hanh` (`lich_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `tour_ncc_ibfk_2` FOREIGN KEY (`dich_vu_id`) REFERENCES `dich_vu_ncc` (`dich_vu_id`);
 COMMIT;
 

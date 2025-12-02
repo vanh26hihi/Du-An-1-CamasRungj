@@ -357,6 +357,9 @@
   let hdvData = <?= json_encode($allHDV ?? []) ?>;
   let oldData = <?= json_encode($_SESSION['old'] ?? []) ?>;
   let currentTourData = null; // Lưu thông tin tour hiện tại
+  let copiedFlag = <?= isset($_GET['copied']) ? 'true' : 'false' ?>; // Đánh dấu mở form từ chức năng sao chép
+  let prefillTourId = <?= isset($_GET['tour_id']) ? intval($_GET['tour_id']) : 'null' ?>; // Tour mới vừa sao chép
+  let prefillData = <?= isset($copyPrefill) ? json_encode($copyPrefill) : 'null' ?>; // Dữ liệu HDV & dịch vụ sao chép
 
   console.log('Script loaded successfully');
 
@@ -631,6 +634,20 @@
       loadTourInfo(oldData.tour_id);
       // Hiển thị lịch khởi hành khi có oldData
       document.getElementById('lichKhoiHanhSection').style.display = 'block';
+    } else if (prefillTourId && copiedFlag) {
+      // Prefill tour mới được sao chép
+      document.getElementById('tour_id').value = prefillTourId;
+      loadTourInfo(prefillTourId);
+      document.getElementById('lichKhoiHanhSection').style.display = 'block';
+      // Thêm thông báo vào khu vực tourInfo
+      setTimeout(() => {
+        if (document.getElementById('tourInfo').style.display === 'block') {
+          const copyNotice = document.createElement('div');
+          copyNotice.className = 'alert alert-success mt-3';
+          copyNotice.innerHTML = '<i class="fas fa-copy"></i> Đã sao chép tour. Vui lòng nhập lịch khởi hành mới.';
+          document.getElementById('tourInfo').appendChild(copyNotice);
+        }
+      }, 300);
     }
 
     // Restore HDV
@@ -652,8 +669,23 @@
         }
       });
     } else {
-      // Tự động thêm 1 HDV khi load trang (lần đầu)
-      addHDVCard();
+      // Nếu có dữ liệu sao chép HDV thì prefill, ngược lại tạo mặc định 1 HDV rỗng
+      if (prefillData && prefillData.hdv_ids && prefillData.hdv_ids.length) {
+        // Xóa card mặc định nếu có
+        document.querySelectorAll('.hdv-item').forEach(item => item.remove());
+        prefillData.hdv_ids.forEach((id, index) => {
+          addHDVCard();
+          let lastItem = document.querySelectorAll('.hdv-item')[document.querySelectorAll('.hdv-item').length - 1];
+          let select = lastItem.querySelector('.hdv-select');
+          let roleSelect = lastItem.querySelector('select[name="vai_tro[]"]');
+          if (select) select.value = id;
+          if (roleSelect && prefillData.vai_tros && prefillData.vai_tros[index]) {
+            roleSelect.value = prefillData.vai_tros[index];
+          }
+        });
+      } else {
+        addHDVCard();
+      }
     }
 
     // Restore lịch trình nếu có
@@ -683,6 +715,19 @@
     }
     if (oldData.catering_id) {
       document.getElementById('catering_id').value = oldData.catering_id;
+    }
+
+    // Prefill dịch vụ sao chép nếu không có oldData
+    if (!oldData.transport_id && prefillData && prefillData.services) {
+      if (prefillData.services.transport_id) {
+        document.getElementById('transport_id').value = prefillData.services.transport_id;
+      }
+      if (prefillData.services.hotel_id) {
+        document.getElementById('hotel_id').value = prefillData.services.hotel_id;
+      }
+      if (prefillData.services.catering_id) {
+        document.getElementById('catering_id').value = prefillData.services.catering_id;
+      }
     }
 
     // Xử lý hiển thị giá mặc định khi chọn dịch vụ

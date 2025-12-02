@@ -1,22 +1,21 @@
-<!-- header  -->
+<!-- header -->
 <?php require_once './views/layout/header.php'; ?>
 <!-- Navbar -->
 <?php require_once './views/layout/navbar.php'; ?>
-<!-- /.navbar -->
-
 <!-- Main Sidebar Container -->
 <?php require_once './views/layout/sidebar.php'; ?>
-<!-- Content Wrapper. Contains page content -->
+
+<!-- Content Wrapper -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
+  <!-- Content Header -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1> Quản lý Danh Mục Tour</h1>
+          <h1>Quản lý Danh Mục Tour</h1>
         </div>
       </div>
-    </div><!-- /.container-fluid -->
+    </div>
   </section>
 
   <!-- Main content -->
@@ -30,16 +29,26 @@
               <div class="col-12 col-sm-12">
                 <div class="card card-primary card-tabs">
 
+                  <!-- ==================== TAB NAVIGATION ==================== -->
                   <div class="card-header p-0 pt-1">
                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                       <li class="nav-item">
-                        <a class="nav-link active" data-toggle="pill" href="#tab-tour" role="tab">Thông Tin Danh Mục Tour</a>
+                        <a class="nav-link active" id="tab-link-tour" data-toggle="pill" href="#tab-tour" role="tab">
+                          Thông Tin Danh Mục Tour
+                          <span class="badge badge-danger ml-1" id="error-badge-tab1" style="display: none;">!</span>
+                        </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tab-customer" role="tab">Chọn Địa Điểm Tour</a>
+                        <a class="nav-link" id="tab-link-customer" data-toggle="pill" href="#tab-customer" role="tab">
+                          Chọn Địa Điểm Tour
+                          <span class="badge badge-danger ml-1" id="error-badge-tab2" style="display: none;">!</span>
+                        </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" data-toggle="pill" href="#tab-lich-trinh" role="tab"><i class="fas fa-route"></i> Lịch Trình</a>
+                        <a class="nav-link" id="tab-link-lich-trinh" data-toggle="pill" href="#tab-lich-trinh" role="tab">
+                          <i class="fas fa-route"></i> Lịch Trình
+                          <span class="badge badge-danger ml-1" id="error-badge-tab3" style="display: none;">!</span>
+                        </a>
                       </li>
                     </ul>
                   </div>
@@ -47,9 +56,9 @@
                   <div class="card-body">
                     <div class="tab-content">
 
-                      <!-- TAB 1: THÔNG TIN TOUR -->
+                      <!-- ==================== TAB 1: THÔNG TIN TOUR ==================== -->
                       <div class="tab-pane fade show active" id="tab-tour" role="tabpanel">
-                        <h4>Nhập Thông Tin Danh Mục Tour </h4>
+                        <h4>Nhập Thông Tin Danh Mục Tour</h4>
 
                         <div class="card-body">
                           <div class="row">
@@ -97,7 +106,7 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Số Ngày Du Lịch</label>
-                                <input type="number" class="form-control" name="thoi_luong_mac_dinh" min="1" placeholder="Nhập Số Ngày Du Lịch" value="<?= htmlspecialchars($old['thoi_luong_mac_dinh'] ?? '') ?>">
+                                <input type="number" class="form-control" id="thoi_luong_mac_dinh" name="thoi_luong_mac_dinh" min="1" placeholder="Nhập Số Ngày Du Lịch" value="<?= htmlspecialchars($old['thoi_luong_mac_dinh'] ?? '') ?>">
                                 <?php if (!empty($error['thoi_luong_mac_dinh'])): ?>
                                   <p class="text-danger"><?= $error['thoi_luong_mac_dinh'] ?></p>
                                 <?php endif; ?>
@@ -129,11 +138,9 @@
                             </div>
                           </div>
                         </div>
-                        <!-- /.card-body -->
-
                       </div>
 
-                      <!-- TAB 2: THÔNG TIN ĐỊA ĐIỂM -->
+                      <!-- ==================== TAB 2: ĐỊA ĐIỂM ==================== -->
                       <div class="tab-pane fade" id="tab-customer" role="tabpanel">
                         <h4>Chọn Và Nhập Thông Tin Địa Điểm</h4>
 
@@ -152,14 +159,36 @@
                         </div>
                       </div>
 
-                      <!-- TAB 3: LỊCH TRÌNH -->
+                      <!-- ==================== TAB 3: LỊCH TRÌNH ==================== -->
                       <div class="tab-pane fade" id="tab-lich-trinh" role="tabpanel">
-                        <h4><i class="fas fa-route"></i> Lịch Trình Tour</h4>
-                        <p class="text-info">Lịch trình sẽ được tạo tự động theo số ngày và địa điểm bạn đã chọn ở Địa Điểm Tour.</p>
+                        <div class="mb-3">
+                          <h4 class="mb-1"><i class="fas fa-route"></i> Lịch Trình Tour</h4>
+                          <p class="text-muted mb-0">Nhập lịch trình cho từng ngày của tour</p>
+                        </div>
 
-                        <div class="card-body">
+                        <?php if (!empty($error['lich_trinh'])): ?>
+                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            <strong>Lỗi:</strong> <?= $error['lich_trinh'] ?>
+                            <button type="button" class="close" data-dismiss="alert">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                        <?php endif; ?>
+
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                          <i class="fas fa-info-circle"></i> 
+                          <strong>Hướng dẫn:</strong> 
+                          Sau khi nhập "Số Ngày Du Lịch" ở "Thông Tin Danh Mục Tour", hệ thống sẽ tự động tạo các ngày tương ứng.
+                          Mỗi ngày chọn 1 địa điểm (từ "Chọn Địa Điểm Tour") và có thể thêm nhiều hoạt động.
+                          <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="card-body p-0">
                           <div id="lich_trinh_container">
-                            <p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Địa Điểm Tour để tạo lịch trình tự động</p>
+                            <!-- Các ngày sẽ được tạo tự động -->
                           </div>
                         </div>
                       </div>
@@ -168,7 +197,7 @@
                   </div>
 
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmitForm">Submit</button>
                   </div>
 
                 </div>
@@ -176,51 +205,130 @@
             </form>
           </div>
         </div>
-        <!-- /.col -->
       </div>
-      <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
   </section>
-  <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
+
 <!-- Footer -->
 <?php require_once './views/layout/footer.php'; ?>
-<!-- End Footer  -->
 </body>
-
 </html>
 <?php deleteSessionError(); ?>
 
+<!-- ============================================================================
+     JAVASCRIPT - ORGANIZED BY FUNCTIONALITY
+     ============================================================================ -->
 <script>
-  // Dữ liệu địa điểm từ server
+  // ============================================================================
+  // === 1. DATA INITIALIZATION ===
+  // ============================================================================
+  
+  // Server data
   const diaDiemData = <?php echo json_encode($diaDiemTour); ?>;
-
-  // Lưu trữ dữ liệu địa điểm đã thêm
+  
+  // Client state management
   let diaDiemList = <?php echo !empty($old['dia_diem']) ? json_encode($old['dia_diem']) : '[]'; ?>;
+  let lichTrinhNgayList = [];
 
-  // Khởi tạo form địa điểm khi tải trang
+  // ============================================================================
+  // === 2. DOM READY - INITIAL SETUP ===
+  // ============================================================================
+  
   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dia diem form
     if (diaDiemList.length > 0) {
       diaDiemList.forEach((item, index) => {
         renderDiaDiem(item, index);
       });
     } else {
-      // Ensure the data array reflects the single initial empty block
       diaDiemList.push({});
       renderDiaDiem({}, 0);
     }
 
-    // Event listener cho nút thêm địa điểm
-    document.getElementById('btn-add-dia-diem').addEventListener('click', function() {
-      diaDiemList.push({});
-      const newIndex = diaDiemList.length - 1;
-      renderDiaDiem({}, newIndex);
-    });
+    // Initialize lich trinh from thoi_luong_mac_dinh
+    const soNgayDuLich = parseInt(document.getElementById('thoi_luong_mac_dinh').value) || 0;
+    if (soNgayDuLich > 0) {
+      generateLichTrinhFromSoNgay(soNgayDuLich);
+    } else {
+      renderAllLichTrinh();
+    }
   });
 
-  // Render form địa điểm
+  // ============================================================================
+  // === 3. EVENT HANDLERS - DIA DIEM ===
+  // ============================================================================
+  
+  // Add dia diem button
+  document.getElementById('btn-add-dia-diem').addEventListener('click', function() {
+    diaDiemList.push({});
+    const newIndex = diaDiemList.length - 1;
+    renderDiaDiem({}, newIndex);
+  });
+
+  // Monitor dia diem changes for lich trinh update
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('dia-diem-select')) {
+      renderAllLichTrinh();
+    }
+  });
+
+  // ============================================================================
+  // === 4. EVENT HANDLERS - LICH TRINH ===
+  // ============================================================================
+  
+  // Listen to thoi_luong_mac_dinh input
+  document.getElementById('thoi_luong_mac_dinh').addEventListener('input', function() {
+    const soNgay = parseInt(this.value) || 0;
+    if (soNgay > 0 && soNgay <= 30) {
+      generateLichTrinhFromSoNgay(soNgay);
+    } else if (soNgay > 30) {
+      alert('Số ngày du lịch không được vượt quá 30 ngày!');
+      this.value = 30;
+      generateLichTrinhFromSoNgay(30);
+    } else {
+      lichTrinhNgayList = [];
+      renderAllLichTrinh();
+    }
+  });
+
+  // Validation for time fields
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('gio-bat-dau') || e.target.classList.contains('gio-ket-thuc')) {
+      const ngayIdx = e.target.dataset.ngay;
+      const ltIdx = e.target.dataset.lt;
+      
+      const gioBatDauEl = document.querySelector(`input[name="ngay[${ngayIdx}][lich_trinh][${ltIdx}][gio_bat_dau]"]`);
+      const gioKetThucEl = document.querySelector(`input[name="ngay[${ngayIdx}][lich_trinh][${ltIdx}][gio_ket_thuc]"]`);
+      
+      if (gioBatDauEl && gioKetThucEl) {
+        const gioBatDau = gioBatDauEl.value;
+        const gioKetThuc = gioKetThucEl.value;
+        
+        const errorKetThucEl = document.querySelector(`.error-gio-ket-thuc-${ngayIdx}-${ltIdx}`);
+        
+        // Reset error
+        if (errorKetThucEl) {
+          errorKetThucEl.style.display = 'none';
+          gioKetThucEl.classList.remove('is-invalid');
+        }
+        
+        // Validate: end time must be after start time
+        if (gioBatDau && gioKetThuc && gioKetThuc <= gioBatDau) {
+          if (errorKetThucEl) {
+            errorKetThucEl.textContent = 'Giờ kết thúc phải sau giờ bắt đầu';
+            errorKetThucEl.style.display = 'block';
+            gioKetThucEl.classList.add('is-invalid');
+          }
+        }
+      }
+    }
+  });
+
+  // ============================================================================
+  // === 5. RENDERING FUNCTIONS - DIA DIEM ===
+  // ============================================================================
+  
   function renderDiaDiem(data, index) {
     const container = document.getElementById('dia_diem_container');
     const diaDiemItem = document.createElement('div');
@@ -244,7 +352,6 @@
                 </option>
               `).join('')}
             </select>
-            ${data.error_dia_diem_id ? `<p class="text-danger">${data.error_dia_diem_id}</p>` : ''}
           </div>
         </div>
 
@@ -285,14 +392,13 @@
 
     container.appendChild(diaDiemItem);
 
-    // Event listener cho select địa điểm
+    // Attach change event
     const selectElement = diaDiemItem.querySelector('.dia-diem-select');
     selectElement.addEventListener('change', function() {
       const selectedDiaDiemId = this.value;
       const selectedDiaDiem = diaDiemData.find(dd => dd.dia_diem_id == selectedDiaDiemId);
 
       if (selectedDiaDiem) {
-        // Cập nhật thông tin hiển thị
         document.getElementById(`dia_diem_name_${index}`).textContent = '📍 ' + selectedDiaDiem.ten;
         document.getElementById(`dia_diem_mo_ta_${index}`).textContent = selectedDiaDiem.mo_ta;
         document.getElementById(`dia_diem_quoc_gia_${index}`).innerHTML = `
@@ -300,8 +406,6 @@
           <strong style="color: #0c5460;">📝 Mô tả:</strong> ${selectedDiaDiem.mo_ta_quoc_gia}
         `;
         document.getElementById(`dia_diem_info_${index}`).style.display = 'block';
-
-        // Cập nhật dữ liệu
         diaDiemList[index].dia_diem_id = selectedDiaDiemId;
       } else {
         document.getElementById(`dia_diem_info_${index}`).style.display = 'none';
@@ -309,83 +413,320 @@
       }
     });
 
-    // Trigger change event nếu đã có giá trị
+    // Trigger change if already has value
     if (data.dia_diem_id) {
       selectElement.dispatchEvent(new Event('change'));
     }
   }
 
-  // Hàm xóa địa điểm — sau khi xóa sẽ re-render toàn bộ block từ diaDiemList
   function removeDiaDiem(index) {
-    // Remove from data
     diaDiemList.splice(index, 1);
-
-    // Re-render container to keep indexes and element IDs consistent
     const container = document.getElementById('dia_diem_container');
     container.innerHTML = '';
     diaDiemList.forEach((item, idx) => {
       renderDiaDiem(item, idx);
     });
-
-    // Cập nhật lại lịch trình
-    updateLichTrinh();
   }
 
-  // Hàm tạo lịch trình tự động dựa trên địa điểm đã chọn
-  function updateLichTrinh() {
-    const lichTrinhContainer = document.getElementById('lich_trinh_container');
-
-    // Lọc các địa điểm đã chọn
-    const selectedDiaDiem = diaDiemList.filter(item => item.dia_diem_id);
-
-    if (selectedDiaDiem.length === 0) {
-      lichTrinhContainer.innerHTML = '<p class="text-muted"><i class="fas fa-info-circle"></i> Hãy chọn địa điểm ở Tab 2 để tạo lịch trình tự động</p>';
+  // ============================================================================
+  // === 6. RENDERING FUNCTIONS - LICH TRINH ===
+  // ============================================================================
+  
+  function generateLichTrinhFromSoNgay(soNgayDuLich) {
+    if (soNgayDuLich < 1) {
+      lichTrinhNgayList = [];
+      renderAllLichTrinh();
       return;
     }
 
-    let html = '';
-    selectedDiaDiem.forEach((item, index) => {
-      const diaDiem = diaDiemData.find(dd => dd.dia_diem_id == item.dia_diem_id);
-      const ngayThu = index + 1;
-
-      html += `
-        <div class="card mb-3 border-primary">
-          <div class="card-header bg-primary text-white">
-            <h5><i class="fas fa-calendar-day"></i> Ngày ${ngayThu}: ${diaDiem ? diaDiem.ten : 'Chưa rõ'}</h5>
-          </div>
-          <div class="card-body">
-            <input type="hidden" name="lich_trinh[${index}][ngay_thu]" value="${ngayThu}">
-            <input type="hidden" name="lich_trinh[${index}][dia_diem_id]" value="${item.dia_diem_id}">
-            
-            <div class="form-group">
-              <label>Tên địa điểm cụ thể</label>
-              <input type="text" class="form-control" name="lich_trinh[${index}][mo_ta]" 
-                placeholder="Ví dụ: Vịnh Hạ Long, Bãi Cháy..." />
-            </div>
-            
-            <div class="form-group">
-              <label>Nội dung lịch trình <span class="text-danger">*</span></label>
-              <textarea class="form-control" name="lich_trinh[${index}][noi_dung]" rows="4" 
-                placeholder="Mô tả hoạt động trong ngày ${ngayThu}..." required></textarea>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    lichTrinhContainer.innerHTML = html;
+    if (lichTrinhNgayList.length !== soNgayDuLich) {
+      const oldData = [...lichTrinhNgayList];
+      lichTrinhNgayList = [];
+      
+      for (let i = 1; i <= soNgayDuLich; i++) {
+        const existingDay = oldData.find(d => d.ngay_thu === i);
+        if (existingDay) {
+          lichTrinhNgayList.push(existingDay);
+        } else {
+          lichTrinhNgayList.push({
+            ngay_thu: i,
+            dia_diem_tour_id: '',
+            lich_trinh: [
+              { gio_bat_dau: '', gio_ket_thuc: '', noi_dung: '' }
+            ]
+          });
+        }
+      }
+      
+      renderAllLichTrinh();
+    }
   }
 
-  // Cập nhật lịch trình khi thay đổi địa điểm
-  document.addEventListener('change', function(e) {
-    if (e.target.classList.contains('dia-diem-select')) {
-      updateLichTrinh();
-    }
-  });
+  function renderAllLichTrinh() {
+    const container = document.getElementById('lich_trinh_container');
+    if (!container) return;
+    
+    container.innerHTML = '';
 
-  // Cập nhật lịch trình khi thêm địa điểm mới
-  const originalBtnAddDiaDiem = document.getElementById('btn-add-dia-diem');
-  originalBtnAddDiaDiem.addEventListener('click', function() {
-    setTimeout(updateLichTrinh, 100);
-  });
+    const soNgayDuLich = parseInt(document.getElementById('thoi_luong_mac_dinh').value) || 0;
+    
+    if (lichTrinhNgayList.length === 0) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = 'alert alert-warning';
+      alertDiv.innerHTML = `
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>Chưa có lịch trình!</strong><br>
+        ${soNgayDuLich > 0 
+          ? `Đang tải lịch trình cho <strong>${soNgayDuLich} ngày</strong>...`
+          : 'Vui lòng nhập <strong>"Số Ngày Du Lịch"</strong> ở "Thông Tin Danh Mục Tour" để tự động tạo lịch trình.'
+        }
+      `;
+      container.appendChild(alertDiv);
+      return;
+    }
+
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'alert alert-success mb-3';
+    infoDiv.innerHTML = `
+      <i class="fas fa-check-circle"></i> 
+      <strong>Tour ${lichTrinhNgayList.length} ngày</strong> - Vui lòng nhập thông tin lịch trình cho từng ngày
+    `;
+    container.appendChild(infoDiv);
+
+    lichTrinhNgayList.forEach((ngay, ngayIndex) => {
+      renderNgayCard(ngay, ngayIndex, container);
+    });
+  }
+
+  function renderNgayCard(ngay, ngayIndex, container) {
+    const ngayCard = document.createElement('div');
+    ngayCard.className = 'card mb-4 border-primary shadow';
+    ngayCard.id = `ngay_card_${ngayIndex}`;
+
+    const selectedDiaDiem = diaDiemList.filter(dd => dd.dia_diem_id);
+    let diaDiemOptions = '<option value="">-- Chọn Địa Điểm --</option>';
+    selectedDiaDiem.forEach((ddItem, idx) => {
+      const dd = diaDiemData.find(d => d.dia_diem_id == ddItem.dia_diem_id);
+      if (dd) {
+        const isSelected = ngay.dia_diem_tour_id == idx ? 'selected' : '';
+        diaDiemOptions += `<option value="${idx}" ${isSelected}>${dd.ten} (Thứ tự: ${idx + 1})</option>`;
+      }
+    });
+
+    let lichTrinhHTML = '';
+    ngay.lich_trinh.forEach((lt, ltIndex) => {
+      lichTrinhHTML += renderLichTrinhItem(ngay, ngayIndex, lt, ltIndex);
+    });
+
+    ngayCard.innerHTML = `
+      <div class="card-header bg-gradient-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-calendar-day"></i> NGÀY ${ngay.ngay_thu}
+            <small class="ml-2" style="font-size: 0.85rem; opacity: 0.9;">(${ngay.lich_trinh.length} hoạt động)</small>
+          </h5>
+        </div>
+      </div>
+      <div class="card-body bg-light">
+        <input type="hidden" name="ngay[${ngayIndex}][ngay_thu]" value="${ngay.ngay_thu}">
+        
+        <div class="form-group">
+          <label class="font-weight-bold">
+            <i class="fas fa-map-marker-alt text-danger"></i> Địa Điểm Cho Ngày ${ngay.ngay_thu} <span class="text-danger">*</span>
+          </label>
+          <select name="ngay[${ngayIndex}][dia_diem_tour_id]" class="form-control dia-diem-ngay" data-ngay="${ngayIndex}" required>
+            ${diaDiemOptions}
+          </select>
+          <small class="text-muted">Chọn địa điểm chính cho ngày này (từ "Chọn Địa Điểm Tour")</small>
+        </div>
+
+        <hr>
+        <h6 class="text-info mb-3"><i class="fas fa-list"></i> Các Hoạt Động Trong Ngày</h6>
+        
+        <div id="lich_trinh_ngay_${ngayIndex}">
+          ${lichTrinhHTML}
+        </div>
+
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-sm btn-info" onclick="addLichTrinhItem(${ngayIndex})">
+            <i class="fas fa-plus-circle"></i> Thêm Hoạt Động
+          </button>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(ngayCard);
+  }
+
+  function renderLichTrinhItem(ngay, ngayIndex, lt, ltIndex) {
+    return `
+      <div class="card mb-2 border-info" id="lt_${ngayIndex}_${ltIndex}">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center py-2">
+          <small><i class="fas fa-clock"></i> Lịch Trình #${ltIndex + 1}</small>
+          <button type="button" class="btn btn-danger btn-sm" onclick="removeLichTrinhItem(${ngayIndex}, ${ltIndex})" title="Xóa lịch trình này">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group mb-2">
+                <label class="mb-1"><i class="fas fa-clock text-success"></i> Giờ Bắt Đầu <span class="text-danger">*</span></label>
+                <input type="time" name="ngay[${ngayIndex}][lich_trinh][${ltIndex}][gio_bat_dau]" 
+                  class="form-control form-control-sm gio-bat-dau" 
+                  data-ngay="${ngayIndex}" 
+                  data-lt="${ltIndex}"
+                  value="${lt.gio_bat_dau}" required>
+                <small class="text-danger error-gio-bat-dau-${ngayIndex}-${ltIndex}" style="display: none;"></small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-2">
+                <label class="mb-1"><i class="fas fa-clock text-warning"></i> Giờ Kết Thúc <span class="text-danger">*</span></label>
+                <input type="time" name="ngay[${ngayIndex}][lich_trinh][${ltIndex}][gio_ket_thuc]" 
+                  class="form-control form-control-sm gio-ket-thuc" 
+                  data-ngay="${ngayIndex}" 
+                  data-lt="${ltIndex}"
+                  value="${lt.gio_ket_thuc}" required>
+                <small class="text-danger error-gio-ket-thuc-${ngayIndex}-${ltIndex}" style="display: none;"></small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-0">
+            <label class="mb-1"><i class="fas fa-align-left text-info"></i> Nội Dung Hoạt Động <span class="text-danger">*</span></label>
+            <textarea name="ngay[${ngayIndex}][lich_trinh][${ltIndex}][noi_dung]" 
+              class="form-control form-control-sm noi-dung-lt" 
+              rows="2" 
+              data-ngay="${ngayIndex}" 
+              data-lt="${ltIndex}"
+              placeholder="VD: Tham quan bảo tàng, ăn trưa tại nhà hàng... (tối thiểu 10 ký tự)" 
+              required>${lt.noi_dung}</textarea>
+            <small class="text-danger error-noi-dung-${ngayIndex}-${ltIndex}" style="display: none;"></small>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function addLichTrinhItem(ngayIndex) {
+    lichTrinhNgayList[ngayIndex].lich_trinh.push({
+      gio_bat_dau: '',
+      gio_ket_thuc: '',
+      noi_dung: ''
+    });
+    renderAllLichTrinh();
+  }
+
+  function removeLichTrinhItem(ngayIndex, ltIndex) {
+    if (lichTrinhNgayList[ngayIndex].lich_trinh.length === 1) {
+      alert('Mỗi ngày phải có ít nhất 1 hoạt động!');
+      return;
+    }
+    lichTrinhNgayList[ngayIndex].lich_trinh.splice(ltIndex, 1);
+    renderAllLichTrinh();
+  }
+
+  // ============================================================================
+  // === 7. FORM VALIDATION ===
+  // ============================================================================
+  
+  function validateLichTrinhForm() {
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('[id^="error-badge-"]').forEach(el => el.style.display = 'none');
+    
+    let hasError = false;
+    let firstErrorTab = null;
+    
+    // Tab 1 validation
+    const inputTen = document.querySelector('input[name="ten"]');
+    const selectDanhMuc = document.querySelector('select[name="danh_muc_id"]');
+    const inputGia = document.querySelector('input[name="gia_co_ban"]');
+    const inputSoNgay = document.getElementById('thoi_luong_mac_dinh');
+    
+    if (inputTen && !inputTen.value.trim()) {
+      inputTen.classList.add('is-invalid');
+      hasError = true;
+      firstErrorTab = 'tab-tour';
+    }
+    if (selectDanhMuc && !selectDanhMuc.value) {
+      selectDanhMuc.classList.add('is-invalid');
+      hasError = true;
+      if (!firstErrorTab) firstErrorTab = 'tab-tour';
+    }
+    if (inputGia && !inputGia.value) {
+      inputGia.classList.add('is-invalid');
+      hasError = true;
+      if (!firstErrorTab) firstErrorTab = 'tab-tour';
+    }
+    if (inputSoNgay && !inputSoNgay.value) {
+      inputSoNgay.classList.add('is-invalid');
+      hasError = true;
+      if (!firstErrorTab) firstErrorTab = 'tab-tour';
+    }
+    
+    if (hasError && firstErrorTab === 'tab-tour') {
+      document.getElementById('error-badge-tab1').style.display = 'inline-block';
+    }
+    
+    // Tab 2 validation
+    const diaDiemSelects = document.querySelectorAll('.dia-diem-select');
+    let hasSelectedDiaDiem = false;
+    diaDiemSelects.forEach(select => {
+      if (select.value) hasSelectedDiaDiem = true;
+    });
+    
+    if (!hasSelectedDiaDiem) {
+      document.getElementById('error-badge-tab2').style.display = 'inline-block';
+      hasError = true;
+      if (!firstErrorTab) firstErrorTab = 'tab-customer';
+    }
+    
+    // Tab 3 validation
+    if (lichTrinhNgayList.length === 0) {
+      document.getElementById('error-badge-tab3').style.display = 'inline-block';
+      hasError = true;
+      if (!firstErrorTab) firstErrorTab = 'tab-lich-trinh';
+    }
+    
+    // Navigate to first error tab
+    if (hasError && firstErrorTab) {
+      if (firstErrorTab === 'tab-tour') {
+        document.getElementById('tab-link-tour').click();
+      } else if (firstErrorTab === 'tab-customer') {
+        document.getElementById('tab-link-customer').click();
+      } else if (firstErrorTab === 'tab-lich-trinh') {
+        document.getElementById('tab-link-lich-trinh').click();
+      }
+      
+      setTimeout(() => {
+        const firstError = document.querySelector('.is-invalid');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+      
+      return false;
+    }
+    
+    return true;
+  }
+
+  // ============================================================================
+  // === 8. FORM SUBMISSION ===
+  // ============================================================================
+  
+  const formElement = document.querySelector('form');
+  const btnSubmit = document.getElementById('btnSubmitForm');
+  
+  if (btnSubmit && formElement) {
+    btnSubmit.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (!validateLichTrinhForm()) {
+        return;
+      }
+      
+      formElement.submit();
+    });
+  }
 </script>

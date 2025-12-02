@@ -10,7 +10,8 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
 ?>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const select = document.getElementById("lich_id");
+    const tourSelect = document.getElementById("tour_id");
+    const lichSelect = document.getElementById("lich_id");
     const tourInfoBox = document.getElementById("tourInfo");
     const ten_tour = document.getElementById("ten_tour");
     const mo_ta = document.getElementById("mo_ta");
@@ -18,12 +19,14 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     const chinh_sach = document.getElementById("chinh_sach");
     const diem_khoi_hanh = document.getElementById("diem_khoi_hanh");
     const oldData = <?= json_encode($old) ?>;
+    const listLichAll = <?= json_encode($listLichAll ?? []) ?>;
+    const listTours = <?= json_encode($listTours ?? []) ?>;
 
     // Hàm restore thông tin tour
     function restoreTourInfo() {
       if (oldData.lich_id) {
-        select.value = oldData.lich_id;
-        const option = select.options[select.selectedIndex] || {};
+        lichSelect.value = oldData.lich_id;
+        const option = lichSelect.options[lichSelect.selectedIndex] || {};
         ten_tour.value = option.getAttribute("data-ten-tour") || "";
         mo_ta.value = option.getAttribute("data-mo-ta") || "";
         gia_co_ban.value = option.getAttribute("data-gia-co-ban") || "";
@@ -34,9 +37,9 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     }
 
     // tour info change event
-    if (select) {
-      select.addEventListener("change", function() {
-        const option = select.options[select.selectedIndex] || {};
+    if (lichSelect) {
+      lichSelect.addEventListener("change", function() {
+        const option = lichSelect.options[lichSelect.selectedIndex] || {};
         ten_tour.value = option.getAttribute("data-ten-tour") || "";
         mo_ta.value = option.getAttribute("data-mo-ta") || "";
         gia_co_ban.value = option.getAttribute("data-gia-co-ban") || "";
@@ -46,100 +49,46 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
       });
     }
 
-    // elements for customers
+    // elements for customers (table version without add/remove buttons)
     const soNguoiInput = document.getElementById("so_nguoi");
-    const container = document.getElementById("customerList");
+    const container = document.querySelector('#tableDsKhach tbody');
+    const serverErrors = <?= json_encode($error ?? []) ?>;
+
+    function buildRow(i, khachOld) {
+      const errName = serverErrors[`ds_khach_${i}_ho_ten`] ?? "";
+      const errGender = serverErrors[`ds_khach_${i}_gioi_tinh`] ?? "";
+      const errPhone = serverErrors[`ds_khach_${i}_so_dien_thoai`] ?? "";
+      const errEmail = serverErrors[`ds_khach_${i}_email`] ?? "";
+      const errCCCD = serverErrors[`ds_khach_${i}_cccd`] ?? "";
+      const errBirthday = serverErrors[`ds_khach_${i}_ngay_sinh`] ?? "";
+      const errNote = serverErrors[`ds_khach_${i}_ghi_chu`] ?? "";
+      const oldHoTen = khachOld.ho_ten ?? "";
+      const oldGioiTinh = khachOld.gioi_tinh ?? "";
+      const oldSoDienThoai = khachOld.so_dien_thoai ?? "";
+      const oldEmail = khachOld.email ?? "";
+      const oldCCCD = khachOld.cccd ?? "";
+      const oldNgaySinh = khachOld.ngay_sinh ?? "";
+      const oldGhiChu = khachOld.ghi_chu ?? "";
+      return `<tr data-index="${i}">
+        <td class="align-middle">${i + 1}</td>
+        <td><input type="text" name="ds_khach[${i}][ho_ten]" class="form-control form-control-sm" value="${oldHoTen}">${errName ? `<small class='text-danger'>${errName}</small>` : ''}</td>
+        <td><select name="ds_khach[${i}][gioi_tinh]" class="form-control form-control-sm"><option value="" ${!oldGioiTinh ? 'selected' : ''}>--</option><option value="Nam" ${oldGioiTinh === 'Nam' ? 'selected' : ''}>Nam</option><option value="Nữ" ${oldGioiTinh === 'Nữ' ? 'selected' : ''}>Nữ</option></select>${errGender ? `<small class='text-danger'>${errGender}</small>` : ''}</td>
+        <td><input type="text" name="ds_khach[${i}][so_dien_thoai]" class="form-control form-control-sm" value="${oldSoDienThoai}">${errPhone ? `<small class='text-danger'>${errPhone}</small>` : ''}</td>
+        <td><input type="text" name="ds_khach[${i}][email]" class="form-control form-control-sm" value="${oldEmail}">${errEmail ? `<small class='text-danger'>${errEmail}</small>` : ''}</td>
+        <td><input type="text" name="ds_khach[${i}][cccd]" class="form-control form-control-sm" value="${oldCCCD}">${errCCCD ? `<small class='text-danger'>${errCCCD}</small>` : ''}</td>
+        <td><input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control form-control-sm" value="${oldNgaySinh}">${errBirthday ? `<small class='text-danger'>${errBirthday}</small>` : ''}</td>
+        <td><input type="text" name="ds_khach[${i}][ghi_chu]" class="form-control form-control-sm" value="${oldGhiChu}">${errNote ? `<small class='text-danger'>${errNote}</small>` : ''}</td>
+      </tr>`;
+    }
 
     function generateCustomers(count) {
-      // đảm bảo count ít nhất = 1 (theo min và value của bạn)
       count = parseInt(count) || 1;
-
-      // Nếu container rỗng hoặc số lượng khác, (tạo lại)
-      const existing = container.querySelectorAll('.khach-item').length;
-      if (existing === count) return; // không cần rebuild nếu cùng số lượng
-
-      container.innerHTML = "";
-      for (let i = 0; i < count; i++) { // i = 0 → khớp với controller
-        const serverErrors = <?= json_encode($error ?? []) ?>;
-        const dsKhachOld = oldData.ds_khach ?? [];
+      const dsKhachOld = oldData.ds_khach ?? [];
+      container.innerHTML = '';
+      for (let i = 0; i < count; i++) {
         const khachOld = dsKhachOld[i] ?? {};
-
-        // Lấy từng lỗi theo đúng key trong controller
-        const errName = serverErrors[`ds_khach_${i}_ho_ten`] ?? "";
-        const errGender = serverErrors[`ds_khach_${i}_gioi_tinh`] ?? "";
-        const errPhone = serverErrors[`ds_khach_${i}_so_dien_thoai`] ?? "";
-        const errEmail = serverErrors[`ds_khach_${i}_email`] ?? "";
-        const errCCCD = serverErrors[`ds_khach_${i}_cccd`] ?? "";
-        const errBirthday = serverErrors[`ds_khach_${i}_ngay_sinh`] ?? "";
-        const errNote = serverErrors[`ds_khach_${i}_ghi_chu`] ?? "";
-
-        // Lấy dữ liệu cũ
-        const oldHoTen = khachOld.ho_ten ?? "";
-        const oldGioiTinh = khachOld.gioi_tinh ?? "";
-        const oldSoDienThoai = khachOld.so_dien_thoai ?? "";
-        const oldEmail = khachOld.email ?? "";
-        const oldCCCD = khachOld.cccd ?? "";
-        const oldNgaySinh = khachOld.ngay_sinh ?? "";
-        const oldGhiChu = khachOld.ghi_chu ?? "";
-
-        const html = `
-    <div class="col-md-6">
-        <div class="border p-3 mb-3 rounded bg-light khach-item">
-            <h5>Khách hàng ${i + 1}</h5>
-
-            <div class="form-group">
-                <label>Họ Tên</label>
-                <input type="text" name="ds_khach[${i}][ho_ten]" class="form-control" value="${oldHoTen}">
-                ${errName ? `<div class="invalid-feedback d-block">${errName}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>Giới Tính</label>
-                <select name="ds_khach[${i}][gioi_tinh]" class="form-control select2">
-                    <option value="" disabled ${!oldGioiTinh ? 'selected' : ''}>--Chọn Giới Tính--</option>
-                    <option value="Nam" ${oldGioiTinh === 'Nam' ? 'selected' : ''}>Nam</option>
-                    <option value="Nữ" ${oldGioiTinh === 'Nữ' ? 'selected' : ''}>Nữ</option>
-                </select>
-                ${errGender ? `<div class="invalid-feedback d-block">${errGender}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>Số Điện Thoại</label>
-                <input type="text" name="ds_khach[${i}][so_dien_thoai]" class="form-control" value="${oldSoDienThoai}">
-                ${errPhone ? `<div class="invalid-feedback d-block">${errPhone}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="text" name="ds_khach[${i}][email]" class="form-control" value="${oldEmail}">
-                ${errEmail ? `<div class="invalid-feedback d-block">${errEmail}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>CCCD</label>
-                <input type="text" name="ds_khach[${i}][cccd]" class="form-control" value="${oldCCCD}">
-                ${errCCCD ? `<div class="invalid-feedback d-block">${errCCCD}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>Ngày Sinh</label>
-                <input type="date" name="ds_khach[${i}][ngay_sinh]" class="form-control" value="${oldNgaySinh}">
-                ${errBirthday ? `<div class="invalid-feedback d-block">${errBirthday}</div>` : ""}
-            </div>
-
-            <div class="form-group">
-                <label>Ghi Chú</label>
-                <textarea name="ds_khach[${i}][ghi_chu]" class="form-control">${oldGhiChu}</textarea>
-                ${errNote ? `<div class="invalid-feedback d-block">${errNote}</div>` : ""}
-            </div>
-
-        </div>
-    </div>
-    `;
-
-        container.insertAdjacentHTML("beforeend", html);
+        container.insertAdjacentHTML('beforeend', buildRow(i, khachOld));
       }
-
     }
 
     // khi thay đổi số lượng
@@ -156,7 +105,20 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     // Điều này đảm bảo khi tải lại trang bạn sẽ thấy 1 form (value=1)
     (function initOnLoad() {
       // Restore tour info nếu có dữ liệu cũ
-      restoreTourInfo();
+      if (oldData.tour_id) {
+        tourSelect.value = oldData.tour_id;
+        rebuildLichOptionsByTour(oldData.tour_id);
+        if (oldData.lich_id) {
+          lichSelect.value = oldData.lich_id;
+          const option = lichSelect.options[lichSelect.selectedIndex] || {};
+          ten_tour.value = option.getAttribute("data-ten-tour") || "";
+          mo_ta.value = option.getAttribute("data-mo-ta") || "";
+          gia_co_ban.value = option.getAttribute("data-gia-co-ban") || "";
+          chinh_sach.value = option.getAttribute("data-chinh-sach") || "";
+          diem_khoi_hanh.value = option.getAttribute("data-diem-khoi-hanh") || "";
+          tourInfoBox.style.display = "block";
+        }
+      }
 
       const val = soNguoiInput ? (parseInt(soNguoiInput.value) || 1) : 1;
       generateCustomers(val);
@@ -191,9 +153,49 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     }
 
     // Khi chọn tour → cập nhật thông tin + tính tổng
-    select.addEventListener("change", function() {
+    lichSelect.addEventListener("change", function() {
       tinhTongTien();
     });
+
+    function rebuildLichOptionsByTour(tourId) {
+      // clear
+      lichSelect.innerHTML = '<option value="" disabled selected>--Chọn Lịch Khởi Hành--</option>';
+      const lichForTour = listLichAll.filter(l => String(l.tour_id) === String(tourId));
+      // find tour info
+      const tour = listTours.find(t => String(t.tour_id) === String(tourId));
+      lichForTour.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.lich_id;
+        opt.textContent = `${tour?.ten_tour || ''} | ${formatDateJS(l.ngay_bat_dau)}`;
+        opt.setAttribute('data-ten-tour', tour?.ten_tour || '');
+        opt.setAttribute('data-mo-ta', tour?.mo_ta || '');
+        opt.setAttribute('data-gia-co-ban', tour?.gia_co_ban || '');
+        opt.setAttribute('data-chinh-sach', tour?.chinh_sach || '');
+        opt.setAttribute('data-diem-khoi-hanh', tour?.diem_khoi_hanh || '');
+        lichSelect.appendChild(opt);
+      });
+    }
+
+    function formatDateJS(dateStr) {
+      const d = new Date(dateStr);
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}-${mm}-${yyyy}`;
+    }
+
+    if (tourSelect) {
+      tourSelect.addEventListener('change', function() {
+        const tourId = this.value;
+        tourInfoBox.style.display = 'none';
+        ten_tour.value = '';
+        mo_ta.value = '';
+        gia_co_ban.value = '';
+        chinh_sach.value = '';
+        diem_khoi_hanh.value = '';
+        rebuildLichOptionsByTour(tourId);
+      });
+    }
 
     // Khi thay đổi số người → tạo danh sách khách + tính tổng
     soNguoiInput.addEventListener("input", function() {
@@ -201,6 +203,15 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
       generateCustomers(val);
       tinhTongTien();
     });
+
+    // Add row button
+    const btnAddRow = document.getElementById('btnAddKhach');
+    if (btnAddRow) {
+      btnAddRow.addEventListener('click', function() {
+        addRow();
+        tinhTongTien();
+      });
+    }
 
     // Tính tổng ngay lúc load trang
     tinhTongTien();
@@ -263,26 +274,31 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
                         <h4>Chọn Tour Du Lịch</h4>
 
                         <div class="form-group">
-                          <select id="lich_id" name="lich_id" class="form-control select2">
-                            <option value="" <?= empty($old['lich_id']) ? 'selected' : '' ?> disabled>--Chọn Tour--</option>
-                            <?php foreach ($listLichAndTour as $item): ?>
-                              <option value="<?= $item['lich_id'] ?>"
-                                data-ten-tour="<?= $item['ten_tour'] ?>"
-                                data-mo-ta="<?= $item['mo_ta'] ?>"
-                                data-gia-co-ban="<?= $item['gia_co_ban'] ?>"
-                                data-chinh-sach="<?= $item['chinh_sach'] ?>"
-                                data-diem-khoi-hanh="<?= $item['diem_khoi_hanh'] ?>"
-                                <?= ($old['lich_id'] ?? '') == $item['lich_id'] ? 'selected' : '' ?>>
-                                <?= $item['ten_tour'] . ' | ' . formatDate($item['ngay_bat_dau']) ?>
+                          <label>Tour</label>
+                          <select id="tour_id" name="tour_id" class="form-control select2">
+                            <option value="" <?= empty($old['tour_id']) ? 'selected' : '' ?> disabled>--Chọn Tour--</option>
+                            <?php foreach ($listTours as $tour): ?>
+                              <option value="<?= $tour['tour_id'] ?>" <?= ($old['tour_id'] ?? '') == $tour['tour_id'] ? 'selected' : '' ?>>
+                                <?= $tour['ten_tour'] ?>
                               </option>
                             <?php endforeach; ?>
+                          </select>
+                          <?php if (isset($error['tour_id'])): ?>
+                            <div class="invalid-feedback d-block"> <?= $error['tour_id'] ?> </div>
+                          <?php endif; ?>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Lịch Khởi Hành</label>
+                          <select id="lich_id" name="lich_id" class="form-control select2">
+                            <option value="" <?= empty($old['lich_id']) ? 'selected' : '' ?> disabled>--Chọn Lịch Khởi Hành--</option>
                           </select>
                           <?php if (isset($error['lich_id'])): ?>
                             <div class="invalid-feedback d-block"> <?= $error['lich_id'] ?> </div>
                           <?php endif; ?>
                         </div>
 
-                        <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="<?= $old['lich_id'] ?? 'display:none;' ?>">
+                        <div id="tourInfo" class="p-3 bg-light border rounded mt-3" style="<?= isset($old['lich_id']) ? '' : 'display:none;' ?>">
                           <h5>Thông tin Tour</h5>
                           <div class="row">
 
@@ -407,7 +423,23 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
                       <div class="tab-pane fade" id="tab-list" role="tabpanel">
                         <h4>Thông Tin Danh Sách Khách Hàng</h4>
 
-                        <div id="customerList" class="row"></div>
+                        <div class="table-responsive" style="max-height:400px; overflow:auto;">
+                          <table class="table table-bordered table-sm" id="tableDsKhach">
+                            <thead class="thead-light">
+                              <tr>
+                                <th style="width:40px">#</th>
+                                <th>Họ Tên</th>
+                                <th>Giới Tính</th>
+                                <th>SĐT</th>
+                                <th>Email</th>
+                                <th>CCCD</th>
+                                <th>Ngày Sinh</th>
+                                <th>Ghi Chú</th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
 
                         <div id="warningSoNguoi" class="alert alert-danger" style="display:none;">
                           Vui lòng nhập số lượng người tham gia tour.

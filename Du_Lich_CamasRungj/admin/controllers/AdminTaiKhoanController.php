@@ -2,17 +2,14 @@
 class AdminTaiKhoanController
 {
     public $modelTaiKhoan;
-    public $modelDonHang;
-    public $modelSanPham;
+
     public function __construct()
     {
         $this->modelTaiKhoan = new AdminTaiKhoan();
-        $this->modelDonHang = new AdminDonHang();
-        $this->modelSanPham = new AdminSanPham();
     }
 
 
-        public function danhSachQuanTri()
+    public function danhSachQuanTri()
     {
         $listQuanTri = $this->modelTaiKhoan->getAllTaiKhoan(1);
         require_once './views/taikhoan/quantri/listQuanTri.php';
@@ -183,48 +180,57 @@ class AdminTaiKhoanController
         $id_khach_hang = $_GET['id_khach_hang'];
         $khachHang  = $this->modelTaiKhoan->getDetailTaiKhoan($id_khach_hang);
         $trangThai  = $this->modelTaiKhoan->getAllTrangThai();
-        $listDonHang = $this->modelDonHang->getDonHangFromKhachHang($id_khach_hang);
-        $listBinhLuan = $this->modelSanPham->getBinhLuanFromKhachHang($id_khach_hang);
+
+        // TODO: Cần tạo model cho đơn hàng và bình luận
+        $listDonHang = [];
+        $listBinhLuan = [];
 
         require_once './views/taikhoan/khachhang/detailKhachHang.php';
     }
 
     public function formLogin()
     {
-        require_once './views/auth/formLogin.php';
+        // Nếu đã đăng nhập, chuyển về trang chủ admin
+        if (isset($_SESSION['user_admin'])) {
+            header('Location: ' . BASE_URL_ADMIN);
+            exit();
+        }
 
+        require_once './views/auth/formLogin.php';
         deleteSessionError();
     }
 
     public function login()
     {
-        if (isset($_SESSION['user_admin'])) {
-            unset($_SESSION['user_admin']);
-            unset($_SESSION['user_admin_infor']);
-            unset($_SESSION['old_email']);
-            unset($_SESSION['error']);
-        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-            // var_dump($_SESSION['user_admin']['anh_dai_dien']);
-            // die;
 
+            // Validate input
+            if (empty($email) || empty($password)) {
+                $_SESSION['error'] = 'Vui lòng nhập đầy đủ email và mật khẩu';
+                $_SESSION['old_email'] = $email;
+                header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
+                exit();
+            }
+
+            // Kiểm tra đăng nhập
             $user = $this->modelTaiKhoan->checkLogin($email, $password);
+
             if ($user['trang_thai'] === true) {
+                // Đăng nhập thành công - Lưu toàn bộ thông tin user vào session
                 $_SESSION['user_admin'] = $user['user'];
-                $_SESSION['user_admin_infor'] = [
-                    'id' => $user['user']['id'],
-                    'ho_ten' => $user['user']['ho_ten'],
-                    'email' => $user['user']['email'],
-                    'anh_dai_dien' => $user['user']['anh_dai_dien'] ?? 'https://www.transparentpng.com/thumb/user/gray-user-profile-icon-png-fP8Q1P.png',
-                ];
+
+                // Xóa session lỗi và email cũ
+                unset($_SESSION['error']);
+                unset($_SESSION['old_email']);
+
                 header('Location: ' . BASE_URL_ADMIN);
                 exit();
             } else {
+                // Đăng nhập thất bại
                 $_SESSION['error'] = $user['message'];
-                $_SESSION['old_email'] = $user['email']; // giữ email để hiển thị lại
+                $_SESSION['old_email'] = $email;
                 header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
             }
@@ -234,7 +240,6 @@ class AdminTaiKhoanController
     {
         if (isset($_SESSION['user_admin'])) {
             unset($_SESSION['user_admin']);
-            unset($_SESSION['user_admin_infor']);
             unset($_SESSION['old_email']);
             unset($_SESSION['error']);
         }
@@ -356,4 +361,3 @@ class AdminTaiKhoanController
         }
     }
 }
-

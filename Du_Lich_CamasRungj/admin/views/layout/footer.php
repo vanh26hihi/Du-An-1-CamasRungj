@@ -1,8 +1,9 @@
 ﻿ <footer class="main-footer">
    <div class="float-right d-none d-sm-block">
-     <b>CamasRungj</b>
+     <b><i class="fas fa-globe-asia"></i> CamasRungj</b>
    </div>
-   <Strong>Webside Quản Lý Du Lịch CamasRungj</Strong>
+   <strong><i class="fas fa-briefcase"></i> Website Quản Lý Du Lịch CamasRungj</strong>
+   <span class="ml-2" style="opacity: 0.8;">- Nền tảng quản lý tour du lịch chuyên nghiệp</span>
  </footer>
 
  <!-- Control Sidebar -->
@@ -34,4 +35,5 @@
  <script src="./assets/dist/js/adminlte.min.js"></script>
  <!-- AdminLTE for demo purposes -->
  <script src="./assets/dist/js/demo.js"></script>
+
 

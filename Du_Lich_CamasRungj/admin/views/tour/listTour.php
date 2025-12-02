@@ -94,11 +94,14 @@
                         <?php endif; ?>
                       </td>
                       <td class="text-center">
+                        <a href="<?= BASE_URL_ADMIN . '?act=copy-tour&tour_id=' . $tour['tour_id'] ?>" class="mb-1">
+                          <button class="btn btn-secondary btn-sm" title="Tạo lịch mới cho tour">Lịch mới</button>
+                        </a>
                         <?php if (!empty($tour['lich_id'])): ?>
-                          <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&lich_id=' . $tour['lich_id'] ?>">
+                          <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&lich_id=' . $tour['lich_id'] ?>" class="mb-1">
                             <button class="btn btn-primary btn-sm">Sửa</button>
                           </a>
-                          <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa lịch khởi hành này không?');">
+                          <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa lịch khởi hành này không?');" class="mb-1">
                             <button class="btn btn-danger btn-sm">Xóa</button>
                           </a>
                         <?php else: ?>

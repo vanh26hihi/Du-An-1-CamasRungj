@@ -18,18 +18,56 @@ class AdminTourController
     // Form thêm lịch khởi hành cho tour
     public function formAddTour()
     {
-        $allTours = $this->model->getAllToursForSelect(); // Danh sách tour
-        $allHDV = $this->model->getAllHDV(); // Danh sách hướng dẫn viên
-        $dsTrangThai = $this->model->getAllTrangThaiLichKhoiHanh(); // Danh sách trạng thái
-
-        // Lấy dịch vụ theo từng loại
+        $allTours = $this->model->getAllToursForSelect();
+        $allHDV = $this->model->getAllHDV();
+        $dsTrangThai = $this->model->getAllTrangThaiLichKhoiHanh();
         $transportServices = $this->model->getDichVuByType('transport');
         $hotelServices = $this->model->getDichVuByType('hotel');
         $cateringServices = $this->model->getDichVuByType('catering');
 
         $error = $_SESSION['error'] ?? [];
+        // Prefill data when coming from copyTour
+        $copyPrefill = $_SESSION['copy_prefill'] ?? null;
+        if (isset($_SESSION['copy_prefill'])) {
+            unset($_SESSION['copy_prefill']); // one-time use
+        }
         require 'views/tour/addTour.php';
         deleteSessionError();
+    }
+
+    // Chuẩn bị tạo lịch mới cho tour đã có: chỉ lấy thông tin, HDV & dịch vụ mẫu (không tạo tour mới)
+    public function copyTour()
+    {
+        $tour_id = $_GET['tour_id'] ?? null;
+        if (!$tour_id) {
+            $_SESSION['error'] = 'Thiếu tour_id để sao chép';
+            header('Location: ' . BASE_URL_ADMIN . '?act=quan-ly-tour');
+            exit();
+        }
+        // Lấy lịch khởi hành mới nhất của tour để làm template HDV & dịch vụ
+        $latestLich = $this->model->getLatestLichByTour($tour_id);
+        if ($latestLich) {
+            $templateHDV = $this->model->getPhanCongHDVByLich($latestLich['lich_id']);
+            $templateServices = $this->model->getDichVuByLich($latestLich['lich_id']);
+
+            // Chuẩn hóa dữ liệu để view dễ dùng
+            $hdv_ids = [];
+            $vai_tros = [];
+            foreach ($templateHDV as $pc) {
+                $hdv_ids[] = $pc['hdv_id'];
+                $vai_tros[] = $pc['vai_tro'];
+            }
+
+            $_SESSION['copy_prefill'] = [
+                'hdv_ids' => $hdv_ids,
+                'vai_tros' => $vai_tros,
+                'services' => $templateServices
+            ];
+        }
+
+        $_SESSION['success'] = 'Tạo lịch mới từ tour đã chọn';
+        header('Location: ' . BASE_URL_ADMIN . '?act=form-them-tour&tour_id=' . $tour_id . '&copied=1');
+        exit();
     }
 
     // Xử lý thêm lịch khởi hành
@@ -454,6 +492,7 @@ class AdminTourController
     // Xóa lịch khởi hành (cascade: lich_trinh, phan_cong_hdv)
     public function deleteTour()
     {
+        // Xóa lịch khởi hành
         $lich_id = $_GET['lich_id'] ?? null;
         if ($lich_id) {
             $result = $this->model->deleteLichKhoiHanh($lich_id);
@@ -462,7 +501,45 @@ class AdminTourController
             } else {
                 $_SESSION['error'] = "Có lỗi khi xóa lịch khởi hành";
             }
+            header('Location: ' . BASE_URL_ADMIN . '?act=quan-ly-tour');
+            exit;
         }
+        
+        // Xóa tour (cascade delete tất cả dữ liệu liên quan)
+        $tour_id = $_GET['tour_id'] ?? null;
+        if ($tour_id) {
+            // Xóa theo thứ tự: lịch trình → dia_diem_tour → lich_khoi_hanh → tour
+            require_once 'models/AdminDanhMuc.php';
+            $danhMucModel = new AdminDanhMuc();
+            
+            try {
+                // 1. Xóa lịch trình
+                $danhMucModel->deleteLichTrinhByTour($tour_id);
+                
+                // 2. Xóa dia_diem_tour
+                $danhMucModel->deleteDiaDiemTourByTour($tour_id);
+                
+                // 3. Xóa tất cả lịch khởi hành của tour
+                $this->model->deleteLichKhoiHanhByTour($tour_id);
+                
+                // 4. Xóa tour
+                $result = $this->model->deleteTourById($tour_id);
+                
+                if ($result) {
+                    $_SESSION['success'] = "Xóa tour thành công";
+                } else {
+                    $_SESSION['error'] = "Có lỗi khi xóa tour";
+                }
+            } catch (Exception $e) {
+                $_SESSION['error'] = "Lỗi: " . $e->getMessage();
+            }
+            
+            header('Location: ' . BASE_URL_ADMIN . '?act=danh-muc-tour');
+            exit;
+        }
+        
+        // Không có tham số
+        $_SESSION['error'] = "Thiếu tham số để xóa";
         header('Location: ' . BASE_URL_ADMIN . '?act=quan-ly-tour');
         exit;
     }

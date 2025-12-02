@@ -638,4 +638,53 @@ class AdminTour
             return [];
         }
     }
+
+    // Lấy lịch khởi hành mới nhất (làm template sao chép HDV & dịch vụ)
+    public function getLatestLichByTour($tourId)
+    {
+        try {
+            $sql = "SELECT * FROM lich_khoi_hanh WHERE tour_id = :tour_id ORDER BY ngay_bat_dau DESC, lich_id DESC LIMIT 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(['tour_id' => $tourId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Xóa tất cả lịch khởi hành của tour
+     */
+    public function deleteLichKhoiHanhByTour($tourId)
+    {
+        try {
+            // Lấy tất cả lich_id của tour
+            $lichIds = $this->getAllLichKhoiHanhByTour($tourId);
+            
+            // Xóa từng lịch (cascade delete lịch trình, HDV, dịch vụ)
+            foreach ($lichIds as $lichId) {
+                $this->deleteLichKhoiHanh($lichId);
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            echo "Lỗi deleteLichKhoiHanhByTour: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    /**
+     * Xóa tour theo tour_id
+     */
+    public function deleteTourById($tourId)
+    {
+        try {
+            $sql = "DELETE FROM tour WHERE tour_id = :tour_id";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute(['tour_id' => $tourId]);
+        } catch (Exception $e) {
+            echo "Lỗi deleteTourById: " . $e->getMessage();
+            return false;
+        }
+    }
 }

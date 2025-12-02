@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../commons/env.php';
 require_once '../commons/function.php';
 
@@ -13,10 +14,21 @@ require_once './controllers/AdminTaiKhoanController.php';
 
 require_once './models/AdminBooking.php';
 require_once './models/AdminTour.php';
+require_once './models/AdminTaiKhoan.php';
 
 $act = $_GET['act'] ?? '/';
 
-$publicRoutes = ['login-admin', 'check-login-admin', 'logout-admin'];
+// Danh sách route công khai (không cần đăng nhập)
+$publicRoutes = ['login-admin', 'check-login-admin'];
+
+// Kiểm tra đăng nhập cho tất cả route trừ public routes
+if (!in_array($act, $publicRoutes)) {
+    // Nếu chưa đăng nhập, chuyển đến trang login
+    if (empty($_SESSION['user_admin'])) {
+        header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
+        exit();
+    }
+}
 
 match ($act) {
     '/' => (new AdminBaoCaoThongKeController())->home(),
@@ -77,4 +89,5 @@ match ($act) {
     'form-sua-tour' => (new AdminTourController())->formEditTour(),
     'post-sua-tour' => (new AdminTourController())->postEditTour(),
     'xoa-tour' => (new AdminTourController())->deleteTour(),
+    'copy-tour' => (new AdminTourController())->copyTour(),
 };
