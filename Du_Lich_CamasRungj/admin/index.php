@@ -14,7 +14,7 @@ require_once './controllers/AdminTaiKhoanController.php';
 require_once './controllers/AdminTaiKhoanQuanTriController.php';
 require_once './controllers/AdminTaiKhoanHDVController.php';
 require_once './controllers/AdminTaiKhoanCaNhanController.php';
-require_once './controllers/hdv/HDVLichLamViecController.php';
+require_once './controllers/HDVLichLamViecController.php';
 
 require_once './models/AdminBooking.php';
 require_once './models/AdminTour.php';

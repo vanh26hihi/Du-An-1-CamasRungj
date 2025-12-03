@@ -1,5 +1,5 @@
 <?php
-require_once './commons/function.php';
+require_once '../commons/function.php';
 require_once './models/HDVModel.php';
 require_once './models/DiemDanhModel.php';
 require_once './models/NhatKyTourModel.php';
@@ -8,8 +8,8 @@ class HDVLichLamViecController {
 
     // Helper: Lấy thông tin lịch khởi hành
     private function getLichInfo($lich_id) {
-        $sql = "SELECT lkh.*, t.ten as ten_tour, t.mo_ta, t.hinh_anh,
-                       t.gia_co_ban, t.so_ngay, t.diem_khoi_hanh, t.diem_ket_thuc
+        $sql = "SELECT lkh.*, t.ten as ten_tour, t.mo_ta, t.mo_ta_ngan,
+                       t.gia_co_ban, t.thoi_luong_mac_dinh, t.diem_khoi_hanh
                 FROM lich_khoi_hanh lkh
                 JOIN tour t ON t.tour_id = lkh.tour_id
                 WHERE lkh.lich_id = ?";
@@ -47,7 +47,7 @@ class HDVLichLamViecController {
         }
         
         $lichInfo = $this->getLichInfo($lich_id);
-        $data = HDVModel::getPassengersByLich($lich_id);
+        $danhSachKhach = HDVModel::getPassengersByLich($lich_id);
         
         require_once './views/layout/header.php';
         require_once './views/layout/navbar.php';
