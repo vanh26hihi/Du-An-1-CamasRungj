@@ -296,7 +296,11 @@ body.sidebar-collapse .nav-sidebar .nav-item .nav-link:hover {
   transform: none !important;
 }
 
-body.sidebar-mini.sidebar-collapse .nav-sidebar .nav-item .nav-link:hover .nav-icon,
+body.sidebar-mini.sidebar-collapse
+  .nav-sidebar
+  .nav-item
+  .nav-link:hover
+  .nav-icon,
 body.sidebar-collapse .nav-sidebar .nav-item .nav-link:hover .nav-icon {
   color: #3498db !important;
   transform: scale(1.12);
@@ -310,7 +314,11 @@ body.sidebar-collapse .nav-sidebar .nav-item .nav-link.active {
   border-left-width: 5px !important;
 }
 
-body.sidebar-mini.sidebar-collapse .nav-sidebar .nav-item .nav-link.active .nav-icon,
+body.sidebar-mini.sidebar-collapse
+  .nav-sidebar
+  .nav-item
+  .nav-link.active
+  .nav-icon,
 body.sidebar-collapse .nav-sidebar .nav-item .nav-link.active .nav-icon {
   color: #f39c12 !important;
   font-weight: 600;
@@ -329,4 +337,3 @@ body.sidebar-collapse .sidebar {
   padding-right: 0 !important;
   padding-top: 0 !important;
 }
-
