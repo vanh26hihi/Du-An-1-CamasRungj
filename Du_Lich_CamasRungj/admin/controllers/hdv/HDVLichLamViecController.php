@@ -23,10 +23,18 @@ class HDVLichLamViecController
     
     public function danhSachLichLamViec()
     {
-        $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
         
-        // Lấy thông tin HDV
-        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        // Lấy hdv_id từ nguoi_dung_id
+        $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+        
+        if (!$hdvInfo) {
+            $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+            header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
+            exit();
+        }
+        
+        $hdv_id = $hdvInfo['hdv_id'];
         
         // Lấy danh sách lịch làm việc
         $lichLamViec = HDVModel::getLichLamViecByHDV($hdv_id);
@@ -34,7 +42,7 @@ class HDVLichLamViecController
         require_once './views/layout/header.php';
         require_once './views/layout/navbar.php';
         require_once './views/layout/sidebar.php';
-        require_once './views/lich-lam-viec/danh-sach-lich.php';
+        require_once './views/lich-lam-viec/lich-lam-viec-home.php';
         require_once './views/layout/footer.php';
     }
 
@@ -45,7 +53,16 @@ class HDVLichLamViecController
     public function danhSachKhach()
     {
         $lich_id = $_GET['lich_id'] ?? null;
-        $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        
+        // Lấy hdv_id từ nguoi_dung_id
+        $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+            header('Location: ' . BASE_URL_ADMIN);
+            exit();
+        }
+        $hdv_id = $hdvInfo['hdv_id'];
         
         if (!$lich_id) {
             $_SESSION['error'] = 'Không tìm thấy lịch trình';
@@ -86,7 +103,16 @@ class HDVLichLamViecController
     public function diemDanh()
     {
         $lich_id = $_GET['lich_id'] ?? null;
-        $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        
+        // Lấy hdv_id từ nguoi_dung_id
+        $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+            header('Location: ' . BASE_URL_ADMIN);
+            exit();
+        }
+        $hdv_id = $hdvInfo['hdv_id'];
         
         if (!$lich_id) {
             $_SESSION['error'] = 'Không tìm thấy lịch trình';
@@ -128,7 +154,16 @@ class HDVLichLamViecController
     {
         $hanh_khach_id = $_GET['hanh_khach_id'] ?? null;
         $lich_id = $_GET['lich_id'] ?? null;
-        $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        
+        // Lấy hdv_id từ nguoi_dung_id
+        $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+            header('Location: ' . BASE_URL_ADMIN);
+            exit();
+        }
+        $hdv_id = $hdvInfo['hdv_id'];
         
         if (!$hanh_khach_id || !$lich_id) {
             $_SESSION['error'] = 'Thiếu thông tin điểm danh';
@@ -158,7 +193,16 @@ class HDVLichLamViecController
     public function nhatKyTour()
     {
         $lich_id = $_GET['lich_id'] ?? null;
-        $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
+        
+        // Lấy hdv_id từ nguoi_dung_id
+        $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+            header('Location: ' . BASE_URL_ADMIN);
+            exit();
+        }
+        $hdv_id = $hdvInfo['hdv_id'];
         
         if (!$lich_id) {
             $_SESSION['error'] = 'Không tìm thấy lịch trình';
@@ -196,14 +240,23 @@ class HDVLichLamViecController
     // === THÊM NHẬT KÝ TOUR ===
     // ========================================================================
     
-    public function themNhatKy()
+    public function themNhatKyTour()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $lich_id = $_POST['lich_id'] ?? null;
             $dia_diem = trim($_POST['dia_diem'] ?? '');
             $mo_ta = trim($_POST['mo_ta'] ?? '');
             $ngay_ghi = $_POST['ngay_ghi'] ?? date('Y-m-d');
-            $hdv_id = $_SESSION['user_admin']['nguoi_dung_id'];
+            $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'];
+            
+            // Lấy hdv_id từ nguoi_dung_id
+            $hdvInfo = HDVModel::getHDVByNguoiDungId($nguoi_dung_id);
+            if (!$hdvInfo) {
+                $_SESSION['error'] = 'Không tìm thấy thông tin hướng dẫn viên';
+                header('Location: ' . BASE_URL_ADMIN);
+                exit();
+            }
+            $hdv_id = $hdvInfo['hdv_id'];
             
             $error = [];
             

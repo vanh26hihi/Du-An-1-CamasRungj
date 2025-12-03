@@ -72,7 +72,7 @@
                             unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
                             ?>
                             
-                            <form action="<?= BASE_URL_ADMIN ?>?act=hdv-them-nhat-ky" method="POST">
+                            <form action="<?= BASE_URL_ADMIN ?>?act=hdv-them-nhat-ky-tour" method="POST">
                                 <input type="hidden" name="lich_id" value="<?= $lichInfo['lich_id'] ?>">
                                 
                                 <div class="row">

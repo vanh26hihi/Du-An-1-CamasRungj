@@ -20,15 +20,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-primary">
-                        <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-list"></i> Danh Sách Hành Khách
                             </h3>
-                            <div class="card-tools">
-                                <a href="<?= BASE_URL_ADMIN . '?act=form-them-booking' ?>" class="btn btn-sm btn-success">
-                                    <i class="fas fa-user-plus"></i> Thêm hành khách
-                                </a>
-                            </div>
                         </div>
                         <div class="card-body">
                             <?php if (!empty($data)): ?>

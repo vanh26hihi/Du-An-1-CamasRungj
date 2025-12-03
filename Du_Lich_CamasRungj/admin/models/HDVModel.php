@@ -111,7 +111,7 @@ class HDVModel
             if (!isset($grouped[$tourKey])) {
                 $grouped[$tourKey] = [
                     'tour_id' => $tourId,
-                    'ten_tour' => $ten_tour,
+                    'ten_tour' => $tour['ten'],
                     'schedules' => []
                 ];
             }
@@ -143,13 +143,17 @@ class HDVModel
     {
         if (empty($lich_id)) {
             // Nếu không truyền lich_id, trả về toàn bộ hành khách
-            $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+            $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.gioi_tinh, hanh_khach_list.cccd, 
+                    hanh_khach_list.so_dien_thoai, hanh_khach_list.email, hanh_khach_list.ngay_sinh, 
+                    hanh_khach_list.ghi_chu
                 FROM hanh_khach_list
                 ORDER BY hanh_khach_list.ho_ten";
             return db_query($sql)->fetchAll();
         }
 
-        $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.cccd, hanh_khach_list.so_dien_thoai, hanh_khach_list.ghi_chu
+        $sql = "SELECT hanh_khach_list.ho_ten, hanh_khach_list.gioi_tinh, hanh_khach_list.cccd, 
+                hanh_khach_list.so_dien_thoai, hanh_khach_list.email, hanh_khach_list.ngay_sinh, 
+                hanh_khach_list.ghi_chu
             FROM dat_tour
             JOIN hanh_khach_list ON hanh_khach_list.dat_tour_id = dat_tour.dat_tour_id
             WHERE dat_tour.lich_id = ?";
@@ -211,6 +215,15 @@ class HDVModel
         return db_query($sql, [$hdv_id])->fetch();
     }
 
+    // Lấy thông tin HDV theo nguoi_dung_id
+    public static function getHDVByNguoiDungId($nguoi_dung_id)
+    {
+        $sql = "SELECT hdv_id, nguoi_dung_id, ho_ten, so_dien_thoai, email, kinh_nghiem, ngon_ngu 
+                FROM huong_dan_vien 
+                WHERE nguoi_dung_id = ?";
+        return db_query($sql, [$nguoi_dung_id])->fetch();
+    }
+
     // Lấy danh sách tất cả HDV
     public static function getAllHDV()
     {
@@ -227,5 +240,21 @@ class HDVModel
         $sql = "INSERT INTO huong_dan_vien (ho_ten, so_dien_thoai, email, kinh_nghiem, ngon_ngu, ngay_tao)
                 VALUES (?, ?, ?, ?, ?, ?)";
         return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $ngay_tao]);
+    }
+
+    // Cập nhật thông tin HDV
+    public static function updateHDV($hdv_id, $ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu)
+    {
+        $sql = "UPDATE huong_dan_vien 
+                SET ho_ten = ?, so_dien_thoai = ?, email = ?, kinh_nghiem = ?, ngon_ngu = ?
+                WHERE hdv_id = ?";
+        return db_query($sql, [$ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu, $hdv_id]);
+    }
+
+    // Xóa HDV
+    public static function deleteHDV($hdv_id)
+    {
+        $sql = "DELETE FROM huong_dan_vien WHERE hdv_id = ?";
+        return db_query($sql, [$hdv_id]);
     }
 }

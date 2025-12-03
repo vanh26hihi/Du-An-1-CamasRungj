@@ -36,4 +36,39 @@
  <!-- AdminLTE for demo purposes -->
  <script src="./assets/dist/js/demo.js"></script>
 
+ <!-- Custom Sidebar Hover Script -->
+ <script>
+ $(document).ready(function() {
+   let hoverTimeout;
+   const $body = $('body');
+   const $sidebar = $('.main-sidebar');
+   
+   // Hover vào sidebar - mở rộng
+   $sidebar.on('mouseenter', function() {
+     clearTimeout(hoverTimeout);
+     if ($body.hasClass('sidebar-collapse')) {
+       $body.removeClass('sidebar-collapse');
+       $body.addClass('sidebar-hover-active');
+     }
+   });
+   
+   // Rời khỏi sidebar - thu gọn
+   $sidebar.on('mouseleave', function() {
+     clearTimeout(hoverTimeout);
+     hoverTimeout = setTimeout(function() {
+       if ($body.hasClass('sidebar-hover-active')) {
+         $body.addClass('sidebar-collapse');
+         $body.removeClass('sidebar-hover-active');
+       }
+     }, 300); // Delay 300ms trước khi thu gọn
+   });
+   
+   // Click nút toggle - chuyển đổi chế độ cố định
+   $('[data-widget="pushmenu"]').on('click', function() {
+     // Xóa class hover-active khi click toggle
+     $body.removeClass('sidebar-hover-active');
+   });
+ });
+ </script>
+
 

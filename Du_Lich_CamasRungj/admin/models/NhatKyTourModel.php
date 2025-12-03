@@ -55,6 +55,14 @@ class NhatKyTourModel {
         return db_query($sql, [$nhat_ky_id])->fetch();
     }
 
+    // Thêm nhật ký tour mới (alias cho add)
+    public static function insert($data) {
+        $sql = "INSERT INTO nhat_ky_tour (lich_id, dia_diem, mo_ta, ngay_ghi, nguoi_tao_id)
+                VALUES (:lich_id, :dia_diem, :mo_ta, :ngay_ghi, :nguoi_tao_id)";
+        $stmt = connectDB()->prepare($sql);
+        return $stmt->execute($data);
+    }
+
     // Cập nhật nhật ký tour
     public static function update($data) {
         $sql = "UPDATE nhat_ky_tour 

@@ -47,6 +47,7 @@ match ($act) {
     'xoa-booking' => (new AdminBookingController())->deleteBooking(),
 
     'hdv-quan-ly' => HDVController::quanLyHDV($_GET['hdv_id'] ?? 'all'),
+    'hdv-lich-lam-viec' => (new HDVLichLamViecController())->danhSachLichLamViec(),
     'hdv-form-them' => HDVController::formAddHDV(),
     'hdv-them' => HDVController::postAddHDV(),
     'hdv-form-sua' => HDVController::formEditHDV($_GET['hdv_id'] ?? null),
@@ -54,7 +55,11 @@ match ($act) {
     'hdv-xoa' => HDVController::deleteHDV($_GET['hdv_id'] ?? null),
     'hdv-chi-tiet-lich' => HDVController::chiTietLich($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
-    'hdv-diem-danh-action' => HDVController::diemDanhAction($_GET['hanh_khach_id'] ?? null, $_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
+    'hdv-danh-sach-khach' => (new HDVLichLamViecController())->danhSachKhach(),
+    'hdv-diem-danh' => (new HDVLichLamViecController())->diemDanh(),
+    'hdv-xu-ly-diem-danh' => (new HDVLichLamViecController())->xuLyDiemDanh(),
+    'hdv-nhat-ky-tour' => (new HDVLichLamViecController())->nhatKyTour(),
+    'hdv-them-nhat-ky-tour' => (new HDVLichLamViecController())->themNhatKyTour(),
 
     // Quản lý tài khoản quản trị (AdminTaiKhoanQuanTriController)
     'list-tai-khoan-quan-tri' => (new AdminTaiKhoanQuanTriController())->danhSachQuanTri(),
@@ -84,14 +89,6 @@ match ($act) {
     'login-admin' => (new AdminTaiKhoanController())->formLogin(),
     'logout-admin' => (new AdminTaiKhoanController())->logout(),
     'check-login-admin' => (new AdminTaiKhoanController())->login(),
-
-    // Routes cho HDV - Lịch Làm Việc
-    'hdv-danh-sach-khach' => (new HDVLichLamViecController())->danhSachKhach(),
-    'hdv-diem-danh' => (new HDVLichLamViecController())->diemDanh(),
-    'hdv-xu-ly-diem-danh' => (new HDVLichLamViecController())->xuLyDiemDanh(),
-    'hdv-nhat-ky-tour' => (new HDVLichLamViecController())->nhatKyTour(),
-    'hdv-them-nhat-ky' => (new HDVLichLamViecController())->themNhatKy(),
-
 
     //router quản lí danh mục tour
     'danh-muc-tour' => (new AdminDanhMucController())->listDanhMuc(),
