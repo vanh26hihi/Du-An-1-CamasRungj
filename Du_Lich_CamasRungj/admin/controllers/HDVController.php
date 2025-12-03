@@ -206,4 +206,19 @@ class HDVController {
         include './views/layout/footer.php';
     }
 
+    // Trang chủ cho HDV - Hiển thị lịch làm việc
+    public static function lichLamViecHDV($hdv_id) {
+        // Lấy thông tin HDV
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        
+        // Lấy lịch làm việc của HDV
+        $lichLamViec = HDVModel::getLichLamViecByHDV($hdv_id);
+        
+        include './views/layout/header.php';
+        include './views/layout/navbar.php';
+        include './views/layout/sidebar.php';
+        include './views/hdv/lich-lam-viec-home.php';
+        include './views/layout/footer.php';
+    }
+
 }

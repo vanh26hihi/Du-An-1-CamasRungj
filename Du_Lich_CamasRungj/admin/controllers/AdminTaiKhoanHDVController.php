@@ -233,9 +233,9 @@ class AdminTaiKhoanHDVController
 
         // Reset password to default
         $default_password = '123@123ab';
-        $password_hash = password_hash($default_password, PASSWORD_BCRYPT);
         
-        $result = $this->modelTaiKhoan->resetPassword($id, $password_hash);
+        // Model sẽ tự hash, không truyền password đã hash vào
+        $result = $this->modelTaiKhoan->resetPassword($id, $default_password);
 
         if ($result) {
             $_SESSION['success'] = "Đã reset mật khẩu thành công! Mật khẩu mới: $default_password";

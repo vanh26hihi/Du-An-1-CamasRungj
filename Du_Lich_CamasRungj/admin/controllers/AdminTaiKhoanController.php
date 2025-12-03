@@ -69,8 +69,9 @@ class AdminTaiKhoanController
                 exit();
             }
 
-            // Check password
-            if (!password_verify($password, $user['mat_khau'])) {
+            // Check password (support both hashed and plain text for backward compatibility)
+            $verify_result = password_verify($password, $user['mat_khau']) || $password === $user['mat_khau'];
+            if (!$verify_result) {
                 $_SESSION['error'] = 'Mật khẩu không chính xác';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');

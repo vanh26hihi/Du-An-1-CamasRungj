@@ -90,9 +90,9 @@
           <?php else: // HDV 
           ?>
             <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="<?= BASE_URL_ADMIN ?>" class="nav-link">
                 <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>Xem Lịch Làm Việc</p>
+                <p>Lịch Làm Việc</p>
               </a>
             </li>
             <li class="nav-item">
@@ -111,15 +111,6 @@
                   </a>
                 </li>
               </ul>
-            </li>
-          <?php endif; ?>
-          <?php if ($_SESSION['user_admin']['vai_tro_id'] == 2): // HDV placeholder routes 
-          ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link" onclick="alert('H1: Xem Lịch Làm Việc');">
-                <i class="nav-icon fas fa-eye"></i>
-                <p>H1 Xem Lịch Làm Việc</p>
-              </a>
             </li>
           <?php endif; ?>
         </ul>
