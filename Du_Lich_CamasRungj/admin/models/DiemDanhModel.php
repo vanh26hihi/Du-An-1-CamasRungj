@@ -39,7 +39,7 @@ class DiemDanhModel {
         
         // Lấy tất cả khách hàng trong lịch này (từ dat_tour) - đảm bảo lấy đầy đủ
         if ($lichTrinhId) {
-            $sql = "SELECT hk.hanh_khach_id, hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu,
+            $sql = "SELECT hk.hanh_khach_id, hk.ho_ten, hk.gioi_tinh, hk.cccd, hk.so_dien_thoai, hk.email, hk.ghi_chu,
                            d.diem_danh_id, d.da_den, d.thoi_gian, d.ghi_chu AS ghi_chu_diem_danh
                     FROM dat_tour dt
                     JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
@@ -50,7 +50,7 @@ class DiemDanhModel {
             return db_query($sql, [$lichTrinhId, $lich_id])->fetchAll();
         } else {
             // Nếu không có lich_trinh, vẫn lấy tất cả khách hàng
-            $sql = "SELECT hk.hanh_khach_id, hk.ho_ten, hk.cccd, hk.so_dien_thoai, hk.ghi_chu,
+            $sql = "SELECT hk.hanh_khach_id, hk.ho_ten, hk.gioi_tinh, hk.cccd, hk.so_dien_thoai, hk.email, hk.ghi_chu,
                            NULL AS diem_danh_id, NULL AS da_den, NULL AS thoi_gian, NULL AS ghi_chu_diem_danh
                     FROM dat_tour dt
                     JOIN hanh_khach_list hk ON hk.dat_tour_id = dt.dat_tour_id
@@ -134,8 +134,8 @@ class DiemDanhModel {
             return db_query($sql, [$newStatus, $hdv_id, $existing['diem_danh_id']]);
         } else {
             // Nếu chưa có, tạo mới với trạng thái "Có mặt"
-            $sql = "INSERT INTO diem_danh_khach (hanh_khach_id, lich_trinh_id, hdv_id, da_den, thoi_gian, ghi_chu)
-                    VALUES (?, ?, ?, 1, NOW(), '')";
+            $sql = "INSERT INTO diem_danh_khach (hanh_khach_id, lich_trinh_id, dia_diem_id, hdv_id, da_den, thoi_gian, ghi_chu)
+                    VALUES (?, ?, NULL, ?, 1, NOW(), '')";
             return db_query($sql, [$hanh_khach_id, $lichTrinhId, $hdv_id]);
         }
     }

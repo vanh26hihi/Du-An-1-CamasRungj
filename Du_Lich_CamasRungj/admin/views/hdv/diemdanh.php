@@ -27,6 +27,28 @@
                             </h3>
                         </div>
                         <div class="card-body">
+                            <!-- Hướng dẫn điểm danh -->
+                            <div class="alert alert-info mb-4" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-left: 4px solid #0284c7;">
+                                <h5 class="mb-3">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <strong>Hướng Dẫn Điểm Danh</strong>
+                                </h5>
+                                <ul class="mb-0" style="list-style: none; padding-left: 0;">
+                                    <li class="mb-2">
+                                        <i class="fas fa-clock text-primary"></i> 
+                                        <strong>8h30</strong> - Điểm danh tại sân bay
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-clock text-primary"></i> 
+                                        <strong>12h</strong> - Điểm danh tại khách sạn
+                                    </li>
+                                    <li class="mb-0">
+                                        <i class="fas fa-clock text-primary"></i> 
+                                        <strong>20h40</strong> - Điểm danh xuống máy bay
+                                    </li>
+                                </ul>
+                            </div>
+                            
                             <?php if (!empty($data)): ?>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover table-bordered">
