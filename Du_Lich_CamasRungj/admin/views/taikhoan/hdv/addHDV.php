@@ -12,13 +12,13 @@ $old = $_SESSION['old'] ?? [];
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Sửa Tài Khoản Quản Trị</h1>
+                    <h1>Thêm Tài Khoản Hướng Dẫn Viên</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="?act=/">Trang chủ</a></li>
-                        <li class="breadcrumb-item"><a href="?act=danh-sach-quan-tri">Quản lý tài khoản quản trị</a></li>
-                        <li class="breadcrumb-item active">Sửa tài khoản quản trị</li>
+                        <li class="breadcrumb-item"><a href="?act=danh-sach-hdv">Quản lý tài khoản HDV</a></li>
+                        <li class="breadcrumb-item active">Thêm tài khoản HDV</li>
                     </ol>
                 </div>
             </div>
@@ -30,15 +30,13 @@ $old = $_SESSION['old'] ?? [];
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card card-warning">
+                    <div class="card card-success">
                         <div class="card-header">
-                            <h3 class="card-title">Chỉnh Sửa Thông Tin: <?= htmlspecialchars($quanTri['ho_ten']) ?></h3>
+                            <h3 class="card-title">Thông Tin Tài Khoản Hướng Dẫn Viên</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="<?= BASE_URL_ADMIN . "?act=sua-quan-tri" ?>" method="POST">
-                            <input type="hidden" name="nguoi_dung_id" value="<?= $quanTri['nguoi_dung_id'] ?>">
-                            
+                        <form action="<?= BASE_URL_ADMIN . "?act=them-hdv" ?>" method="POST" autocomplete="off">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="ho_ten">Họ và Tên <span class="text-danger">*</span></label>
@@ -47,7 +45,8 @@ $old = $_SESSION['old'] ?? [];
                                            id="ho_ten" 
                                            name="ho_ten" 
                                            placeholder="Nhập họ và tên"
-                                           value="<?= htmlspecialchars($old['ho_ten'] ?? $quanTri['ho_ten']) ?>">
+                                           autocomplete="off"
+                                           value="<?= htmlspecialchars($old['ho_ten'] ?? '') ?>">
                                     <?php if (isset($error['ho_ten'])): ?>
                                         <span class="error invalid-feedback"><?= $error['ho_ten'] ?></span>
                                     <?php endif; ?>
@@ -60,7 +59,8 @@ $old = $_SESSION['old'] ?? [];
                                            id="email" 
                                            name="email" 
                                            placeholder="Nhập email"
-                                           value="<?= htmlspecialchars($old['email'] ?? $quanTri['email']) ?>">
+                                           autocomplete="off"
+                                           value="<?= htmlspecialchars($old['email'] ?? '') ?>">
                                     <?php if (isset($error['email'])): ?>
                                         <span class="error invalid-feedback"><?= $error['email'] ?></span>
                                     <?php endif; ?>
@@ -73,37 +73,49 @@ $old = $_SESSION['old'] ?? [];
                                            id="so_dien_thoai" 
                                            name="so_dien_thoai" 
                                            placeholder="Nhập số điện thoại (9-11 số)"
-                                           value="<?= htmlspecialchars($old['so_dien_thoai'] ?? $quanTri['so_dien_thoai'] ?? '') ?>">
+                                           autocomplete="off"
+                                           value="<?= htmlspecialchars($old['so_dien_thoai'] ?? '') ?>">
                                     <?php if (isset($error['so_dien_thoai'])): ?>
                                         <span class="error invalid-feedback"><?= $error['so_dien_thoai'] ?></span>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="trang_thai">Trạng Thái <span class="text-danger">*</span></label>
-                                    <select class="form-control <?= isset($error['trang_thai']) ? 'is-invalid' : '' ?>" 
-                                            id="trang_thai" 
-                                            name="trang_thai">
-                                        <option value="active" <?= ($old['trang_thai'] ?? $quanTri['trang_thai']) === 'active' ? 'selected' : '' ?>>Hoạt động</option>
-                                        <option value="inactive" <?= ($old['trang_thai'] ?? $quanTri['trang_thai']) === 'inactive' ? 'selected' : '' ?>>Khóa</option>
-                                    </select>
-                                    <?php if (isset($error['trang_thai'])): ?>
-                                        <span class="error invalid-feedback"><?= $error['trang_thai'] ?></span>
+                                    <label for="mat_khau">Mật Khẩu <span class="text-danger">*</span></label>
+                                    <input type="password" 
+                                           class="form-control <?= isset($error['mat_khau']) ? 'is-invalid' : '' ?>" 
+                                           id="mat_khau" 
+                                           name="mat_khau" 
+                                           placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
+                                           autocomplete="new-password">
+                                    <?php if (isset($error['mat_khau'])): ?>
+                                        <span class="error invalid-feedback"><?= $error['mat_khau'] ?></span>
                                     <?php endif; ?>
                                 </div>
 
-                                <div class="alert alert-info">
-                                    <i class="icon fas fa-info-circle"></i>
-                                    <strong>Lưu ý:</strong> Để đổi mật khẩu, vui lòng sử dụng chức năng "Reset Mật Khẩu" ở danh sách tài khoản.
+                                <div class="form-group">
+                                    <label for="xac_nhan_mat_khau">Xác Nhận Mật Khẩu <span class="text-danger">*</span></label>
+                                    <input type="password" 
+                                           class="form-control <?= isset($error['xac_nhan_mat_khau']) ? 'is-invalid' : '' ?>" 
+                                           id="xac_nhan_mat_khau" 
+                                           name="xac_nhan_mat_khau" 
+                                           placeholder="Nhập lại mật khẩu"
+                                           autocomplete="new-password">
+                                    <?php if (isset($error['xac_nhan_mat_khau'])): ?>
+                                        <span class="error invalid-feedback"><?= $error['xac_nhan_mat_khau'] ?></span>
+                                    <?php endif; ?>
                                 </div>
+
+                                <!-- Hidden field: Trạng thái mặc định là active -->
+                                <input type="hidden" name="trang_thai" value="active">
                             </div>
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-save"></i> Cập Nhật
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Lưu Tài Khoản HDV
                                 </button>
-                                <a href="<?= BASE_URL_ADMIN . "?act=danh-sach-quan-tri" ?>" class="btn btn-secondary">
+                                <a href="<?= BASE_URL_ADMIN . "?act=danh-sach-hdv" ?>" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left"></i> Quay Lại
                                 </a>
                             </div>
@@ -131,4 +143,3 @@ if (isset($_SESSION['flash'])) {
     unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
 }
 ?>
-

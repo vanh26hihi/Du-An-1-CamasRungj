@@ -1,6 +1,5 @@
-﻿<?php
+<?php
 
-session_start();
 // Kết nối CSDL qua PDO
 function connectDB()
 {
@@ -25,7 +24,8 @@ function connectDB()
 }
 
 // Hàm thực thi query (SELECT, INSERT, UPDATE, DELETE)
-function db_query($sql, $params = []) {
+function db_query($sql, $params = [])
+{
     $conn = connectDB();
     $stmt = $conn->prepare($sql);
     $stmt->execute($params);
@@ -117,4 +117,3 @@ function tinhNgayDem($ngay_bat_dau, $ngay_ket_thuc)
 
     return "{$soNgay} ngày {$soDem} đêm";
 }
-

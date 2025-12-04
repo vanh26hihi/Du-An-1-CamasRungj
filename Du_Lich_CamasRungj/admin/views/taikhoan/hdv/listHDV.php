@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Quản Lý Tài Khoản Quản Trị</h1>
+          <h1>Quản Lý Tài Khoản Hướng Dẫn Viên</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="?act=/">Trang chủ</a></li>
-            <li class="breadcrumb-item active">Quản lý tài khoản quản trị</li>
+            <li class="breadcrumb-item active">Quản lý tài khoản HDV</li>
           </ol>
         </div>
       </div>
@@ -27,9 +27,9 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <a href="<?= BASE_URL_ADMIN . "?act=form-them-quan-tri" ?>">
+              <a href="<?= BASE_URL_ADMIN . "?act=form-them-hdv" ?>">
                 <button class="btn btn-success">
-                  <i class="fas fa-plus"></i> Thêm Tài Khoản Quản Trị
+                  <i class="fas fa-plus"></i> Thêm Tài Khoản HDV
                 </button>
               </a>
             </div>
@@ -76,49 +76,41 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($listQuanTri as $key => $quantri): ?>
+                  <?php foreach ($listHDV as $key => $hdv): ?>
                     <tr>
                       <td><?= $key + 1 ?></td>
-                      <td><?= htmlspecialchars($quantri['ho_ten']) ?></td>
-                      <td><?= htmlspecialchars($quantri['email']) ?></td>
-                      <td><?= htmlspecialchars($quantri['so_dien_thoai'] ?? 'Chưa cập nhật') ?></td>
+                      <td><?= htmlspecialchars($hdv['ho_ten']) ?></td>
+                      <td><?= htmlspecialchars($hdv['email']) ?></td>
+                      <td><?= htmlspecialchars($hdv['so_dien_thoai'] ?? 'Chưa cập nhật') ?></td>
                       <td>
-                        <?php if ($quantri['trang_thai'] === 'active'): ?>
+                        <?php if ($hdv['trang_thai'] === 'active'): ?>
                           <span class="badge badge-success">Hoạt động</span>
                         <?php else: ?>
                           <span class="badge badge-danger">Khóa</span>
                         <?php endif; ?>
                       </td>
-                      <td><?= date('d/m/Y H:i', strtotime($quantri['ngay_tao'])) ?></td>
+                      <td><?= date('d/m/Y H:i', strtotime($hdv['ngay_tao'])) ?></td>
                       <td>
                         <div class="btn-group">
-                          <a href="<?= BASE_URL_ADMIN . "?act=form-sua-quan-tri&id=" . $quantri['nguoi_dung_id'] ?>" 
+                          <a href="<?= BASE_URL_ADMIN . "?act=form-sua-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
                              class="btn btn-warning btn-sm" 
                              title="Sửa">
                             <i class="fas fa-edit"></i>
                           </a>
                           
-                          <a href="<?= BASE_URL_ADMIN . "?act=reset-password-quan-tri&id=" . $quantri['nguoi_dung_id'] ?>" 
+                          <a href="<?= BASE_URL_ADMIN . "?act=reset-password-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
                              class="btn btn-info btn-sm" 
                              title="Reset Mật Khẩu"
                              onclick="return confirm('Bạn có chắc muốn reset mật khẩu về mặc định (123@123ab)?')">
                             <i class="fas fa-key"></i>
                           </a>
                           
-                          <?php if ($quantri['nguoi_dung_id'] != $_SESSION['user_admin']['nguoi_dung_id']): ?>
-                            <a href="<?= BASE_URL_ADMIN . "?act=xoa-quan-tri&id=" . $quantri['nguoi_dung_id'] ?>" 
-                               class="btn btn-danger btn-sm" 
-                               title="Xóa"
-                               onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?')">
-                              <i class="fas fa-trash"></i>
-                            </a>
-                          <?php else: ?>
-                            <button class="btn btn-secondary btn-sm" 
-                                    title="Không thể xóa chính mình" 
-                                    disabled>
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          <?php endif; ?>
+                          <a href="<?= BASE_URL_ADMIN . "?act=xoa-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
+                             class="btn btn-danger btn-sm" 
+                             title="Xóa"
+                             onclick="return confirm('Bạn có chắc muốn xóa tài khoản HDV này?')">
+                            <i class="fas fa-trash"></i>
+                          </a>
                         </div>
                       </td>
                     </tr>
@@ -180,7 +172,6 @@
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
-<!-- Code injected by live-server -->
 </body>
 
 </html>
