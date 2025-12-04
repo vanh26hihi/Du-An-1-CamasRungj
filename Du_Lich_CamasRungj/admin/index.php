@@ -54,6 +54,7 @@ match ($act) {
     'hdv-sua' => HDVController::postEditHDV($_GET['hdv_id'] ?? null),
     'hdv-xoa' => HDVController::deleteHDV($_GET['hdv_id'] ?? null),
     'hdv-chi-tiet-lich' => HDVController::chiTietLich($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
+    'hdv-diem-danh-action' => HDVController::diemDanhAction(),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
     'hdv-danh-sach-khach' => (new HDVLichLamViecController())->danhSachKhach(),
     'hdv-diem-danh' => (new HDVLichLamViecController())->diemDanh(),

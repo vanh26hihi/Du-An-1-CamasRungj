@@ -187,4 +187,37 @@ class HDVController {
         include './views/layout/footer.php';
     }
 
+    // Xử lý điểm danh (cho admin)
+    public static function diemDanhAction() {
+        require_once './models/DiemDanhModel.php';
+        
+        $hanh_khach_id = $_GET['hanh_khach_id'] ?? null;
+        $lich_id = $_GET['lich_id'] ?? null;
+        $hdv_id = $_GET['hdv_id'] ?? null;
+        $redirect = $_GET['redirect'] ?? 'chi-tiet-lich';
+        $tab = $_GET['tab'] ?? 'diem-danh';
+        
+        if (!$hanh_khach_id || !$lich_id || !$hdv_id) {
+            $_SESSION['error'] = "Thiếu thông tin điểm danh";
+            header("Location: ?act=hdv-chi-tiet-lich&lich_id=" . $lich_id . "&hdv_id=" . $hdv_id . "&tab=" . $tab);
+            exit;
+        }
+        
+        // Toggle điểm danh
+        $result = DiemDanhModel::toggleAttendance($hanh_khach_id, $lich_id, $hdv_id);
+        
+        if ($result) {
+            $_SESSION['success'] = "Cập nhật điểm danh thành công";
+        } else {
+            $_SESSION['error'] = "Có lỗi khi cập nhật điểm danh";
+        }
+        
+        if ($redirect === 'chi-tiet-lich') {
+            header("Location: ?act=hdv-chi-tiet-lich&lich_id=" . $lich_id . "&hdv_id=" . $hdv_id . "&tab=" . $tab);
+        } else {
+            header("Location: ?act=hdv-quan-ly&hdv_id=" . $hdv_id);
+        }
+        exit;
+    }
+
 }
