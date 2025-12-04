@@ -27,13 +27,8 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <h3 class="card-title">Danh Sách Hướng Dẫn Viên</h3>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-them" ?>" class="btn btn-success">
-                                        <i class="fas fa-plus"></i> Thêm HDV
-                                    </a>
                                 </div>
                             </div>
                         </div>

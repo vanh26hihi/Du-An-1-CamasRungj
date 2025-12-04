@@ -1,5 +1,16 @@
 <?php
+// Cấu hình session để tránh logout không mong muốn
+ini_set('session.gc_maxlifetime', 86400); // 24 giờ
+ini_set('session.cookie_lifetime', 86400); // 24 giờ
+session_set_cookie_params(86400); // 24 giờ
+
 session_start();
+
+// Kiểm tra và làm mới session khi có activity
+if (isset($_SESSION['user_admin']['nguoi_dung_id'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+}
+
 require_once '../commons/env.php';
 require_once '../commons/function.php';
 
@@ -27,8 +38,8 @@ $publicRoutes = ['login-admin', 'check-login-admin'];
 
 // Kiểm tra đăng nhập cho tất cả route trừ public routes
 if (!in_array($act, $publicRoutes)) {
-    // Nếu chưa đăng nhập, chuyển đến trang login
-    if (empty($_SESSION['user_admin'])) {
+    // Nếu chưa đăng nhập hoặc session không hợp lệ, chuyển đến trang login
+    if (!isset($_SESSION['user_admin']) || !isset($_SESSION['user_admin']['nguoi_dung_id'])) {
         header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
         exit();
     }

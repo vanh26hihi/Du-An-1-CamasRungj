@@ -54,6 +54,10 @@ class AdminDanhMucController
             exit();
         }
 
+        // DEBUG: Xem dữ liệu POST
+        error_log("=== POST DATA ===");
+        error_log(print_r($_POST, true));
+
         // Thu thập dữ liệu
         $ten = $_POST['ten'] ?? '';
         $danh_muc_id = $_POST['danh_muc_id'] ?? '';
@@ -67,6 +71,10 @@ class AdminDanhMucController
         $thu_tu = $_POST['thu_tu'] ?? [];
         $ghi_chu = $_POST['ghi_chu'] ?? [];
         $ngay = $_POST['ngay'] ?? [];
+
+        // DEBUG: Xem dữ liệu ngày
+        error_log("=== NGAY DATA ===");
+        error_log(print_r($ngay, true));
 
         // Validation
         $error = $this->validateTourData($ten, $danh_muc_id, $gia_co_ban, $thoi_luong_mac_dinh, 
@@ -287,8 +295,6 @@ class AdminDanhMucController
 
         if (empty($ngay) || !is_array($ngay)) {
             $error['ngay'] = "Vui lòng thêm ít nhất một lịch trình";
-        } elseif (count($ngay) != $expected_days) {
-            $error['ngay'] = "Số ngày lịch trình phải bằng thời lượng tour ($expected_days ngày)";
         }
 
         return $error;
@@ -315,18 +321,68 @@ class AdminDanhMucController
 
     private function insertLichTrinhWithMapping($tour_id, $ngays, $dia_diem_tour_id_map)
     {
+        error_log("=== INSERT LICH TRINH ===");
+        error_log("Tour ID: " . $tour_id);
+        error_log("Ngays data: " . print_r($ngays, true));
+        error_log("Map: " . print_r($dia_diem_tour_id_map, true));
+
+        if (empty($ngays) || !is_array($ngays)) {
+            error_log("ERROR: Ngays empty or not array");
+            return;
+        }
+
         foreach ($ngays as $ngay_thu => $ngay_data) {
-            $dia_diem_tour_index = $ngay_data['dia_diem_tour_index'] ?? 0;
-            $dia_diem_tour_id = $dia_diem_tour_id_map[$dia_diem_tour_index] ?? null;
+            error_log("Processing ngay_thu: $ngay_thu");
+            error_log("Ngay data: " . print_r($ngay_data, true));
+
+            if (!is_array($ngay_data)) {
+                error_log("ERROR: Ngay data not array");
+                continue;
+            }
+
+            // Lấy dia_diem_tour_id từ form (có thể là index hoặc ID trực tiếp)
+            $dia_diem_tour_id = null;
             
-            if ($dia_diem_tour_id) {
-                $this->model->insertLichTrinh([
-                    'tour_id' => $tour_id,
-                    'ngay_thu' => $ngay_thu,
-                    'tieu_de' => $ngay_data['tieu_de'] ?? '',
-                    'mo_ta' => $ngay_data['mo_ta'] ?? '',
-                    'dia_diem_tour_id' => $dia_diem_tour_id
-                ]);
+            if (isset($ngay_data['dia_diem_tour_id'])) {
+                // Nếu form gửi dia_diem_tour_id trực tiếp
+                $dia_diem_tour_id = $ngay_data['dia_diem_tour_id'];
+                error_log("Found dia_diem_tour_id: $dia_diem_tour_id");
+            } elseif (isset($ngay_data['dia_diem_tour_index'])) {
+                // Nếu form gửi index, map từ array
+                $dia_diem_tour_index = $ngay_data['dia_diem_tour_index'];
+                $dia_diem_tour_id = $dia_diem_tour_id_map[$dia_diem_tour_index] ?? null;
+                error_log("Found index: $dia_diem_tour_index, mapped to ID: $dia_diem_tour_id");
+            } else {
+                error_log("ERROR: No dia_diem_tour_id or index found");
+            }
+
+            // Xử lý lịch trình chi tiết
+            if (isset($ngay_data['lich_trinh']) && is_array($ngay_data['lich_trinh'])) {
+                error_log("Found lich_trinh array with " . count($ngay_data['lich_trinh']) . " items");
+                
+                foreach ($ngay_data['lich_trinh'] as $lt_index => $lich_trinh) {
+                    error_log("Processing lich_trinh $lt_index: " . print_r($lich_trinh, true));
+                    
+                    if (!is_array($lich_trinh)) {
+                        error_log("ERROR: Lich trinh not array");
+                        continue;
+                    }
+
+                    $insertData = [
+                        'tour_id' => $tour_id,
+                        'ngay_thu' => $ngay_data['ngay_thu'] ?? $ngay_thu,
+                        'gio_bat_dau' => $lich_trinh['gio_bat_dau'] ?? null,
+                        'gio_ket_thuc' => $lich_trinh['gio_ket_thuc'] ?? null,
+                        'dia_diem_tour_id' => $dia_diem_tour_id,
+                        'noi_dung' => $lich_trinh['noi_dung'] ?? ''
+                    ];
+                    
+                    error_log("Inserting: " . print_r($insertData, true));
+                    $result = $this->model->insertLichTrinh($insertData);
+                    error_log("Insert result: " . ($result ? "SUCCESS (ID: $result)" : "FAILED"));
+                }
+            } else {
+                error_log("ERROR: No lich_trinh found in ngay_data");
             }
         }
     }
