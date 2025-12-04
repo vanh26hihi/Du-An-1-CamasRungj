@@ -1,55 +1,7 @@
 <?php
 require_once './models/HDVModel.php';
-require_once './models/NhatKyTourModel.php';
-require_once './models/DiemDanhModel.php';
 
 class HDVController {
-
-    public static function lichLamViec($hdv_id) {
-        $data = HDVModel::getToursByHDV($hdv_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/lichlamviec.php';
-        include './views/layout/footer.php';
-    }
-
-    public static function danhSachKhach($lich_id) {
-        $data = HDVModel::getPassengersByLich($lich_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/danhsachkhach.php';
-        include './views/layout/footer.php';
-    }
-
-    public static function nhatKy($hdv_id) {
-        $data = NhatKyTourModel::getByHDV($hdv_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/nhatky.php';
-        include './views/layout/footer.php';
-    }
-
-    public static function formThemNhatKy($hdv_id) {
-        // Lấy danh sách tất cả HDV
-        $allHDV = HDVModel::getAllHDV();
-        
-        // Lấy danh sách tour và lịch của HDV (hoặc HDV đầu tiên nếu không có)
-        $selectedHDVId = $hdv_id ?? ($allHDV[0]['hdv_id'] ?? 1);
-        $toursData = HDVModel::getToursByHDV($selectedHDVId);
-        $lichLamViecData = HDVModel::getToursByHDVGrouped($selectedHDVId);
-        
-        // Lấy danh sách địa điểm
-        $diaDiemData = HDVModel::getAllDiaDiem();
-        
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/form-them-nhat-ky.php';
-        include './views/layout/footer.php';
-    }
     
     // API endpoint để lấy tours của HDV (cho AJAX)
     public static function getToursByHDVAjax($hdv_id) {
@@ -79,91 +31,23 @@ class HDVController {
         exit;
     }
 
-    public static function themNhatKy($formData) {
-        // Xử lý upload ảnh nếu có
-        if (!empty($_FILES['anh_tour']) && $_FILES['anh_tour']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = PATH_ROOT . 'img/nhatky/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $ext = pathinfo($_FILES['anh_tour']['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('nk_') . '.' . $ext;
-            $target = $uploadDir . $filename;
-            if (move_uploaded_file($_FILES['anh_tour']['tmp_name'], $target)) {
-                // Lưu đường dẫn tương đối để hiển thị từ trang admin (../img/...)
-                $formData['anh_tour'] = '../img/nhatky/' . $filename;
-            }
-        } else {
-            $formData['anh_tour'] = null;
-        }
-
-        NhatKyTourModel::add($formData);
-        header('Location: ?act=hdv-quan-ly&hdv_id=' . $formData['hdv_id'] . '&tab=nhat-ky');
-    }
-
-    public static function diemDanh($lich_id, $hdv_id) {
-        $data = DiemDanhModel::getCustomersForAttendance($lich_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/diemdanh.php';
-        include './views/layout/footer.php';
-    }
-
-    public static function diemDanhAction($hanh_khach_id, $lich_id, $hdv_id) {
-        // Toggle trạng thái điểm danh
-        DiemDanhModel::toggleAttendance($hanh_khach_id, $lich_id, $hdv_id);
-        header('Location: ?act=hdv-diem-danh&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id);
-    }
-
     public static function quanLyHDV($hdv_id) {
-        $tab = $_GET['tab'] ?? 'lich-lam-viec';
-        $lich_id = $_GET['lich_id'] ?? null;
-        $search_hdv = $_GET['search_hdv'] ?? null;
+        $tab = $_GET['tab'] ?? 'thong-tin';
+        
+        // Lấy danh sách tất cả HDV
+        $allHDV = HDVModel::getAllHDV();
         
         // Xử lý hdv_id: nếu là "all" hoặc rỗng, lấy tất cả
         if ($hdv_id === 'all' || $hdv_id === '' || $hdv_id === null) {
             $hdv_id = 'all';
             $hdvInfo = null;
+            $lichLamViec = [];
         } else {
-            // Lấy thông tin HDV
+            // Lấy thông tin HDV từ bảng huong_dan_vien
             $hdvInfo = HDVModel::getHDVById($hdv_id);
-        }
-        
-        // Lấy danh sách tất cả HDV để chọn
-        $allHDV = HDVModel::getAllHDV();
-        
-        // Lấy dữ liệu cho tab lịch làm việc (nhóm theo tên tour)
-        $lichLamViecData = HDVModel::getToursByHDVGrouped($hdv_id, $search_hdv);
-        
-        // Lấy dữ liệu cho tab nhật ký
-        if ($hdv_id !== 'all') {
-            $nhatKyData = NhatKyTourModel::getByHDV($hdv_id);
-        } else {
-            // Lấy tất cả nhật ký của tất cả HDV
-            $nhatKyData = NhatKyTourModel::getAll();
-        }
-        
-        // Lấy dữ liệu cho tab yêu cầu đặc biệt
-        $yeuCauData = [];
-        if ($lich_id) {
-            $yeuCauData = HDVModel::getSpecialRequests($lich_id);
-        } else {
-            // Lấy tất cả yêu cầu từ các tour của HDV
-            if ($hdv_id !== 'all') {
-                $allTours = HDVModel::getToursByHDV($hdv_id);
-                foreach ($allTours as $tour) {
-                    $requests = HDVModel::getSpecialRequests($tour['lich_id']);
-                    $yeuCauData = array_merge($yeuCauData, $requests);
-                }
-            }
-        }
-        
-        // Lấy dữ liệu cho tab đánh giá tour
-        if ($hdv_id !== 'all') {
-            $danhGiaData = NhatKyTourModel::getFeedbackByHDV($hdv_id);
-        } else {
-            $danhGiaData = [];
+            
+            // Lấy lịch làm việc từ bảng phan_cong_hdv
+            $lichLamViec = HDVModel::getLichLamViecByHDV($hdv_id);
         }
         
         include './views/layout/header.php';
@@ -173,95 +57,134 @@ class HDVController {
         include './views/layout/footer.php';
     }
 
-    public static function formSuaNhatKy($nhat_ky_id) {
-        $data = NhatKyTourModel::getById($nhat_ky_id);
+    // Hiển thị form thêm HDV
+    public static function formAddHDV() {
         include './views/layout/header.php';
         include './views/layout/navbar.php';
         include './views/layout/sidebar.php';
-        include './views/hdv/form-sua-nhat-ky.php';
+        include './views/hdv/form-them-hdv.php';
         include './views/layout/footer.php';
     }
 
-    public static function suaNhatKy($formData) {
-        // Lấy bản ghi hiện tại để giữ ảnh cũ khi không upload ảnh mới
-        $current = NhatKyTourModel::getById($formData['nhat_ky_id']);
-
-        if (!empty($_FILES['anh_tour']) && $_FILES['anh_tour']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = PATH_ROOT . 'img/nhatky/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-            $ext = pathinfo($_FILES['anh_tour']['name'], PATHINFO_EXTENSION);
-            $filename = uniqid('nk_') . '.' . $ext;
-            $target = $uploadDir . $filename;
-            if (move_uploaded_file($_FILES['anh_tour']['tmp_name'], $target)) {
-                $formData['anh_tour'] = '../img/nhatky/' . $filename;
-            } else {
-                // nếu không upload được thì giữ ảnh cũ
-                $formData['anh_tour'] = $current['anh_tour'] ?? null;
-            }
-        } else {
-            // không có file mới => giữ ảnh cũ
-            $formData['anh_tour'] = $current['anh_tour'] ?? null;
+    // Xử lý thêm HDV
+    public static function postAddHDV() {
+        $ho_ten = $_POST['ho_ten'] ?? '';
+        $so_dien_thoai = $_POST['so_dien_thoai'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $kinh_nghiem = $_POST['kinh_nghiem'] ?? '';
+        $ngon_ngu = $_POST['ngon_ngu'] ?? '';
+        
+        // Kiểm tra họ tên
+        if ($ho_ten == '') {
+            $_SESSION['error'] = "Họ tên không được để trống";
+            header("Location: ?act=hdv-form-them");
+            exit;
         }
-
-        NhatKyTourModel::update($formData);
-        header('Location: ?act=hdv-quan-ly&hdv_id=' . $formData['hdv_id'] . '&tab=nhat-ky');
+        
+        // Thêm HDV
+        HDVModel::insertHDV($ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu);
+        
+        $_SESSION['success'] = "Thêm hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=all");
+        exit;
     }
 
-    public static function xoaNhatKy($nhat_ky_id, $hdv_id = null) {
-        if (empty($nhat_ky_id)) {
-            header('Location: ?act=hdv-quan-ly&hdv_id=' . ($hdv_id ?? '') . '&tab=nhat-ky');
-            return;
+    // Hiển thị form sửa HDV
+    public static function formEditHDV($hdv_id) {
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        if (!$hdvInfo) {
+            header("Location: ?act=hdv-quan-ly&hdv_id=all");
+            exit;
         }
-
-        // Gọi model để xóa bản ghi và file ảnh (nếu có)
-        NhatKyTourModel::delete($nhat_ky_id);
-
-        header('Location: ?act=hdv-quan-ly&hdv_id=' . ($hdv_id ?? '') . '&tab=nhat-ky');
-    }
-
-    public static function yeuCauDacBiet($lich_id) {
-        $data = HDVModel::getSpecialRequests($lich_id);
         include './views/layout/header.php';
         include './views/layout/navbar.php';
         include './views/layout/sidebar.php';
-        include './views/hdv/yeu-cau-dac-biet.php';
+        include './views/hdv/form-sua-hdv.php';
         include './views/layout/footer.php';
     }
 
-    public static function formSuaYeuCau($khach_hang_id) {
-        $data = HDVModel::getCustomerDetails($khach_hang_id);
-        // Lấy lich_id từ GET parameter
-        $data['lich_id'] = $_GET['lich_id'] ?? '';
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/form-sua-yeu-cau.php';
-        include './views/layout/footer.php';
+    // Xử lý sửa HDV
+    public static function postEditHDV($hdv_id) {
+        $ho_ten = $_POST['ho_ten'] ?? '';
+        $so_dien_thoai = $_POST['so_dien_thoai'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $kinh_nghiem = $_POST['kinh_nghiem'] ?? '';
+        $ngon_ngu = $_POST['ngon_ngu'] ?? '';
+        
+        // Kiểm tra họ tên
+        if ($ho_ten == '') {
+            $_SESSION['error'] = "Họ tên không được để trống";
+            $_SESSION['old'] = $_POST;
+            header("Location: ?act=hdv-form-sua&hdv_id=" . $hdv_id);
+            exit;
+        }
+        
+        // Sửa HDV
+        HDVModel::updateHDV($hdv_id, $ho_ten, $so_dien_thoai, $email, $kinh_nghiem, $ngon_ngu);
+        
+        $_SESSION['success'] = "Sửa hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=" . $hdv_id);
+        exit;
     }
 
-    public static function suaYeuCau($formData) {
-        HDVModel::updateSpecialRequest($formData);
-        $hdv_id = $formData['hdv_id'] ?? $_GET['hdv_id'] ?? '';
-        $lich_id = $formData['lich_id'] ?? '';
-        header('Location: ?act=hdv-quan-ly&hdv_id=' . $hdv_id . '&tab=yeu-cau-dac-biet&lich_id=' . $lich_id);
+    // Xóa hướng dẫn viên
+    public static function deleteHDV($hdv_id) {
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        if (!$hdvInfo) {
+            $_SESSION['error'] = "Không tìm thấy hướng dẫn viên";
+            header("Location: ?act=hdv-quan-ly&hdv_id=all");
+            exit;
+        }
+        
+        HDVModel::deleteHDV($hdv_id);
+        $_SESSION['success'] = "Xóa hướng dẫn viên thành công";
+        header("Location: ?act=hdv-quan-ly&hdv_id=all");
+        exit;
     }
 
-    public static function danhGiaTour($hdv_id) {
-        // Lấy danh sách tour và lịch của HDV
-        $toursData = HDVModel::getToursByHDV($hdv_id);
-        $lichLamViecData = HDVModel::getToursByHDVGrouped($hdv_id);
+    // Chi tiết lịch làm việc (3 tab: Khách hàng, Điểm danh, Nhật ký)
+    public static function chiTietLich($lich_id, $hdv_id) {
+        require_once './models/DiemDanhModel.php';
+        require_once './models/NhatKyTourModel.php';
+        require_once '../commons/function.php';
+        
+        $tab = $_GET['tab'] ?? 'khach-hang';
+        
+        $sql = "SELECT lich_khoi_hanh.lich_id, lich_khoi_hanh.ngay_bat_dau, lich_khoi_hanh.ngay_ket_thuc, tour.tour_id, tour.ten ten_tour
+                FROM lich_khoi_hanh
+                JOIN tour ON lich_khoi_hanh.tour_id = tour.tour_id
+                WHERE lich_khoi_hanh.lich_id = ?";
+        $lichInfo = db_query($sql, [$lich_id])->fetch();
+        
+        if (!$lichInfo) {
+            header("Location: ?act=hdv-quan-ly&hdv_id=" . $hdv_id);
+            exit;
+        }
+        
+        $danhSachKhach = HDVModel::getPassengersByLich($lich_id);
+        $diemDanh = DiemDanhModel::getCustomersForAttendance($lich_id);
+        $nhatKy = NhatKyTourModel::getByLich($lich_id);
         
         include './views/layout/header.php';
         include './views/layout/navbar.php';
         include './views/layout/sidebar.php';
-        include './views/hdv/form-danh-gia-tour.php';
+        include './views/hdv/chi-tiet-lich.php';
         include './views/layout/footer.php';
     }
 
-    public static function guiDanhGia($formData) {
-        NhatKyTourModel::addFeedback($formData);
-        header('Location: ?act=hdv-quan-ly&hdv_id=' . $formData['hdv_id'] . '&tab=danh-gia');
+    // Trang chủ cho HDV - Hiển thị lịch làm việc
+    public static function lichLamViecHDV($hdv_id) {
+        // Lấy thông tin HDV
+        $hdvInfo = HDVModel::getHDVById($hdv_id);
+        
+        // Lấy lịch làm việc của HDV
+        $lichLamViec = HDVModel::getLichLamViecByHDV($hdv_id);
+        
+        include './views/layout/header.php';
+        include './views/layout/navbar.php';
+        include './views/layout/sidebar.php';
+        include './views/hdv/lich-lam-viec-home.php';
+        include './views/layout/footer.php';
     }
+
 }
