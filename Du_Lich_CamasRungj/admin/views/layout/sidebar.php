@@ -10,14 +10,14 @@
       <!-- Sidebar user (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="<?= $_SESSION['user_admin']['anh_dai_dien'] ?>" class="img-circle elevation-2" alt="User Image">
+          <img src="<?= $_SESSION['user_admin']['anh_dai_dien'] ?? './assets/dist/img/user2-160x160.jpg' ?>" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="<?= BASE_URL_ADMIN . '?act=form-sua-thong-tin-ca-nhan-quan-tri' ?>" class="d-block">
-            <?= $_SESSION['user_admin']['ho_ten'] ?>
+            <?= $_SESSION['user_admin']['ho_ten'] ?? 'User' ?>
             <small class="text-muted d-block">
               <i class="fas fa-user-shield"></i> 
-              <?= $_SESSION['user_admin']['vai_tro_id'] == 1 ? 'Quản Trị Viên' : 'Hướng Dẫn Viên' ?>
+              <?= ($_SESSION['user_admin']['vai_tro_id'] ?? 1) == 1 ? 'Quản Trị Viên' : 'Hướng Dẫn Viên' ?>
             </small>
           </a>
         </div>
@@ -26,7 +26,7 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <?php if ($_SESSION['user_admin']['vai_tro_id'] == 1): // Admin 
+          <?php if (($_SESSION['user_admin']['vai_tro_id'] ?? 0) == 1): // Admin 
           ?>
             <li class="nav-item">
               <a href="<?= BASE_URL_ADMIN ?>" class="nav-link">
