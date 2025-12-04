@@ -1,18 +1,7 @@
 <?php
 require_once './models/HDVModel.php';
-require_once './models/DiemDanhModel.php';
 
 class HDVController {
-
-    public static function danhSachKhach($lich_id) {
-        $data = HDVModel::getPassengersByLich($lich_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/danhsachkhach.php';
-        include './views/layout/footer.php';
-    }
-
     
     // API endpoint để lấy tours của HDV (cho AJAX)
     public static function getToursByHDVAjax($hdv_id) {
@@ -40,30 +29,6 @@ class HDVController {
             echo $result;
         }
         exit;
-    }
-
-
-    public static function diemDanh($lich_id, $hdv_id) {
-        $data = DiemDanhModel::getCustomersForAttendance($lich_id);
-        include './views/layout/header.php';
-        include './views/layout/navbar.php';
-        include './views/layout/sidebar.php';
-        include './views/hdv/diemdanh.php';
-        include './views/layout/footer.php';
-    }
-
-    public static function diemDanhAction($hanh_khach_id, $lich_id, $hdv_id) {
-        // Toggle trạng thái điểm danh
-        DiemDanhModel::toggleAttendance($hanh_khach_id, $lich_id, $hdv_id);
-        
-        // Kiểm tra redirect
-        $redirect = $_GET['redirect'] ?? '';
-        if ($redirect == 'chi-tiet-lich') {
-            $tab = $_GET['tab'] ?? 'diem-danh';
-            header('Location: ?act=hdv-chi-tiet-lich&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id . '&tab=' . $tab);
-        } else {
-            header('Location: ?act=hdv-diem-danh&lich_id=' . $lich_id . '&hdv_id=' . $hdv_id);
-        }
     }
 
     public static function quanLyHDV($hdv_id) {
@@ -179,8 +144,9 @@ class HDVController {
 
     // Chi tiết lịch làm việc (3 tab: Khách hàng, Điểm danh, Nhật ký)
     public static function chiTietLich($lich_id, $hdv_id) {
+        require_once './models/DiemDanhModel.php';
         require_once './models/NhatKyTourModel.php';
-        require_once '../commons/env.php';
+        require_once '../commons/function.php';
         
         $tab = $_GET['tab'] ?? 'khach-hang';
         

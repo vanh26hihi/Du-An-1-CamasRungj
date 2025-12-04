@@ -48,14 +48,30 @@
   background-color: rgba(231, 76, 60, 0.4);
 }
 
-/* Pushmenu button */
+/* Pushmenu button - Nút toggle sidebar */
 .main-header .nav-link[data-widget="pushmenu"] {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(243, 156, 18, 0.25);
+  border: 2px solid rgba(243, 156, 18, 0.4);
+  padding: 8px 12px !important;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .main-header .nav-link[data-widget="pushmenu"]:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  transform: scale(1.05);
+  background-color: rgba(243, 156, 18, 0.45);
+  border-color: rgba(243, 156, 18, 0.7);
+  transform: scale(1.08);
+  box-shadow: 0 3px 10px rgba(243, 156, 18, 0.4);
+}
+
+.main-header .nav-link[data-widget="pushmenu"] i {
+  font-size: 1.2rem;
+  margin: 0;
+  transition: transform 0.3s ease;
+}
+
+.main-header .nav-link[data-widget="pushmenu"]:hover i {
+  transform: rotate(90deg);
 }
 
 /* Fullscreen button */

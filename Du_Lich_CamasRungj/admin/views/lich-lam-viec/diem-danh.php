@@ -21,6 +21,26 @@
     <section class="content">
         <div class="container-fluid">
 
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> <?= $_SESSION['success'] ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> <?= $_SESSION['error'] ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+
             <!-- Thông tin tour -->
             <?php if ($lichInfo): ?>
                 <div class="row mb-3">
@@ -49,7 +69,7 @@
                                         $tongKhach = count($danhSachDiemDanh);
                                         $daCoMat = 0;
                                         foreach ($danhSachDiemDanh as $khach) {
-                                            if ($khach['trang_thai_diem_danh'] == 'co_mat') {
+                                            if ($khach['da_den'] == 1) {
                                                 $daCoMat++;
                                             }
                                         }
@@ -77,7 +97,7 @@
                                 <i class="fas fa-list-check"></i> Danh Sách Điểm Danh
                             </h3>
                             <div class="card-tools">
-                                <a href="<?= BASE_URL_ADMIN ?>" class="btn btn-sm btn-light">
+                                <a href="<?= BASE_URL_ADMIN ?>?act=hdv-lich-lam-viec" class="btn btn-sm btn-light">
                                     <i class="fas fa-arrow-left"></i> Quay lại
                                 </a>
                             </div>
@@ -126,7 +146,7 @@
                                         <?php 
                                         $stt = 1;
                                         foreach ($danhSachDiemDanh as $khach): 
-                                            $coMat = $khach['trang_thai_diem_danh'] == 'co_mat';
+                                            $coMat = $khach['da_den'] == 1;
                                             $badgeClass = $coMat ? 'badge-success' : 'badge-secondary';
                                             $badgeText = $coMat ? 'Có mặt' : 'Chưa điểm danh';
                                             $badgeIcon = $coMat ? 'fa-check-circle' : 'fa-times-circle';
@@ -135,10 +155,12 @@
                                                 <td class="text-center"><strong><?= $stt++ ?></strong></td>
                                                 <td><strong><?= htmlspecialchars($khach['ho_ten']) ?></strong></td>
                                                 <td class="text-center">
-                                                    <?php if ($khach['gioi_tinh'] == 'Nam'): ?>
+                                                    <?php if (!empty($khach['gioi_tinh']) && $khach['gioi_tinh'] == 'Nam'): ?>
                                                         <i class="fas fa-male text-primary"></i> Nam
-                                                    <?php else: ?>
+                                                    <?php elseif (!empty($khach['gioi_tinh']) && $khach['gioi_tinh'] == 'Nữ'): ?>
                                                         <i class="fas fa-female text-danger"></i> Nữ
+                                                    <?php else: ?>
+                                                        N/A
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?= htmlspecialchars($khach['so_dien_thoai'] ?? 'N/A') ?></td>
