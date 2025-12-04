@@ -36,7 +36,7 @@ class AdminTour
                         t.diem_khoi_hanh AS diem_khoi_hanh,
                         GROUP_CONCAT(CONCAT(h.ho_ten, ' (', pch.vai_tro, ')') SEPARATOR ', ') AS danh_sach_hdv
                     FROM tour t
-                    LEFT JOIN lich_khoi_hanh lk ON lk.tour_id = t.tour_id
+                    INNER JOIN lich_khoi_hanh lk ON lk.tour_id = t.tour_id
                     LEFT JOIN phan_cong_hdv pch ON pch.lich_id = lk.lich_id
                     LEFT JOIN huong_dan_vien h ON h.hdv_id = pch.hdv_id
                     GROUP BY t.tour_id, lk.lich_id
