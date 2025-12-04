@@ -419,4 +419,25 @@ class AdminBookingController
         header("Location:" . BASE_URL_ADMIN . '?act=booking');
         exit();
     }
+
+    // Chi tiết booking
+    public function chiTietBooking()
+    {
+        $id = $_GET['id_booking'] ?? null;
+        if (!$id) {
+            header("Location: " . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+
+        $booking = $this->modelBooking->getDetailBooking($id);
+        if (!$booking) {
+            $_SESSION['error'] = "Không tìm thấy booking";
+            header("Location: " . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+
+        $hanhKhachList = $this->modelBooking->getAllHanhKhachID($id);
+        require_once './views/booking/chiTietBooking.php';
+    }
 }
+

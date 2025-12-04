@@ -330,5 +330,31 @@ class AdminDanhMucController
             }
         }
     }
+
+    // ========================================================================
+    // DETAIL - XEM CHI TIẾT TOUR
+    // ========================================================================
+
+    public function chiTietDanhMuc()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header("Location: " . BASE_URL_ADMIN . '?act=danh-muc-tour');
+            exit();
+        }
+
+        $tour = $this->model->getTourById($id);
+        
+        if (!$tour) {
+            $_SESSION['error'] = "Không tìm thấy tour";
+            header("Location: " . BASE_URL_ADMIN . '?act=danh-muc-tour');
+            exit();
+        }
+
+        $tourDiaDiem = $this->model->getDiaDiemTourByTour($id);
+        $lichTrinhList = $this->model->getLichTrinhByTour($id);
+
+        require 'views/danhmuc/chiTietDanhMuc.php';
+    }
 }
 ?>

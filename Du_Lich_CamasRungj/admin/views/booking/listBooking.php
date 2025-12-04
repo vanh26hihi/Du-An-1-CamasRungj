@@ -76,6 +76,9 @@
                       <td><?= formatPrice($Booking['tong_tien']) ?></td>
                       <td><?= htmlspecialchars($Booking['ten_trang_thai']) ?></td>
                       <td class="text-center">
+                        <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
+                          <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Chi tiết</button>
+                        </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
                           <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
                         </a>

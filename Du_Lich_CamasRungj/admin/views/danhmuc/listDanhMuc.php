@@ -74,6 +74,10 @@
                       <td><?= $row['chinh_sach'] ?? '' ?></td>
                       <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
                       <td class="text-center">
+                        <a href="<?= BASE_URL_ADMIN . '?act=chi-tiet-danh-muc&id=' . $row['tour_id'] ?>" 
+                           class="btn btn-sm btn-info" title="Xem chi tiết">
+                          <i class="fas fa-eye"></i>
+                        </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['tour_id'] ?>" 
                            class="btn btn-sm btn-warning" title="Sửa">
                           <i class="fas fa-edit"></i>
