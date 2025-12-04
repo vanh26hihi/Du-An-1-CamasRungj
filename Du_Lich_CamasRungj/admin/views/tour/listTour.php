@@ -6,6 +6,19 @@
 
 <!-- Main Sidebar Container -->
 <?php require_once './views/layout/sidebar.php'; ?>
+
+<style>
+  .hdv-item {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: white;
+    padding: 5px 10px;
+    margin: 3px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+</style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -45,7 +58,7 @@
               <?php endif; ?>
               <div class="content-header">
                 <a href="<?= BASE_URL_ADMIN . "?act=form-them-tour" ?>">
-                  <button class="btn btn-success">Thêm tour</button>
+                  <button class="btn btn-success"><i class="fas fa-plus"></i> Thêm tour</button>
                 </a>
               </div>
               <table id="example1" class="table table-bordered table-striped table-hover">
@@ -53,13 +66,10 @@
                   <tr>
                     <th>STT</th>
                     <th>Tên tour</th>
-                    <th>Mô tả</th>
                     <th>Giá cơ bản</th>
-                    <th>Chính sách</th>
-                    <th>Người tạo id</th>
-                    <th>Ngày tạo</th>
                     <th>Điểm khởi hành</th>
-                    <th>Hoạt động</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Hướng dẫn viên</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
@@ -67,22 +77,36 @@
                   <?php foreach ($listTour as $key => $tour): ?>
                     <tr>
                       <td class="text-center"><?= $key + 1 ?></td>
-                      <td><?= htmlspecialchars($tour['ten']) ?></td>
-                      <td><?= htmlspecialchars($tour['mo_ta']) ?></td>
-                      <td><?= htmlspecialchars($tour['gia_co_ban']) ?></td>
-                      <td><?= htmlspecialchars($tour['chinh_sach']) ?></td>
-                      <td><?= htmlspecialchars($tour['nguoi_tao_id']) ?></td>
-                      <td><?= htmlspecialchars($tour['ngay_tao']) ?></td>
-                      <td><?= htmlspecialchars($tour['diem_khoi_hanh']) ?></td>
-                      <td><?= htmlspecialchars($tour['hoat_dong']) ?></td>
-
+                      <td><?= htmlspecialchars($tour['ten_tour']) ?></td>
+                      <td><?= isset($tour['gia_co_ban']) ? number_format((float)$tour['gia_co_ban'], 0, ',', '.') . ' VND' : '' ?></td>
+                      <td><?= htmlspecialchars($tour['diem_khoi_hanh'] ?? '') ?></td>
+                      <td><?= $tour['ngay_bat_dau'] ? date('d/m/Y', strtotime($tour['ngay_bat_dau'])) : 'N/A' ?></td>
+                      <td>
+                        <?php if (!empty($tour['danh_sach_hdv'])): ?>
+                          <?php
+                          $danhSachHDV = explode(', ', $tour['danh_sach_hdv']);
+                          foreach ($danhSachHDV as $hdv):
+                          ?>
+                            <span class="hdv-item"><?= htmlspecialchars($hdv) ?></span>
+                          <?php endforeach; ?>
+                        <?php else: ?>
+                          <span class="text-muted">Chưa có HDV</span>
+                        <?php endif; ?>
+                      </td>
                       <td class="text-center">
-                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&id=' . $tour['tour_id'] ?>">
-                          <button class="btn btn-primary btn-sm">Sửa</button>
+                        <a href="<?= BASE_URL_ADMIN . '?act=copy-tour&tour_id=' . $tour['tour_id'] ?>" class="mb-1">
+                          <button class="btn btn-info btn-sm" title="Tạo lịch mới cho tour"><i class="fas fa-calendar-plus"></i> Lịch mới</button>
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&id=' . $tour['tour_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Tour này không?');">
-                          <button class="btn btn-danger btn-sm">Xóa</button>
-                        </a>
+                        <?php if (!empty($tour['lich_id'])): ?>
+                          <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&lich_id=' . $tour['lich_id'] ?>" class="mb-1">
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
+                          </a>
+                          <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa lịch khởi hành này không?');" class="mb-1">
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
+                          </a>
+                        <?php else: ?>
+                          <span class="text-muted">Chưa có lịch</span>
+                        <?php endif; ?>
                       </td>
                     </tr>
                   <?php endforeach; ?>
