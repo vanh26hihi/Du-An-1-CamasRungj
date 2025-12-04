@@ -250,5 +250,85 @@ class AdminDanhMucController
         header("Location: " . BASE_URL_ADMIN . '?act=danh-muc-tour');
         exit();
     }
+
+    // ========================================================================
+    // HELPER METHODS
+    // ========================================================================
+
+    private function validateTourData($ten, $danh_muc_id, $gia_co_ban, $thoi_luong_mac_dinh, 
+                                      $chinh_sach, $diem_khoi_hanh, $mo_ta_ngan, $mo_ta, 
+                                      $dia_diem_id, $ngay, $expected_days, $is_create = true)
+    {
+        $error = [];
+
+        if (empty($ten)) {
+            $error['ten'] = "Tên tour không được để trống";
+        }
+
+        if (empty($danh_muc_id)) {
+            $error['danh_muc_id'] = "Vui lòng chọn danh mục";
+        }
+
+        if (empty($gia_co_ban) || !is_numeric($gia_co_ban) || $gia_co_ban <= 0) {
+            $error['gia_co_ban'] = "Giá cơ bản phải là số dương";
+        }
+
+        if (empty($thoi_luong_mac_dinh) || !is_numeric($thoi_luong_mac_dinh) || $thoi_luong_mac_dinh <= 0) {
+            $error['thoi_luong_mac_dinh'] = "Thời lượng phải là số dương";
+        }
+
+        if (empty($diem_khoi_hanh)) {
+            $error['diem_khoi_hanh'] = "Điểm khởi hành không được để trống";
+        }
+
+        if (empty($dia_diem_id) || !is_array($dia_diem_id)) {
+            $error['dia_diem'] = "Vui lòng chọn ít nhất một địa điểm";
+        }
+
+        if (empty($ngay) || !is_array($ngay)) {
+            $error['ngay'] = "Vui lòng thêm ít nhất một lịch trình";
+        } elseif (count($ngay) != $expected_days) {
+            $error['ngay'] = "Số ngày lịch trình phải bằng thời lượng tour ($expected_days ngày)";
+        }
+
+        return $error;
     }
+
+    private function insertDiaDiemTour($tour_id, $dia_diem_ids, $thu_tus, $ghi_chus)
+    {
+        $mapping = [];
+        foreach ($dia_diem_ids as $index => $dia_diem_id) {
+            $thu_tu = $thu_tus[$index] ?? $index + 1;
+            $ghi_chu = $ghi_chus[$index] ?? '';
+            
+            $dia_diem_tour_id = $this->model->insertDiaDiemTour([
+                'tour_id' => $tour_id,
+                'dia_diem_id' => $dia_diem_id,
+                'thu_tu' => $thu_tu,
+                'ghi_chu' => $ghi_chu
+            ]);
+            
+            $mapping[$index] = $dia_diem_tour_id;
+        }
+        return $mapping;
+    }
+
+    private function insertLichTrinhWithMapping($tour_id, $ngays, $dia_diem_tour_id_map)
+    {
+        foreach ($ngays as $ngay_thu => $ngay_data) {
+            $dia_diem_tour_index = $ngay_data['dia_diem_tour_index'] ?? 0;
+            $dia_diem_tour_id = $dia_diem_tour_id_map[$dia_diem_tour_index] ?? null;
+            
+            if ($dia_diem_tour_id) {
+                $this->model->insertLichTrinh([
+                    'tour_id' => $tour_id,
+                    'ngay_thu' => $ngay_thu,
+                    'tieu_de' => $ngay_data['tieu_de'] ?? '',
+                    'mo_ta' => $ngay_data['mo_ta'] ?? '',
+                    'dia_diem_tour_id' => $dia_diem_tour_id
+                ]);
+            }
+        }
+    }
+}
 ?>
