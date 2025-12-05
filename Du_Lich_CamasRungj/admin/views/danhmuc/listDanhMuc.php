@@ -25,7 +25,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <!-- ==================== SUCCESS/ERROR MESSAGE ==================== -->
+
               <?php if (isset($_GET['msg'])): ?>
                 <script>
                   <?php if ($_GET['msg'] == 'success'): ?>
@@ -41,8 +41,6 @@
                   }
                 </script>
               <?php endif; ?>
-
-              <!-- ==================== ACTION BUTTONS ==================== -->
               <div class="content-header">
                 <a href="<?= BASE_URL_ADMIN . "?act=form-them-danh-muc" ?>">
                   <button class="btn btn-success"><i class="fas fa-plus"></i> Thêm danh mục tour</button>
@@ -74,7 +72,7 @@
                       <td><?= $row['chinh_sach'] ?? '' ?></td>
                       <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
                       <td class="text-center">
-                        <button class="btn btn-sm btn-info btn-preview" data-id="<?= $row['tour_id'] ?>" title="Xem chi tiết">
+                        <button class="btn btn-primary btn-sm btn-preview" data-id="<?= $row['tour_id'] ?>" title="Xem chi tiết">
                           <i class="fas fa-eye"></i> Xem chi tiết
                         </button>
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['tour_id'] ?>" 
@@ -102,10 +100,6 @@
 
 <!-- Footer -->
 <?php require_once './views/layout/footer.php'; ?>
-
-<!-- ============================================================================
-     JAVASCRIPT - DATATABLE INITIALIZATION
-     ============================================================================ -->
 <script>
   $(function() {
     $("#example1").DataTable({
@@ -118,14 +112,12 @@
 </script>
 
 <script>
-  // AJAX preview for tour
   $(document).on('click', '.btn-preview', function() {
     var tourId = $(this).data('id');
     $('#tourPreviewContent').html('<p class="text-muted">Đang tải...</p>');
     $('#tourPreviewOpenPage').attr('href', '#');
     $('#tourPreviewModal').modal('show');
 
-    // Redirect to admin-hosted public view to avoid 404
     var adminPublic = '<?= BASE_URL_ADMIN ?>?act=public-tour&id=' + tourId;
     window.location.href = adminPublic;
   });
