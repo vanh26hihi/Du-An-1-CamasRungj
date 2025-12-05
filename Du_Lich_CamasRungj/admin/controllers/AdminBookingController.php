@@ -22,12 +22,16 @@ class AdminBookingController
         // Cung cấp dữ liệu tách biệt: tour và toàn bộ lịch
         $listTours   = $this->modelBooking->getAllTours();
         $listLichAll = $this->modelBooking->getAllLich();
-        require_once './views/Booking/addBooking.php';
+        require_once './views/booking/addBooking.php';
     }
 
     public function postAddBooking()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            // DEBUG: In ra dữ liệu được gửi
+            error_log("=== DEBUG postAddBooking ===");
+            error_log("POST data: " . json_encode($_POST));
 
             // Gom dữ liệu
             $tour_id        = $_POST['tour_id'] ?? null;
@@ -47,6 +51,8 @@ class AdminBookingController
 
             // Danh sách khách hàng
             $ds_khach = $_POST['ds_khach'] ?? [];
+
+            error_log("tour_id: $tour_id, lich_id: $lich_id, loai: $loai, ho_ten: $ho_ten, email: $email");
 
             // Mảng lỗi
             $error = [];
@@ -135,6 +141,9 @@ class AdminBookingController
             // Nếu có lỗi → trả về form
             if (!empty($error)) {
 
+                error_log("=== Validation errors ===");
+                error_log(json_encode($error));
+
                 $_SESSION['flash'] = true;      // cờ báo có lỗi
                 $_SESSION['error'] = $error;    // lưu lỗi
                 $_SESSION['old']   = $_POST;    // lưu dữ liệu cũ
@@ -157,6 +166,8 @@ class AdminBookingController
             }
             $khach_hang_id = $this->modelBooking->insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi);
 
+            error_log("khach_hang_id inserted: $khach_hang_id");
+
             $dat_tour_id = $this->modelBooking->insertBooking(
                 $lich_id,
                 $loai,
@@ -166,6 +177,8 @@ class AdminBookingController
                 $nguoi_tao_id,
                 $tong_tien
             );
+
+            error_log("dat_tour_id inserted: $dat_tour_id");
 
             foreach ($ds_khach as $kh) {
                 $this->modelBooking->insertListKhachHang(
@@ -180,6 +193,8 @@ class AdminBookingController
                     $kh['so_ghe'] ?? null
                 );
             }
+
+            error_log("=== Booking saved successfully ===");
 
             // Xong → chuyển trang
             header("Location:" . BASE_URL_ADMIN . '?act=booking');

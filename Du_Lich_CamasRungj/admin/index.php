@@ -114,6 +114,8 @@ match ($act) {
     'form-them-tour' => (new AdminTourController())->formAddTour(),
     'post-them-tour' => (new AdminTourController())->postAddTour(),
     'get-tour-info' => (new AdminTourController())->getTourInfo(), // AJAX endpoint
+    'public-tour' => (new AdminTourController())->publicTour(),
+    'tour-detail' => (new AdminTourController())->tourDetail(),
     'form-sua-tour' => (new AdminTourController())->formEditTour(),
     'post-sua-tour' => (new AdminTourController())->postEditTour(),
     'xoa-tour' => (new AdminTourController())->deleteTour(),

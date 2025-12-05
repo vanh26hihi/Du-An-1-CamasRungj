@@ -83,6 +83,10 @@
                            onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
                           <i class="fas fa-trash"></i>
                         </a>
+                        <!-- Preview button: opens modal with tour details loaded via AJAX -->
+                        <button class="btn btn-sm btn-info btn-preview" data-id="<?= $row['tour_id'] ?>" title="Xem chi tiết">
+                          <i class="fas fa-eye"></i>
+                        </button>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -113,5 +117,18 @@
   });
 </script>
 
+<script>
+  // AJAX preview for tour
+  $(document).on('click', '.btn-preview', function() {
+    var tourId = $(this).data('id');
+    $('#tourPreviewContent').html('<p class="text-muted">Đang tải...</p>');
+    $('#tourPreviewOpenPage').attr('href', '#');
+    $('#tourPreviewModal').modal('show');
+
+    // Redirect to admin-hosted public view to avoid 404
+    var adminPublic = '<?= BASE_URL_ADMIN ?>?act=public-tour&id=' + tourId;
+    window.location.href = adminPublic;
+  });
+</script>
 </body>
 </html>

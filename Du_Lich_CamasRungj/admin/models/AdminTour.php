@@ -486,6 +486,26 @@ class AdminTour
         }
     }
 
+    // Lấy danh sách dịch vụ đầy đủ cho một lịch khởi hành (dùng cho hiển thị chi tiết)
+    public function getDichVuListByLich($lichId)
+    {
+        try {
+            $sql = "SELECT tn.dich_vu_id, tn.ghi_chu, tn.gia_thoa_thuan,
+                           dv.loai_dich_vu, dv.ma, dv.mo_ta, dv.gia_mac_dinh,
+                           ncc.ten as ten_nha_cung_cap, ncc.lien_he, ncc.dia_chi
+                    FROM tour_ncc tn
+                    LEFT JOIN dich_vu_ncc dv ON tn.dich_vu_id = dv.dich_vu_id
+                    LEFT JOIN nha_cung_cap ncc ON dv.ncc_id = ncc.ncc_id
+                    WHERE tn.lich_id = :lich_id
+                    ORDER BY dv.loai_dich_vu ASC";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(['lich_id' => $lichId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
 
 
     public function getAllDichVu()

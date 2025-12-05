@@ -95,6 +95,9 @@
                         <?php endif; ?>
                       </td>
                       <td class="text-center">
+                        <a href="<?= BASE_URL_ADMIN . '?act=tour-detail&id=' . $tour['tour_id'] ?>" class="mb-1" target="_blank">
+                          <button class="btn btn-primary btn-sm" title="Xem chi tiết tour"><i class="fas fa-eye"></i> Xem chi tiết</button>
+                        </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=copy-tour&tour_id=' . $tour['tour_id'] ?>" class="mb-1">
                           <button class="btn btn-info btn-sm" title="Tạo lịch mới cho tour"><i class="fas fa-calendar-plus"></i> Lịch mới</button>
                         </a>
