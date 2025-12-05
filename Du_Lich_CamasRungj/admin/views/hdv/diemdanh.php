@@ -341,10 +341,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentStatus = this.closest('tr').querySelector('.badge-success') ? 'Có mặt' : 'Vắng';
             const newStatus = currentStatus === 'Có mặt' ? 'Vắng' : 'Có mặt';
             
-            if (confirm('Xác nhận chuyển trạng thái từ "' + currentStatus + '" sang "' + newStatus + '" cho khách hàng này?')) {
-                // Redirect to attendance action
-                window.location.href = '<?= BASE_URL_ADMIN ?>?act=hdv-diem-danh-action&hanh_khach_id=' + hanhKhachId + '&lich_id=' + lichId + '&hdv_id=' + hdvId;
-            }
+            sweetConfirmPromise('Xác nhận chuyển trạng thái từ "' + currentStatus + '" sang "' + newStatus + '" cho khách hàng này?').then(function(confirmed) {
+                if (confirmed) {
+                    // Redirect to attendance action
+                    window.location.href = '<?= BASE_URL_ADMIN ?>?act=hdv-diem-danh-action&hanh_khach_id=' + hanhKhachId + '&lich_id=' + lichId + '&hdv_id=' + hdvId;
+                }
+            });
         });
     });
 });

@@ -108,6 +108,7 @@ class AdminBooking
                     dat_tour.*,
                     lich_khoi_hanh.lich_id,
                     lich_khoi_hanh.ngay_bat_dau,
+                    lich_khoi_hanh.ngay_ket_thuc,
                     tour.tour_id,
                     tour.ten as ten_tour,
                     tour.mo_ta,

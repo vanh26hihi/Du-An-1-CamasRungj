@@ -76,11 +76,14 @@
                       <td><?= formatPrice($Booking['tong_tien']) ?></td>
                       <td><?= htmlspecialchars($Booking['ten_trang_thai']) ?></td>
                       <td class="text-center">
-                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
-                          <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
+                        <a href="<?= BASE_URL_ADMIN . '?act=booking-detail&id_booking=' . $Booking['dat_tour_id'] ?>" class="btn btn-info btn-sm" title="Xem chi tiết">
+                          <i class="fas fa-eye"></i>Xem Chi tiết
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa Booking này không?');">
-                          <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
+                        <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>" class="btn btn-warning btn-sm">
+                          <i class="fas fa-edit"></i> Sửa
+                        </a>
+                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" class="btn btn-danger btn-sm" onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa Booking này không?');">
+                          <i class="fas fa-trash"></i> Xóa
                         </a>
                       </td>
                     </tr>

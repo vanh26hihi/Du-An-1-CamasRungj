@@ -74,19 +74,19 @@
                       <td><?= $row['chinh_sach'] ?? '' ?></td>
                       <td><?= $row['diem_khoi_hanh'] ?? '' ?></td>
                       <td class="text-center">
+                        <button class="btn btn-sm btn-info btn-preview" data-id="<?= $row['tour_id'] ?>" title="Xem chi tiết">
+                          <i class="fas fa-eye"></i> Xem chi tiết
+                        </button>
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-danh-muc&id=' . $row['tour_id'] ?>" 
                            class="btn btn-sm btn-warning" title="Sửa">
-                          <i class="fas fa-edit"></i>
+                          <i class="fas fa-edit"></i> Sửa
                         </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&tour_id=' . $row['tour_id'] ?>" 
                           class="btn btn-sm btn-danger" title="Xóa" 
                           onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa mục này không?');">
-                          <i class="fas fa-trash"></i>
+                          <i class="fas fa-trash"></i> Xóa
                         </a>
-                        <!-- Preview button: opens modal with tour details loaded via AJAX -->
-                        <button class="btn btn-sm btn-info btn-preview" data-id="<?= $row['tour_id'] ?>" title="Xem chi tiết">
-                          <i class="fas fa-eye"></i>
-                        </button>
+                        
                       </td>
                     </tr>
                   <?php endforeach; ?>

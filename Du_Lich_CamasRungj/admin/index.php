@@ -51,6 +51,7 @@ match ($act) {
         : (new AdminBaoCaoThongKeController())->home(),
 
     'booking' => (new AdminBookingController())->danhSachBooking(),
+    'booking-detail' => (new AdminBookingController())->bookingDetail(),
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
     'form-sua-booking' => (new AdminBookingController())->formEditBooking(),

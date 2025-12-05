@@ -434,4 +434,23 @@ class AdminBookingController
         header("Location:" . BASE_URL_ADMIN . '?act=booking');
         exit();
     }
+
+    public function bookingDetail()
+    {
+        $id_booking = $_GET['id_booking'] ?? null;
+        if (empty($id_booking)) {
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+
+        $bookingInfo = $this->modelBooking->getAllBookingID($id_booking);
+        if (!$bookingInfo) {
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
+            exit();
+        }
+
+        $hanhKhachList = $this->modelBooking->getAllHanhKhachID($id_booking);
+
+        require_once './views/booking/bookingDetail.php';
+    }
 }
