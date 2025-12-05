@@ -164,10 +164,23 @@ class AdminBookingController
                     exit();
                 }
             }
+            
+            // Insert khách hàng (người đặt tour)
+            error_log("=== Starting insert process ===");
             $khach_hang_id = $this->modelBooking->insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi);
 
             error_log("khach_hang_id inserted: $khach_hang_id");
+            
+            if (!$khach_hang_id) {
+                error_log("ERROR: Failed to insert khach_hang");
+                $_SESSION['flash'] = true;
+                $_SESSION['error'] = ['system' => 'Lỗi khi thêm thông tin khách hàng. Vui lòng thử lại.'];
+                $_SESSION['old'] = $_POST;
+                header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+                exit();
+            }
 
+            // Insert booking (đặt tour)
             $dat_tour_id = $this->modelBooking->insertBooking(
                 $lich_id,
                 $loai,
@@ -179,19 +192,42 @@ class AdminBookingController
             );
 
             error_log("dat_tour_id inserted: $dat_tour_id");
+            
+            if (!$dat_tour_id) {
+                error_log("ERROR: Failed to insert dat_tour");
+                $_SESSION['flash'] = true;
+                $_SESSION['error'] = ['system' => 'Lỗi khi tạo đơn đặt tour. Vui lòng thử lại.'];
+                $_SESSION['old'] = $_POST;
+                header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+                exit();
+            }
 
-            foreach ($ds_khach as $kh) {
-                $this->modelBooking->insertListKhachHang(
-                    $dat_tour_id,
-                    $kh['ho_ten'],
-                    $kh['so_dien_thoai'],
-                    $kh['email'],
-                    $kh['gioi_tinh'],
-                    $kh['cccd'],
-                    $kh['ngay_sinh'],
-                    $kh['ghi_chu'] ?? '',
-                    $kh['so_ghe'] ?? null
-                );
+            // Debug danh sách khách hàng
+            error_log("=== Danh sách khách hàng (ds_khach) ===");
+            error_log("Count: " . count($ds_khach));
+            error_log("Data: " . json_encode($ds_khach));
+
+            if (!empty($ds_khach)) {
+                foreach ($ds_khach as $index => $kh) {
+                    error_log("=== Inserting customer #" . ($index + 1) . " ===");
+                    error_log("Data: " . json_encode($kh));
+                    
+                    $result = $this->modelBooking->insertListKhachHang(
+                        $dat_tour_id,
+                        $kh['ho_ten'] ?? '',
+                        $kh['so_dien_thoai'] ?? '',
+                        $kh['email'] ?? '',
+                        $kh['gioi_tinh'] ?? '',
+                        $kh['cccd'] ?? '',
+                        $kh['ngay_sinh'] ?? '',
+                        $kh['ghi_chu'] ?? '',
+                        $kh['so_ghe'] ?? null
+                    );
+                    
+                    error_log("Insert result: " . ($result ? 'success' : 'failed'));
+                }
+            } else {
+                error_log("WARNING: ds_khach is empty - no customers to insert");
             }
 
             error_log("=== Booking saved successfully ===");

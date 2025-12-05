@@ -82,9 +82,15 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     }
 
     function generateCustomers(count) {
-      count = parseInt(count) || 1;
+      count = parseInt(count) || 0; // Chuyển thành 0 nếu rỗng/NaN
       const dsKhachOld = oldData.ds_khach ?? [];
       container.innerHTML = '';
+      
+      if (count === 0) {
+        // Không tạo row nào nếu số người = 0 hoặc rỗng
+        return;
+      }
+      
       for (let i = 0; i < count; i++) {
         const khachOld = dsKhachOld[i] ?? {};
         container.insertAdjacentHTML('beforeend', buildRow(i, khachOld));
@@ -94,15 +100,13 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     // khi thay đổi số lượng
     if (soNguoiInput) {
       soNguoiInput.addEventListener("input", function() {
-        // Không ép mặc định rỗng thành 1 ở đây nếu bạn muốn khác,
-        // nhưng theo yêu cầu bạn đã set value=1 nên mặc định là 1.
-        const val = parseInt(this.value) || 1;
+        const val = parseInt(this.value) || 0; // Chuyển thành 0 nếu rỗng
         generateCustomers(val);
+        tinhTongTien(); // Tính lại tổng tiền khi thay đổi số người
       });
     }
 
-    // Khi trang load: tạo danh sách theo value hiện tại (nếu container rỗng thì tạo)
-    // Điều này đảm bảo khi tải lại trang bạn sẽ thấy 1 form (value=1)
+    // Khi trang load: chỉ restore data cũ, không tự động tạo customers
     (function initOnLoad() {
       // Restore tour info nếu có dữ liệu cũ
       if (oldData.tour_id) {
@@ -120,8 +124,13 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
         }
       }
 
-      const val = soNguoiInput ? (parseInt(soNguoiInput.value) || 1) : 1;
-      generateCustomers(val);
+      // Chỉ generate customers nếu có dữ liệu cũ (restore từ validation lỗi)
+      if (oldData.so_nguoi) {
+        const val = parseInt(oldData.so_nguoi) || 0;
+        if (val > 0) {
+          generateCustomers(val);
+        }
+      }
     })();
 
     // Khi user chuyển sang tab "Danh Sách Khách Hàng" (Bootstrap)
@@ -129,9 +138,11 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
     const tabLink = document.getElementById("custom-tabs-one-list-tab");
 
     function onShowListTab() {
-      // đảm bảo danh sách có mặt (nếu rỗng thì tạo)
-      const val = soNguoiInput ? (parseInt(soNguoiInput.value) || 1) : 1;
-      generateCustomers(val);
+      // Chỉ generate nếu có số người hợp lệ
+      const val = soNguoiInput ? (parseInt(soNguoiInput.value) || 0) : 0;
+      if (val > 0) {
+        generateCustomers(val);
+      }
     }
 
     if (tabLink) {
@@ -147,15 +158,37 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
 
     function tinhTongTien() {
       const gia = parseFloat(gia_co_ban.value) || 0;
-      const soNguoi = parseInt(so_nguoi.value) || 1;
-      const tong = gia * soNguoi;
+      const soNguoi = parseInt(so_nguoi.value) || 0; // 0 nếu rỗng
+      const loai = document.getElementById("loai").value;
+      
+      let tong = 0;
+      
+      if (loai === 'individual') {
+        // Cá nhân: tính giá cho 12 khách
+        tong = gia * 12;
+      } else if (loai === 'group') {
+        // Theo nhóm: tính theo số người thực tế
+        tong = gia * soNguoi;
+      } else {
+        // Chưa chọn loại: mặc định tính theo số người (nếu có)
+        tong = gia * soNguoi;
+      }
+      
       document.getElementById("tong_tien").value = tong;
     }
 
-    // Khi chọn tour → cập nhật thông tin + tính tổng
+    // Khi chọn lịch tour → cập nhật thông tin + tính tổng
     lichSelect.addEventListener("change", function() {
       tinhTongTien();
     });
+    
+    // Khi chọn loại tour → tính lại tổng tiền
+    const loaiSelect = document.getElementById("loai");
+    if (loaiSelect) {
+      loaiSelect.addEventListener("change", function() {
+        tinhTongTien();
+      });
+    }
 
     function rebuildLichOptionsByTour(tourId) {
       // clear
@@ -348,7 +381,7 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
 
                               <div class="form-group">
                                 <label>Số Lượng Người</label>
-                                <input type="number" id="so_nguoi" name="so_nguoi" class="form-control" min="1" value="<?= $old['so_nguoi'] ?? '1' ?>">
+                                <input type="number" id="so_nguoi" name="so_nguoi" class="form-control" min="1" value="<?= $old['so_nguoi'] ?? '' ?>" placeholder="Nhập số lượng người">
                                 <?php if (isset($error['so_nguoi'])): ?>
                                   <div class="invalid-feedback d-block"> <?= $error['so_nguoi'] ?> </div>
                                 <?php endif; ?>
