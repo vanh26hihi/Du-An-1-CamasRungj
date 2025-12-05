@@ -157,10 +157,15 @@
               <!-- Hành khách list -->
               <?php if (!empty($hanhKhachList)): ?>
                 <hr class="my-4">
-                <h5 class="mb-3">
-                  <i class="fas fa-users"></i> Danh Sách Hành Khách (<?= count($hanhKhachList) ?> người)
-                </h5>
-                <div class="table-responsive">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Danh Sách Hành Khách (<?= count($hanhKhachList) ?> người)
+                  </h5>
+                  <button class="btn btn-sm btn-primary" id="togglePassengerBtn" title="Xem tất cả khách hàng">
+                    <i class="fas fa-chevron-down"></i> Xem tất cả khách hàng
+                  </button>
+                </div>
+                <div class="table-responsive" id="passengerTableContainer" style="display: none;">
                   <table class="table table-bordered table-striped table-hover table-sm">
                     <thead class="thead-light">
                       <tr>
@@ -227,7 +232,38 @@
     border-bottom: 2px solid #007bff;
     padding-bottom: 8px;
   }
+
+  #togglePassengerBtn {
+    transition: all 0.3s ease;
+  }
+
+  #togglePassengerBtn.expanded i {
+    transform: rotate(180deg);
+  }
 </style>
+
+<script>
+  $(function() {
+    $('#togglePassengerBtn').on('click', function() {
+      const container = $('#passengerTableContainer');
+      const btn = $(this);
+      
+      if (container.is(':visible')) {
+        // Hide
+        container.slideUp(300, function() {
+          btn.removeClass('expanded');
+          btn.html('<i class="fas fa-chevron-down"></i> Xem tất cả khách hàng');
+        });
+      } else {
+        // Show
+        container.slideDown(300, function() {
+          btn.addClass('expanded');
+          btn.html('<i class="fas fa-chevron-up"></i> Ẩn khách hàng');
+        });
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
