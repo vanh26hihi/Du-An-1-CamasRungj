@@ -358,4 +358,98 @@ class AdminDanhMuc
             return false;
         }
     }
+
+    /**
+     * Update địa điểm tour theo ID
+     * @param int $diaDiemTourId
+     * @param array $data
+     * @return bool
+     */
+    public function updateDiaDiemTour($diaDiemTourId, $data)
+    {
+        try {
+            $sql = "UPDATE dia_diem_tour 
+                    SET dia_diem_id = :dia_diem_id, 
+                        thu_tu = :thu_tu, 
+                        ghi_chu = :ghi_chu 
+                    WHERE dia_diem_tour_id = :dia_diem_tour_id";
+            
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([
+                'dia_diem_tour_id' => $diaDiemTourId,
+                'dia_diem_id' => $data['dia_diem_id'],
+                'thu_tu' => $data['thu_tu'],
+                'ghi_chu' => $data['ghi_chu']
+            ]);
+        } catch (Exception $e) {
+            echo "Lỗi updateDiaDiemTour: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Xóa địa điểm tour theo ID
+     * @param int $diaDiemTourId
+     * @return bool
+     */
+    public function deleteDiaDiemTourById($diaDiemTourId)
+    {
+        try {
+            $sql = "DELETE FROM dia_diem_tour WHERE dia_diem_tour_id = :dia_diem_tour_id";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute(['dia_diem_tour_id' => $diaDiemTourId]);
+        } catch (Exception $e) {
+            echo "Lỗi deleteDiaDiemTourById: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Update lịch trình theo ID
+     * @param int $lichTrinhId
+     * @param array $data
+     * @return bool
+     */
+    public function updateLichTrinh($lichTrinhId, $data)
+    {
+        try {
+            $sql = "UPDATE lich_trinh 
+                    SET ngay_thu = :ngay_thu,
+                        gio_bat_dau = :gio_bat_dau,
+                        gio_ket_thuc = :gio_ket_thuc,
+                        dia_diem_tour_id = :dia_diem_tour_id,
+                        noi_dung = :noi_dung
+                    WHERE lich_trinh_id = :lich_trinh_id";
+            
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([
+                'lich_trinh_id' => $lichTrinhId,
+                'ngay_thu' => $data['ngay_thu'],
+                'gio_bat_dau' => $data['gio_bat_dau'],
+                'gio_ket_thuc' => $data['gio_ket_thuc'],
+                'dia_diem_tour_id' => $data['dia_diem_tour_id'],
+                'noi_dung' => $data['noi_dung']
+            ]);
+        } catch (Exception $e) {
+            echo "Lỗi updateLichTrinh: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
+     * Xóa lịch trình theo ID
+     * @param int $lichTrinhId
+     * @return bool
+     */
+    public function deleteLichTrinhById($lichTrinhId)
+    {
+        try {
+            $sql = "DELETE FROM lich_trinh WHERE lich_trinh_id = :lich_trinh_id";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute(['lich_trinh_id' => $lichTrinhId]);
+        } catch (Exception $e) {
+            echo "Lỗi deleteLichTrinhById: " . $e->getMessage();
+            return false;
+        }
+    }
 }

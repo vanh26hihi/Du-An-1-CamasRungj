@@ -303,9 +303,10 @@
     // If no schedule data, generate from duration
     if (lichTrinhNgayList.length === 0 && soNgayDuLich > 0) {
       generateLichTrinhFromSoNgay(soNgayDuLich);
-    } else {
-      renderAllLichTrinh();
     }
+    
+    // Always render after loading (whether from DB or generated)
+    renderAllLichTrinh();
 
     // Event listener for duration change
     inputSoNgay.addEventListener('input', function() {
@@ -328,7 +329,12 @@
   // ============================================================================
   
   function loadLichTrinhFromServer() {
+    console.log('=== DEBUG loadLichTrinhFromServer ===');
+    console.log('serverLichTrinhData:', serverLichTrinhData);
+    console.log('tourDiaDiemData:', tourDiaDiemData);
+    
     if (!serverLichTrinhData || serverLichTrinhData.length === 0) {
+      console.log('No schedule data from server');
       return;
     }
 
@@ -336,14 +342,18 @@
     const diaDiemTourIdToIndex = {};
     tourDiaDiemData.forEach((ddt, idx) => {
       diaDiemTourIdToIndex[ddt.dia_diem_tour_id] = idx;
+      console.log(`Mapping: dia_diem_tour_id ${ddt.dia_diem_tour_id} -> index ${idx}`);
     });
 
     // Group schedule by day
     const groupedByNgay = {};
     serverLichTrinhData.forEach(lt => {
       const ngayThu = lt.ngay_thu;
+      console.log(`Processing schedule: Day ${ngayThu}, dia_diem_tour_id: ${lt.dia_diem_tour_id}`);
+      
       if (!groupedByNgay[ngayThu]) {
         const diaDiemIndex = diaDiemTourIdToIndex[lt.dia_diem_tour_id] ?? '';
+        console.log(`New day ${ngayThu}, mapped index: ${diaDiemIndex}`);
         
         groupedByNgay[ngayThu] = {
           ngay_thu: ngayThu,
@@ -352,6 +362,7 @@
         };
       }
       groupedByNgay[ngayThu].lich_trinh.push({
+        lich_trinh_id: lt.lich_trinh_id || '', // Include ID for UPDATE/DELETE
         gio_bat_dau: lt.gio_bat_dau || '',
         gio_ket_thuc: lt.gio_ket_thuc || '',
         noi_dung: lt.noi_dung || ''
@@ -360,6 +371,7 @@
 
     // Convert to array and sort by day
     lichTrinhNgayList = Object.values(groupedByNgay).sort((a, b) => a.ngay_thu - b.ngay_thu);
+    console.log('Final lichTrinhNgayList:', lichTrinhNgayList);
   }
 
   // ============================================================================
@@ -427,11 +439,14 @@
       <h5>Địa Điểm Thứ ${index + 1}</h5>
     </div>
     <div class="card-body">
+      <!-- Hidden input for existing dia_diem_tour_id -->
+      <input type="hidden" name="dia_diem[${index}][dia_diem_tour_id]" value="${data.dia_diem_tour_id || ''}">
+      
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label>Chọn Địa Điểm</label>
-            <select name="dia_diem_id[]" class="form-control dia-diem-select" data-index="${index}">
+            <select name="dia_diem[${index}][dia_diem_id]" class="form-control dia-diem-select" data-index="${index}">
               <option value="">-- Chọn Địa Điểm --</option>
               ${diaDiemData.map(dd => `
                 <option value="${dd.dia_diem_id}" ${data.dia_diem_id == dd.dia_diem_id ? 'selected' : ''}>
@@ -445,14 +460,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label>Thứ Tự</label>
-            <input type="number" name="thu_tu[]" class="form-control" min="1" value="${data.thu_tu || index + 1}" readonly>
+            <input type="number" name="dia_diem[${index}][thu_tu]" class="form-control" min="1" value="${data.thu_tu || index + 1}" readonly>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label>Ghi Chú</label>
-            <textarea name="ghi_chu[]" class="form-control" placeholder="Nhập ghi chú (nếu có)">${data.ghi_chu || ''}</textarea>
+            <textarea name="dia_diem[${index}][ghi_chu]" class="form-control" placeholder="Nhập ghi chú (nếu có)">${data.ghi_chu || ''}</textarea>
           </div>
         </div>
       </div>
@@ -654,6 +669,8 @@
           </button>
         </div>
         <div class="card-body">
+          <!-- Hidden input for existing lich_trinh_id -->
+          <input type="hidden" name="ngay[${ngayIndex}][lich_trinh][${ltIndex}][lich_trinh_id]" value="${lt.lich_trinh_id || ''}">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group mb-2">
@@ -669,7 +686,7 @@
             <div class="col-md-6">
               <div class="form-group mb-2">
                 <label class="mb-1"><i class="fas fa-clock text-warning"></i> Giờ Kết Thúc <span class="text-danger">*</span></label>
-                <input type="time" name="ngay[${ngayIndex}][lich_trinh][${ltIdx}][gio_ket_thuc]" 
+                <input type="time" name="ngay[${ngayIndex}][lich_trinh][${ltIndex}][gio_ket_thuc]" 
                   class="form-control form-control-sm gio-ket-thuc" 
                   data-ngay="${ngayIndex}" 
                   data-lt="${ltIndex}"

@@ -19,6 +19,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="./assets/dist/css/adminlte.min.css">
   <!-- Custom Styles -->
+  <link rel="stylesheet" href="./assets/css/custom-list.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-header.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-sidebar.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-footer.css?v=<?= time() ?>">
