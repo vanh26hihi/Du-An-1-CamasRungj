@@ -25,7 +25,7 @@
       <!-- Logout -->
       <li class="nav-item">
         <a class="nav-link" href="<?= BASE_URL_ADMIN . '?act=logout-admin' ?>" 
-           onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?')" 
+           onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn đăng xuất?')" 
            role="button" 
            title="Đăng xuất">
           <i class="fas fa-sign-out-alt"></i> Đăng Xuất

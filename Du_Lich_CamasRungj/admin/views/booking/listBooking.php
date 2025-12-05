@@ -79,7 +79,7 @@
                         <a href="<?= BASE_URL_ADMIN . '?act=form-sua-booking&id_booking=' . $Booking['dat_tour_id'] ?>">
                           <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
                         </a>
-                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa Booking này không?');">
+                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-booking&id_booking=' . $Booking['dat_tour_id'] ?>" onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa Booking này không?');">
                           <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
                         </a>
                       </td>

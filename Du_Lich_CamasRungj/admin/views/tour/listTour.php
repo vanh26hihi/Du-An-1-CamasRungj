@@ -105,7 +105,7 @@
                           <a href="<?= BASE_URL_ADMIN . '?act=form-sua-tour&lich_id=' . $tour['lich_id'] ?>" class="mb-1">
                             <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Sửa</button>
                           </a>
-                          <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa lịch khởi hành này không?');" class="mb-1">
+                          <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&lich_id=' . $tour['lich_id'] ?>" onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa lịch khởi hành này không?');" class="mb-1">
                             <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Xóa</button>
                           </a>
                         <?php else: ?>

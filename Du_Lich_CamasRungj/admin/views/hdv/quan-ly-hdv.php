@@ -101,9 +101,9 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                                                 <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-sua&hdv_id=" . $hdv_id ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i> Sửa
                                                 </a>
-                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa&hdv_id=" . $hdv_id ?>" 
-                                                   class="btn btn-sm btn-danger"
-                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa hướng dẫn viên <?= htmlspecialchars($hdvInfo['ho_ten']) ?>?');">
+                                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa&hdv_id=" . $hdv_id ?>" 
+                                                                    class="btn btn-sm btn-danger"
+                                                                    onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa hướng dẫn viên <?= htmlspecialchars($hdvInfo['ho_ten']) ?>?');">
                                                     <i class="fas fa-trash"></i> Xóa
                                                 </a>
                                             </div>

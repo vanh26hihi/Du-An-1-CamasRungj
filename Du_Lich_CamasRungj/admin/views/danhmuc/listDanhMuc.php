@@ -79,8 +79,8 @@
                           <i class="fas fa-edit"></i>
                         </a>
                         <a href="<?= BASE_URL_ADMIN . '?act=xoa-tour&tour_id=' . $row['tour_id'] ?>" 
-                           class="btn btn-sm btn-danger" title="Xóa" 
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa mục này không?');">
+                          class="btn btn-sm btn-danger" title="Xóa" 
+                          onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa mục này không?');">
                           <i class="fas fa-trash"></i>
                         </a>
                         <!-- Preview button: opens modal with tour details loaded via AJAX -->
