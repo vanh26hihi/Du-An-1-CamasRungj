@@ -333,41 +333,141 @@
 
                         <!-- Tab 3: Nhật Ký Tour -->
                         <?php if ($tab == 'nhat-ky'): ?>
-                            <div class="card">
-                                <div class="card-body">
-                                    <?php if (!empty($nhatKy)): ?>
-                                        <div class="row">
-                                            <?php foreach ($nhatKy as $nk): ?>
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="card">
-                                                        <?php if (!empty($nk['anh_tour'])): ?>
-                                                            <?php 
-                                                            $anh = $nk['anh_tour'];
-                                                            if (strpos($anh, '../') === 0) {
-                                                                $anh = str_replace('../', '', $anh);
-                                                            }
-                                                            if (strpos($anh, 'assets/') !== 0) {
-                                                                $anh = 'assets/img/nhatky/' . basename($anh);
-                                                            }
-                                                            ?>
-                                                            <img src="<?= BASE_URL . htmlspecialchars($anh) ?>" class="card-img-top" alt="Ảnh tour" style="max-height: 200px; object-fit: cover;">
-                                                        <?php endif; ?>
-                                                        <div class="card-body">
-                                                            <h5 class="card-title"><?= htmlspecialchars($nk['dia_diem']) ?></h5>
-                                                            <p class="card-text"><?= htmlspecialchars($nk['noi_dung']) ?></p>
-                                                            <small class="text-muted">
-                                                                <i class="fas fa-calendar"></i> <?= date('d/m/Y H:i', strtotime($nk['ngay_thuc_hien'])) ?>
-                                                            </small>
+                            <!-- Form thêm nhật ký -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="card card-success">
+                                        <div class="card-header">
+                                            <h3 class="card-title">
+                                                <i class="fas fa-plus"></i> Thêm Nhật Ký Mới
+                                            </h3>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <?php
+                                            $error = $_SESSION['error'] ?? [];
+                                            $old = $_SESSION['old'] ?? [];
+                                            unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
+                                            ?>
+                                            
+                                            <form action="<?= BASE_URL_ADMIN ?>?act=hdv-them-nhat-ky" method="POST">
+                                                <input type="hidden" name="lich_id" value="<?= $lich_id ?>">
+                                                <input type="hidden" name="hdv_id" value="<?= $hdv_id ?>">
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Địa Điểm <span class="text-danger">*</span></label>
+                                                            <input type="text" 
+                                                                   name="dia_diem" 
+                                                                   class="form-control <?= isset($error['dia_diem']) ? 'is-invalid' : '' ?>" 
+                                                                   placeholder="VD: Đà Nẵng - Bà Nà Hills"
+                                                                   value="<?= $old['dia_diem'] ?? '' ?>"
+                                                                   required>
+                                                            <?php if (isset($error['dia_diem'])): ?>
+                                                                <small class="text-danger"><?= $error['dia_diem'] ?></small>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Ngày Ghi</label>
+                                                            <input type="date" 
+                                                                   name="ngay_ghi" 
+                                                                   class="form-control" 
+                                                                   value="<?= $old['ngay_ghi'] ?? date('Y-m-d') ?>">
                                                         </div>
                                                     </div>
                                                 </div>
-                                            <?php endforeach; ?>
+                                                
+                                                <div class="form-group">
+                                                    <label>Mô Tả <span class="text-danger">*</span></label>
+                                                    <textarea name="mo_ta" 
+                                                              rows="4" 
+                                                              class="form-control <?= isset($error['mo_ta']) ? 'is-invalid' : '' ?>" 
+                                                              placeholder="Ghi chú về hoạt động, tình hình khách hàng, vấn đề phát sinh..."
+                                                              required><?= $old['mo_ta'] ?? '' ?></textarea>
+                                                    <?php if (isset($error['mo_ta'])): ?>
+                                                        <small class="text-danger"><?= $error['mo_ta'] ?></small>
+                                                    <?php endif; ?>
+                                                </div>
+                                                
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn btn-success">
+                                                        <i class="fas fa-save"></i> Lưu Nhật Ký
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                    <?php else: ?>
-                                        <div class="alert alert-info">
-                                            <i class="fas fa-info-circle"></i> Chưa có nhật ký tour nào
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Danh sách nhật ký -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-header bg-primary">
+                                            <h3 class="card-title">
+                                                <i class="fas fa-list"></i> Danh Sách Nhật Ký
+                                            </h3>
                                         </div>
-                                    <?php endif; ?>
+                                        <div class="card-body">
+                                            <?php if (empty($nhatKy)): ?>
+                                                <div class="alert alert-info text-center">
+                                                    <i class="fas fa-info-circle fa-2x mb-2"></i>
+                                                    <p class="mb-0">Chưa có nhật ký nào. Hãy thêm nhật ký đầu tiên!</p>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="timeline">
+                                                    <?php foreach ($nhatKy as $nk): 
+                                                        $ngayHienThi = $nk['ngay_thuc_hien'] ?? date('Y-m-d H:i:s');
+                                                        $noiDungHienThi = $nk['noi_dung'] ?? '';
+                                                        
+                                                        // Parse nội dung để tách địa điểm và mô tả (nếu có format "Địa điểm: ...\nMô tả: ...")
+                                                        $diaDiemHienThi = $nk['dia_diem'] ?? 'Địa điểm';
+                                                        if (strpos($noiDungHienThi, 'Địa điểm:') === 0) {
+                                                            $parts = explode("\n", $noiDungHienThi, 2);
+                                                            if (count($parts) >= 1) {
+                                                                $diaDiemHienThi = str_replace('Địa điểm: ', '', $parts[0]);
+                                                            }
+                                                            if (count($parts) >= 2 && strpos($parts[1], 'Mô tả:') === 0) {
+                                                                $noiDungHienThi = str_replace('Mô tả: ', '', $parts[1]);
+                                                            } else if (count($parts) >= 2) {
+                                                                $noiDungHienThi = $parts[1];
+                                                            } else {
+                                                                $noiDungHienThi = '';
+                                                            }
+                                                        }
+                                                    ?>
+                                                        <div>
+                                                            <i class="fas fa-map-marker-alt bg-primary"></i>
+                                                            <div class="timeline-item">
+                                                                <span class="time">
+                                                                    <i class="fas fa-clock"></i> 
+                                                                    <?= date('d/m/Y H:i', strtotime($ngayHienThi)) ?>
+                                                                </span>
+                                                                <h3 class="timeline-header">
+                                                                    <strong><?= htmlspecialchars($diaDiemHienThi) ?></strong>
+                                                                </h3>
+                                                                <div class="timeline-body">
+                                                                    <?= nl2br(htmlspecialchars($noiDungHienThi)) ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                    <div>
+                                                        <i class="fas fa-clock bg-gray"></i>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -549,4 +649,85 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+.timeline {
+    position: relative;
+    margin: 0 0 30px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #ddd;
+    left: 31px;
+    margin: 0;
+    border-radius: 2px;
+}
+
+.timeline > div {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.timeline > div > .timeline-item {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    margin-top: 0;
+    background: #fff;
+    color: #444;
+    margin-left: 60px;
+    margin-right: 15px;
+    padding: 0;
+    position: relative;
+}
+
+.timeline > div > .fa,
+.timeline > div > .fas,
+.timeline > div > .far,
+.timeline > div > .fab,
+.timeline > div > .fal,
+.timeline > div > .fad,
+.timeline > div > .svg-inline--fa,
+.timeline > div > .ion {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    line-height: 30px;
+    position: absolute;
+    color: #fff;
+    background: #999;
+    border-radius: 50%;
+    text-align: center;
+    left: 18px;
+    top: 0;
+}
+
+.timeline > div > .timeline-item > .time {
+    color: #999;
+    float: right;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.timeline > div > .timeline-item > .timeline-header {
+    margin: 0;
+    color: #555;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+.timeline > div > .timeline-item > .timeline-body,
+.timeline > div > .timeline-item > .timeline-footer {
+    padding: 10px;
+}
+</style>
 

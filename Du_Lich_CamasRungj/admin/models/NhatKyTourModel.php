@@ -27,11 +27,15 @@ class NhatKyTourModel {
 
     // Lấy nhật ký tour theo lich_id
     public static function getByLich($lich_id) {
-        $sql = "SELECT nhat_ky_tour.nhat_ky_tour_id, nhat_ky_tour.ngay_thuc_hien, nhat_ky_tour.noi_dung, nhat_ky_tour.anh_tour,
-                       dia_diem.ten dia_diem, tour.ten tour
+        $sql = "SELECT nhat_ky_tour.nhat_ky_tour_id, 
+                       nhat_ky_tour.ngay_thuc_hien,
+                       nhat_ky_tour.noi_dung,
+                       nhat_ky_tour.anh_tour,
+                       COALESCE(dia_diem.ten, 'Chưa xác định') as dia_diem,
+                       tour.ten as tour
                 FROM nhat_ky_tour
-                JOIN dia_diem ON dia_diem.dia_diem_id = nhat_ky_tour.dia_diem_id
-                JOIN tour ON tour.tour_id = nhat_ky_tour.tour_id
+                LEFT JOIN dia_diem ON dia_diem.dia_diem_id = nhat_ky_tour.dia_diem_id
+                LEFT JOIN tour ON tour.tour_id = nhat_ky_tour.tour_id
                 WHERE nhat_ky_tour.lich_id = ?
                 ORDER BY nhat_ky_tour.ngay_thuc_hien DESC";
         return db_query($sql, [$lich_id])->fetchAll();
@@ -55,12 +59,83 @@ class NhatKyTourModel {
         return db_query($sql, [$nhat_ky_id])->fetch();
     }
 
-    // Thêm nhật ký tour mới (alias cho add)
+    // Thêm nhật ký tour mới (dùng cấu trúc bảng hiện tại)
     public static function insert($data) {
-        $sql = "INSERT INTO nhat_ky_tour (lich_id, dia_diem, mo_ta, ngay_ghi, nguoi_tao_id)
-                VALUES (:lich_id, :dia_diem, :mo_ta, :ngay_ghi, :nguoi_tao_id)";
-        $stmt = connectDB()->prepare($sql);
-        return $stmt->execute($data);
+        // Nếu dùng cấu trúc mới (có dia_diem, mo_ta, ngay_ghi)
+        if (isset($data[':dia_diem']) && isset($data[':mo_ta'])) {
+            // Thử insert với cấu trúc mới trước
+            try {
+                $sql = "INSERT INTO nhat_ky_tour (lich_id, dia_diem, mo_ta, ngay_ghi, nguoi_tao_id)
+                        VALUES (:lich_id, :dia_diem, :mo_ta, :ngay_ghi, :nguoi_tao_id)";
+                $stmt = connectDB()->prepare($sql);
+                return $stmt->execute($data);
+            } catch (Exception $e) {
+                // Nếu lỗi, dùng cấu trúc cũ
+            }
+        }
+        
+        // Dùng cấu trúc cũ (tour_id, hdv_id, lich_id, dia_diem_id, noi_dung)
+        // Lấy tour_id từ lich_id
+        $sqlLich = "SELECT tour_id FROM lich_khoi_hanh WHERE lich_id = ?";
+        $lichInfo = db_query($sqlLich, [$data[':lich_id']])->fetch();
+        if (!$lichInfo) {
+            return false;
+        }
+        
+        // Lấy hdv_id từ data hoặc từ nguoi_tao_id
+        $hdv_id = $data[':hdv_id'] ?? null;
+        if (!$hdv_id && isset($data[':nguoi_tao_id'])) {
+            require_once './models/HDVModel.php';
+            $hdvInfo = HDVModel::getHDVByNguoiDungId($data[':nguoi_tao_id']);
+            $hdv_id = $hdvInfo ? $hdvInfo['hdv_id'] : null;
+        }
+        
+        // Lấy dia_diem_id từ tên địa điểm (tìm trong bảng dia_diem)
+        $dia_diem_id = null;
+        if (isset($data[':dia_diem']) && !empty($data[':dia_diem'])) {
+            $sqlDiaDiem = "SELECT dia_diem_id FROM dia_diem WHERE ten LIKE ? LIMIT 1";
+            $diaDiem = db_query($sqlDiaDiem, ['%' . $data[':dia_diem'] . '%'])->fetch();
+            $dia_diem_id = $diaDiem ? $diaDiem['dia_diem_id'] : null;
+        }
+        
+        // Nếu không tìm thấy, lấy địa điểm đầu tiên của tour
+        if (!$dia_diem_id) {
+            $sqlDiaDiemTour = "SELECT dia_diem_id FROM dia_diem_tour WHERE tour_id = ? LIMIT 1";
+            $diaDiemTour = db_query($sqlDiaDiemTour, [$lichInfo['tour_id']])->fetch();
+            $dia_diem_id = $diaDiemTour ? $diaDiemTour['dia_diem_id'] : null;
+        }
+        
+        // Nếu vẫn không có, lấy địa điểm đầu tiên trong hệ thống
+        if (!$dia_diem_id) {
+            $sqlDiaDiemDefault = "SELECT dia_diem_id FROM dia_diem LIMIT 1";
+            $diaDiemDefault = db_query($sqlDiaDiemDefault)->fetch();
+            $dia_diem_id = $diaDiemDefault ? $diaDiemDefault['dia_diem_id'] : 1;
+        }
+        
+        // Lưu nội dung: "Địa điểm: [dia_diem]\nMô tả: [mo_ta]"
+        $noi_dung = '';
+        if (isset($data[':dia_diem']) && !empty($data[':dia_diem'])) {
+            $noi_dung = "Địa điểm: " . $data[':dia_diem'] . "\n";
+        }
+        if (isset($data[':mo_ta']) && !empty($data[':mo_ta'])) {
+            $noi_dung .= "Mô tả: " . $data[':mo_ta'];
+        }
+        
+        // Xác định ngày thực hiện
+        $ngay_thuc_hien = isset($data[':ngay_ghi']) ? $data[':ngay_ghi'] . ' 00:00:00' : date('Y-m-d H:i:s');
+        
+        // Insert với cấu trúc cũ
+        $sql = "INSERT INTO nhat_ky_tour (tour_id, hdv_id, lich_id, dia_diem_id, anh_tour, ngay_thuc_hien, noi_dung)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        return db_query($sql, [
+            $lichInfo['tour_id'],
+            $hdv_id,
+            $data[':lich_id'],
+            $dia_diem_id,
+            '', // anh_tour
+            $ngay_thuc_hien,
+            $noi_dung
+        ]);
     }
 
     // Cập nhật nhật ký tour

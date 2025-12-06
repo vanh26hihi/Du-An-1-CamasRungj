@@ -297,4 +297,56 @@ class HDVController {
         exit;
     }
 
+    // Thêm nhật ký tour
+    public static function themNhatKy() {
+        require_once './models/NhatKyTourModel.php';
+        require_once '../commons/function.php';
+        
+        $lich_id = $_POST['lich_id'] ?? null;
+        $hdv_id = $_POST['hdv_id'] ?? null;
+        $dia_diem = $_POST['dia_diem'] ?? '';
+        $mo_ta = $_POST['mo_ta'] ?? '';
+        $ngay_ghi = $_POST['ngay_ghi'] ?? date('Y-m-d');
+        
+        // Validation
+        $error = [];
+        if (empty($dia_diem)) {
+            $error['dia_diem'] = "Vui lòng nhập địa điểm";
+        }
+        if (empty($mo_ta)) {
+            $error['mo_ta'] = "Vui lòng nhập mô tả";
+        }
+        
+        if (!empty($error)) {
+            $_SESSION['error'] = $error;
+            $_SESSION['old'] = $_POST;
+            header("Location: ?act=hdv-chi-tiet-lich&lich_id=" . $lich_id . "&hdv_id=" . $hdv_id . "&tab=nhat-ky");
+            exit;
+        }
+        
+        // Lấy nguoi_dung_id từ session (admin) - để lưu người tạo
+        $nguoi_dung_id = $_SESSION['user_admin']['nguoi_dung_id'] ?? null;
+        
+        // Thêm nhật ký (dùng method insert giống bên HDV)
+        $data = [
+            ':lich_id' => $lich_id,
+            ':hdv_id' => $hdv_id,
+            ':dia_diem' => $dia_diem,
+            ':mo_ta' => $mo_ta,
+            ':ngay_ghi' => $ngay_ghi,
+            ':nguoi_tao_id' => $nguoi_dung_id
+        ];
+        
+        try {
+            NhatKyTourModel::insert($data);
+            $_SESSION['success'] = "Thêm nhật ký thành công!";
+        } catch (Exception $e) {
+            $_SESSION['error'] = ['general' => 'Lỗi: ' . $e->getMessage()];
+            $_SESSION['old'] = $_POST;
+        }
+        
+        header("Location: ?act=hdv-chi-tiet-lich&lich_id=" . $lich_id . "&hdv_id=" . $hdv_id . "&tab=nhat-ky");
+        exit;
+    }
+
 }
