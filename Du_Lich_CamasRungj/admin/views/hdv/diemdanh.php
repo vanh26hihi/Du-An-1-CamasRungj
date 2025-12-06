@@ -50,21 +50,26 @@
                             </div>
                             
                             <?php if (!empty($data)): ?>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 5%;">STT</th>
-                                            <th style="width: 18%;">Tên Hành Khách</th>
-                                            <th style="width: 12%;">CCCD</th>
-                                            <th style="width: 12%;">Số Điện Thoại</th>
-                                            <th style="width: 18%;">Yêu Cầu Đặc Biệt</th>
-                                            <th style="width: 10%;">Trạng Thái</th>
-                                            <th style="width: 15%;">Thời Gian</th>
-                                            <th style="width: 10%;">Hành Động</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <!-- Form điểm danh -->
+                            <form id="formDiemDanh" method="POST" action="<?= BASE_URL_ADMIN ?>?act=hdv-diem-danh-action">
+                                <input type="hidden" name="lich_id" value="<?= $_GET['lich_id'] ?? '' ?>">
+                                <input type="hidden" name="hdv_id" value="<?= $_GET['hdv_id'] ?? '' ?>">
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 5%;">STT</th>
+                                                <th style="width: 18%;">Tên Hành Khách</th>
+                                                <th style="width: 12%;">CCCD</th>
+                                                <th style="width: 12%;">Số Điện Thoại</th>
+                                                <th style="width: 18%;">Yêu Cầu Đặc Biệt</th>
+                                                <th style="width: 10%;">Trạng Thái</th>
+                                                <th style="width: 15%;">Thời Gian</th>
+                                                <th style="width: 10%;">Điểm Danh</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                         <?php 
                                         $stt = 1;
                                         foreach ($data as $item): 
@@ -84,41 +89,55 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td class="text-center">
-                                                <?php if (isset($item['da_den']) && $item['da_den']): ?>
-                                                    <span class="badge badge-success">
-                                                        <i class="fas fa-check"></i> Có mặt
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="badge badge-danger">
-                                                        <i class="fas fa-times"></i> Vắng
-                                                    </span>
-                                                <?php endif; ?>
+                                                <span class="badge <?= isset($item['da_den']) && $item['da_den'] ? 'badge-success' : 'badge-danger' ?> status-badge-<?= $item['hanh_khach_id'] ?>">
+                                                    <i class="fas <?= isset($item['da_den']) && $item['da_den'] ? 'fa-check' : 'fa-times' ?>"></i> 
+                                                    <?= isset($item['da_den']) && $item['da_den'] ? 'Có mặt' : 'Vắng' ?>
+                                                </span>
                                             </td>
-                                            <td><?php echo !empty($item['thoi_gian']) ? date('d/m/Y H:i', strtotime($item['thoi_gian'])) : 'Chưa điểm danh'; ?></td>
+                                            <td class="thoi-gian-cell-<?= $item['hanh_khach_id'] ?>">
+                                                <?= !empty($item['thoi_gian']) ? '<span class="thoi-gian-' . $item['hanh_khach_id'] . '">' . date('d/m/Y H:i', strtotime($item['thoi_gian'])) . '</span>' : '<span class="text-muted">Chưa điểm danh</span>' ?>
+                                            </td>
                                             <td class="text-center">
-                                                <?php if (isset($item['da_den']) && $item['da_den']): ?>
-                                                    <button class="btn btn-sm btn-warning btn-diem-danh" 
-                                                            data-hanh-khach-id="<?= $item['hanh_khach_id'] ?>"
-                                                            data-lich-id="<?= $_GET['lich_id'] ?>"
-                                                            data-hdv-id="<?= $_GET['hdv_id'] ?>"
-                                                            title="Chuyển sang Vắng">
-                                                        <i class="fas fa-times"></i> Vắng
-                                                    </button>
-                                                <?php else: ?>
-                                                    <button class="btn btn-sm btn-success btn-diem-danh" 
-                                                            data-hanh-khach-id="<?= $item['hanh_khach_id'] ?>"
-                                                            data-lich-id="<?= $_GET['lich_id'] ?>"
-                                                            data-hdv-id="<?= $_GET['hdv_id'] ?>"
-                                                            title="Đánh dấu Có mặt">
-                                                        <i class="fas fa-check"></i> Có mặt
-                                                    </button>
-                                                <?php endif; ?>
+                                                <div class="icheck-success d-inline">
+                                                    <input type="checkbox" 
+                                                           id="check_<?= $item['hanh_khach_id'] ?>" 
+                                                           name="hanh_khach_ids[]" 
+                                                           value="<?= $item['hanh_khach_id'] ?>"
+                                                           class="checkbox-diem-danh"
+                                                           data-hanh-khach-id="<?= $item['hanh_khach_id'] ?>"
+                                                           <?= (isset($item['da_den']) && $item['da_den']) ? 'checked' : '' ?>>
+                                                    <label for="check_<?= $item['hanh_khach_id'] ?>"></label>
+                                                </div>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
+                                    <tfoot class="bg-light">
+                                        <tr>
+                                            <td colspan="7" class="text-right align-middle">
+                                                <?php 
+                                                $totalKhach = count($data);
+                                                $daCoMat = 0;
+                                                foreach ($data as $item) {
+                                                    if (isset($item['da_den']) && $item['da_den']) {
+                                                        $daCoMat++;
+                                                    }
+                                                }
+                                                ?>
+                                                <strong>Tổng cộng: <span id="tongKhach"><?= $totalKhach ?></span> khách | 
+                                                <span class="text-success">Có mặt: <span id="daCoMat"><?= $daCoMat ?></span></span> | 
+                                                <span class="text-danger">Vắng: <span id="vangMat"><?= $totalKhach - $daCoMat ?></span></span></strong>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <button type="submit" class="btn btn-success btn-lg" id="btnLuuDiemDanh">
+                                                    <i class="fas fa-save"></i> Lưu điểm danh
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
+                            </form>
                             <?php else: ?>
                             <div class="alert alert-info" role="alert">
                                 <i class="fas fa-info-circle"></i> Chưa có khách hàng nào trong tour này
@@ -331,21 +350,144 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.btn-diem-danh');
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            const hanhKhachId = this.getAttribute('data-hanh-khach-id');
-            const lichId = this.getAttribute('data-lich-id');
-            const hdvId = this.getAttribute('data-hdv-id');
+    const checkboxes = document.querySelectorAll('.checkbox-diem-danh');
+    const form = document.getElementById('formDiemDanh');
+    const btnLuu = document.getElementById('btnLuuDiemDanh');
+    
+    // Cập nhật UI khi click checkbox (không submit)
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const hanhKhachId = this.dataset.hanhKhachId;
+            const isChecked = this.checked;
+            const row = this.closest('tr');
+            const statusBadge = document.querySelector('.status-badge-' + hanhKhachId);
             
-            const currentStatus = this.closest('tr').querySelector('.badge-success') ? 'Có mặt' : 'Vắng';
-            const newStatus = currentStatus === 'Có mặt' ? 'Vắng' : 'Có mặt';
-            
-            if (confirm('Xác nhận chuyển trạng thái từ "' + currentStatus + '" sang "' + newStatus + '" cho khách hàng này?')) {
-                // Redirect to attendance action
-                window.location.href = '<?= BASE_URL_ADMIN ?>?act=hdv-diem-danh-action&hanh_khach_id=' + hanhKhachId + '&lich_id=' + lichId + '&hdv_id=' + hdvId;
+            // Cập nhật giao diện
+            if (isChecked) {
+                statusBadge.className = 'badge badge-success status-badge-' + hanhKhachId;
+                statusBadge.innerHTML = '<i class="fas fa-check"></i> Có mặt';
+            } else {
+                statusBadge.className = 'badge badge-danger status-badge-' + hanhKhachId;
+                statusBadge.innerHTML = '<i class="fas fa-times"></i> Vắng';
+                
+                // Xóa thời gian nếu có
+                const thoiGianCell = document.querySelector('.thoi-gian-cell-' + hanhKhachId);
+                if (thoiGianCell) {
+                    thoiGianCell.innerHTML = '<span class="text-muted">Chưa điểm danh</span>';
+                }
             }
+            
+            // Cập nhật số liệu
+            updateStats();
         });
     });
+    
+    // Cập nhật thống kê
+    function updateStats() {
+        const total = checkboxes.length;
+        const checked = document.querySelectorAll('.checkbox-diem-danh:checked').length;
+        const absent = total - checked;
+        
+        document.getElementById('tongKhach').textContent = total;
+        document.getElementById('daCoMat').textContent = checked;
+        document.getElementById('vangMat').textContent = absent;
+    }
+    
+    // Submit form qua AJAX
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            console.log('Form submit started');
+            console.log('Action URL:', form.action);
+            
+            if (btnLuu) {
+                btnLuu.disabled = true;
+                btnLuu.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            }
+            
+            const formData = new FormData(form);
+            
+            // Log form data
+            console.log('Form data:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers.get('Content-Type'));
+                
+                // Kiểm tra content-type
+                const contentType = response.headers.get('Content-Type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    return response.text().then(text => {
+                        console.error('Response is not JSON:', text);
+                        throw new Error('Server trả về dữ liệu không hợp lệ (HTML thay vì JSON)');
+                    });
+                }
+                
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                
+                if (data.success) {
+                    // Hiển thị thông báo thành công
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: data.message || 'Đã lưu điểm danh',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    
+                    // Cập nhật thời gian điểm danh
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            const hanhKhachId = checkbox.dataset.hanhKhachId;
+                            const thoiGianCell = document.querySelector('.thoi-gian-cell-' + hanhKhachId);
+                            
+                            if (thoiGianCell && !thoiGianCell.querySelector('.thoi-gian-' + hanhKhachId)) {
+                                const now = new Date();
+                                const dateStr = now.getDate().toString().padStart(2, '0') + '/' + 
+                                              (now.getMonth() + 1).toString().padStart(2, '0') + '/' + 
+                                              now.getFullYear();
+                                const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                                              now.getMinutes().toString().padStart(2, '0');
+                                thoiGianCell.innerHTML = '<span class="thoi-gian-' + hanhKhachId + '">' + 
+                                                        dateStr + ' ' + timeStr + '</span>';
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: data.message || 'Có lỗi xảy ra'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi kết nối!',
+                    text: error.message || 'Không thể kết nối đến server. Vui lòng kiểm tra kết nối mạng.',
+                    footer: 'Chi tiết lỗi: ' + error.toString()
+                });
+            })
+            .finally(() => {
+                if (btnLuu) {
+                    btnLuu.disabled = false;
+                    btnLuu.innerHTML = '<i class="fas fa-save"></i> Lưu điểm danh';
+                }
+            });
+        });
+    }
 });
 </script>

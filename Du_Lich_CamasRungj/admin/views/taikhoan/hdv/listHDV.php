@@ -98,17 +98,17 @@
                             <i class="fas fa-edit"></i>
                           </a>
                           
-                          <a href="<?= BASE_URL_ADMIN . "?act=reset-password-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
-                             class="btn btn-info btn-sm" 
-                             title="Reset Mật Khẩu"
-                             onclick="return confirm('Bạn có chắc muốn reset mật khẩu về mặc định (123@123ab)?')">
+                            <a href="<?= BASE_URL_ADMIN . "?act=reset-password-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
+                              class="btn btn-info btn-sm" 
+                              title="Reset Mật Khẩu"
+                              onclick="return sweetConfirmDelete(event, 'Bạn có chắc muốn reset mật khẩu về mặc định (123@123ab)?')">
                             <i class="fas fa-key"></i>
                           </a>
                           
-                          <a href="<?= BASE_URL_ADMIN . "?act=xoa-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
-                             class="btn btn-danger btn-sm" 
-                             title="Xóa"
-                             onclick="return confirm('Bạn có chắc muốn xóa tài khoản HDV này?')">
+                            <a href="<?= BASE_URL_ADMIN . "?act=xoa-hdv&id=" . $hdv['nguoi_dung_id'] ?>" 
+                              class="btn btn-danger btn-sm" 
+                              title="Xóa"
+                              onclick="return sweetConfirmDelete(event, 'Bạn có chắc muốn xóa tài khoản HDV này?')">
                             <i class="fas fa-trash"></i>
                           </a>
                         </div>

@@ -27,13 +27,8 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <h3 class="card-title">Danh Sách Hướng Dẫn Viên</h3>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-them" ?>" class="btn btn-success">
-                                        <i class="fas fa-plus"></i> Thêm HDV
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -106,9 +101,9 @@ $tab = $_GET['tab'] ?? 'thong-tin';
                                                 <a href="<?= BASE_URL_ADMIN . "?act=hdv-form-sua&hdv_id=" . $hdv_id ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i> Sửa
                                                 </a>
-                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa&hdv_id=" . $hdv_id ?>" 
-                                                   class="btn btn-sm btn-danger"
-                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa hướng dẫn viên <?= htmlspecialchars($hdvInfo['ho_ten']) ?>?');">
+                                                                <a href="<?= BASE_URL_ADMIN . "?act=hdv-xoa&hdv_id=" . $hdv_id ?>" 
+                                                                    class="btn btn-sm btn-danger"
+                                                                    onclick="return sweetConfirmDelete(event, 'Bạn có chắc chắn muốn xóa hướng dẫn viên <?= htmlspecialchars($hdvInfo['ho_ten']) ?>?');">
                                                     <i class="fas fa-trash"></i> Xóa
                                                 </a>
                                             </div>

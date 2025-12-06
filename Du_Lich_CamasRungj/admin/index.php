@@ -1,5 +1,16 @@
 <?php
+// Cấu hình session để tránh logout không mong muốn
+ini_set('session.gc_maxlifetime', 86400); // 24 giờ
+ini_set('session.cookie_lifetime', 86400); // 24 giờ
+session_set_cookie_params(86400); // 24 giờ
+
 session_start();
+
+// Kiểm tra và làm mới session khi có activity
+if (isset($_SESSION['user_admin']['nguoi_dung_id'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+}
+
 require_once '../commons/env.php';
 require_once '../commons/function.php';
 
@@ -27,8 +38,8 @@ $publicRoutes = ['login-admin', 'check-login-admin'];
 
 // Kiểm tra đăng nhập cho tất cả route trừ public routes
 if (!in_array($act, $publicRoutes)) {
-    // Nếu chưa đăng nhập, chuyển đến trang login
-    if (empty($_SESSION['user_admin'])) {
+    // Nếu chưa đăng nhập hoặc session không hợp lệ, chuyển đến trang login
+    if (!isset($_SESSION['user_admin']) || !isset($_SESSION['user_admin']['nguoi_dung_id'])) {
         header('Location: ' . BASE_URL_ADMIN . '?act=login-admin');
         exit();
     }
@@ -40,7 +51,7 @@ match ($act) {
         : (new AdminBaoCaoThongKeController())->home(),
 
     'booking' => (new AdminBookingController())->danhSachBooking(),
-    'chi-tiet-booking' => (new AdminBookingController())->chiTietBooking(),
+    'booking-detail' => (new AdminBookingController())->bookingDetail(),
     'form-them-booking' => (new AdminBookingController())->formAddBooking(),
     'them-booking' => (new AdminBookingController())->postAddBooking(),
     'form-sua-booking' => (new AdminBookingController())->formEditBooking(),
@@ -105,6 +116,8 @@ match ($act) {
     'form-them-tour' => (new AdminTourController())->formAddTour(),
     'post-them-tour' => (new AdminTourController())->postAddTour(),
     'get-tour-info' => (new AdminTourController())->getTourInfo(), // AJAX endpoint
+    'public-tour' => (new AdminTourController())->publicTour(),
+    'tour-detail' => (new AdminTourController())->tourDetail(),
     'form-sua-tour' => (new AdminTourController())->formEditTour(),
     'post-sua-tour' => (new AdminTourController())->postEditTour(),
     'xoa-tour' => (new AdminTourController())->deleteTour(),

@@ -489,6 +489,85 @@ class AdminTourController
         exit;
     }
 
+    // Public view rendered within admin routing (avoids relying on external file)
+    public function publicTour()
+    {
+        $tourId = $_GET['id'] ?? null;
+        if (!$tourId) {
+            header('HTTP/1.1 404 Not Found');
+            echo "Tour không tồn tại";
+            exit;
+        }
+
+        $tourDetail = $this->model->getTourDetailById($tourId);
+        if (!$tourDetail) {
+            header('HTTP/1.1 404 Not Found');
+            echo "Tour không tìm thấy";
+            exit;
+        }
+
+        // Use models to get additional info
+        require_once 'models/AdminDanhMuc.php';
+        $danhMucModel = new AdminDanhMuc();
+        $diaDiemList = $this->model->getDiaDiemTourByTour($tourId);
+        $lichTrinhList = $danhMucModel->getLichTrinhByTour($tourId);
+
+        // make variables available to view
+        $tourDetail = $tourDetail;
+        $diaDiemList = $diaDiemList;
+        $lichTrinhList = $lichTrinhList;
+        $lichKhoiHanh = null;
+        $hdvList = [];
+        $serviceList = [];
+
+        require 'views/danhmuc/tourPublic.php';
+        exit;
+    }
+
+    // Xem chi tiết tour (dùng cho quản lý tour, hiển thị đầy đủ)
+    public function tourDetail()
+    {
+        $tourId = $_GET['id'] ?? null;
+        if (!$tourId) {
+            header('HTTP/1.1 404 Not Found');
+            echo "Tour không tồn tại";
+            exit;
+        }
+
+        $tourDetail = $this->model->getTourDetailById($tourId);
+        if (!$tourDetail) {
+            header('HTTP/1.1 404 Not Found');
+            echo "Tour không tìm thấy";
+            exit;
+        }
+
+        // Use models to get additional info
+        require_once 'models/AdminDanhMuc.php';
+        $danhMucModel = new AdminDanhMuc();
+        $diaDiemList = $this->model->getDiaDiemTourByTour($tourId);
+        $lichTrinhList = $danhMucModel->getLichTrinhByTour($tourId);
+
+        // Lấy thông tin lịch khởi hành (ngày xuất phát, HDV, dịch vụ)
+        $lichKhoiHanh = $this->model->getLatestLichByTour($tourId);
+        $hdvList = [];
+        $serviceList = [];
+        if ($lichKhoiHanh) {
+            $hdvList = $this->model->getPhanCongHDVByLich($lichKhoiHanh['lich_id']);
+            $serviceList = $this->model->getDichVuListByLich($lichKhoiHanh['lich_id']);
+        }
+
+        // make variables available to view
+        $tourDetail = $tourDetail;
+        $diaDiemList = $diaDiemList;
+        $lichTrinhList = $lichTrinhList;
+        $lichKhoiHanh = $lichKhoiHanh;
+        $hdvList = $hdvList;
+        $serviceList = $serviceList;
+
+        require 'views/tour/tourDetail.php';
+        exit;
+    }
+
     // Xóa lịch khởi hành (cascade: lich_trinh, phan_cong_hdv)
     public function deleteTour()
     {

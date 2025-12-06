@@ -1,0 +1,201 @@
+/* Custom CSS cho các trang list - Admin */
+
+/* Page Header */
+.page-header-custom {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-header-custom h1 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.page-header-custom .breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+
+.page-header-custom .breadcrumb-item,
+.page-header-custom .breadcrumb-item a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Card Improvements */
+.card-custom {
+  border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.card-custom .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 15px 20px;
+}
+
+.card-custom .card-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+  margin-bottom: 20px;
+}
+
+.btn-add-new {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-add-new:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+/* Table Styling */
+.table-custom {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-custom thead th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.table-custom tbody tr {
+  transition: all 0.2s;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-custom tbody td {
+  padding: 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Badge Styling */
+.badge-tour-type {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.badge-group {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.badge-individual {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.badge-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.badge-hdv {
+  display: inline-block;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  padding: 5px 10px;
+  margin: 2px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Action Buttons in Table */
+.btn-action {
+  margin: 2px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-action i {
+  margin-right: 4px;
+}
+
+/* Alert Messages */
+.alert-custom {
+  border-radius: 8px;
+  border: none;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-custom.alert-success {
+  background: linear-gradient(135deg, #81fbb8 0%, #28c76f 100%);
+  color: white;
+}
+
+.alert-custom.alert-danger {
+  background: linear-gradient(135deg, #fa8072 0%, #ea5455 100%);
+  color: white;
+}
+
+.alert-custom i {
+  margin-right: 8px;
+}
+
+/* Price Formatting */
+.price-text {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-custom {
+    font-size: 12px;
+  }
+
+  .btn-action {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .page-header-custom h1 {
+    font-size: 20px;
+  }
+}

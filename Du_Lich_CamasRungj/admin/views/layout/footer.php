@@ -36,6 +36,9 @@
  <!-- AdminLTE for demo purposes -->
  <script src="./assets/dist/js/demo.js"></script>
 
+ <!-- SweetAlert2 -->
+ <script src="./assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
  <!-- Custom Sidebar Hover Script -->
  <script>
  $(document).ready(function() {
@@ -70,5 +73,42 @@
    });
  });
  </script>
+
+<!-- Global SweetAlert2 helpers -->
+<script>
+  function sweetConfirmDelete(event, message) {
+    event = event || window.event;
+    var target = event.currentTarget || event.srcElement;
+    var href = target.getAttribute('href') || target.dataset.href;
+    if (!href) return true; // fallback to normal
+    event.preventDefault();
+    Swal.fire({
+      title: 'Xác nhận',
+      text: message || 'Bạn có chắc chắn muốn thực hiện hành động này? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, xóa',
+      cancelButtonText: 'Hủy',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // redirect to href
+        window.location.href = href;
+      }
+    });
+    return false;
+  }
+
+  // Generic helper to replace confirm() inside scripts: returns a Promise
+  function sweetConfirmPromise(message) {
+    return Swal.fire({
+      title: 'Xác nhận',
+      text: message || 'Bạn có chắc chắn muốn thực hiện hành động này? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có',
+      cancelButtonText: 'Hủy',
+    }).then(result => result.isConfirmed);
+  }
+</script>
 
 

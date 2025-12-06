@@ -108,6 +108,7 @@ class AdminBooking
                     dat_tour.*,
                     lich_khoi_hanh.lich_id,
                     lich_khoi_hanh.ngay_bat_dau,
+                    lich_khoi_hanh.ngay_ket_thuc,
                     tour.tour_id,
                     tour.ten as ten_tour,
                     tour.mo_ta,
@@ -135,12 +136,15 @@ class AdminBooking
 
     public function insertBooking($lich_id, $loai, $so_nguoi, $ghi_chu, $khach_hang_id, $nguoi_tao_id, $tong_tien)
     {
-        $ten_te = 'VND';
         try {
-            $sql = 'INSERT INTO dat_tour(lich_id, loai, so_nguoi, ghi_chu, khach_hang_id, nguoi_tao_id, tong_tien, ten_te)
-                VALUES(:lich_id, :loai, :so_nguoi, :ghi_chu, :khach_hang_id, :nguoi_tao_id, :tong_tien, :ten_te)';
+            error_log("=== insertBooking called ===");
+            error_log("lich_id: $lich_id, loai: $loai, so_nguoi: $so_nguoi");
+            error_log("khach_hang_id: $khach_hang_id, tong_tien: $tong_tien");
+            
+            $sql = 'INSERT INTO dat_tour(lich_id, loai, so_nguoi, ghi_chu, khach_hang_id, nguoi_tao_id, tong_tien)
+                VALUES(:lich_id, :loai, :so_nguoi, :ghi_chu, :khach_hang_id, :nguoi_tao_id, :tong_tien)';
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 ':lich_id' => $lich_id,
                 ':loai' => $loai,
                 ':so_nguoi' => $so_nguoi,
@@ -148,40 +152,58 @@ class AdminBooking
                 ':khach_hang_id' => $khach_hang_id,
                 ':nguoi_tao_id' => $nguoi_tao_id,
                 ':tong_tien' => $tong_tien,
-                ':ten_te' => $ten_te,
             ]);
-            return $this->conn->lastInsertId();
+            
+            $dat_tour_id = $this->conn->lastInsertId();
+            error_log("Insert booking successful - dat_tour_id: $dat_tour_id");
+            
+            return $dat_tour_id;
         } catch (Exception $e) {
-            echo 'Lỗi: ' . $e->getMessage();
+            error_log("ERROR insertBooking: " . $e->getMessage());
+            echo 'Lỗi insertBooking: ' . $e->getMessage();
+            return false;
         }
     }
 
     public function insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi)
     {
         try {
+            error_log("=== insertKhachHang called ===");
+            error_log("ho_ten: $ho_ten, email: $email, cccd: $cccd");
+            
             $sql = 'INSERT INTO khach_hang(ho_ten, so_dien_thoai, email, cccd, dia_chi)
                 VALUES(:ho_ten, :so_dien_thoai, :email, :cccd, :dia_chi)';
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 ':ho_ten' => $ho_ten,
                 ':so_dien_thoai' => $so_dien_thoai,
                 ':email' => $email,
                 ':cccd' => $cccd,
                 ':dia_chi' => $dia_chi,
             ]);
-            return $this->conn->lastInsertId();
+            
+            $khach_hang_id = $this->conn->lastInsertId();
+            error_log("Insert khach_hang successful - khach_hang_id: $khach_hang_id");
+            
+            return $khach_hang_id;
         } catch (Exception $e) {
-            echo 'Lỗi: ' . $e->getMessage();
+            error_log("ERROR insertKhachHang: " . $e->getMessage());
+            echo 'Lỗi insertKhachHang: ' . $e->getMessage();
+            return false;
         }
     }
 
     public function insertListKhachHang($dat_tour_id, $ho_ten, $so_dien_thoai, $email, $gioi_tinh, $cccd, $ngay_sinh, $ghi_chu, $so_ghe)
     {
         try {
+            error_log("=== insertListKhachHang called ===");
+            error_log("dat_tour_id: $dat_tour_id");
+            error_log("ho_ten: $ho_ten, email: $email, cccd: $cccd");
+            
             $sql = 'INSERT INTO hanh_khach_list(dat_tour_id, ho_ten, so_dien_thoai, email, gioi_tinh, cccd, ngay_sinh, ghi_chu, so_ghe)
                 VALUES(:dat_tour_id, :ho_ten, :so_dien_thoai, :email, :gioi_tinh, :cccd, :ngay_sinh, :ghi_chu, :so_ghe)';
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 ':dat_tour_id' => $dat_tour_id,
                 ':ho_ten' => $ho_ten,
                 ':so_dien_thoai' => $so_dien_thoai,
@@ -192,9 +214,15 @@ class AdminBooking
                 ':ghi_chu' => $ghi_chu,
                 ':so_ghe' => $so_ghe,
             ]);
-            return true;
+            
+            $hanh_khach_id = $this->conn->lastInsertId();
+            error_log("Insert successful - hanh_khach_id: $hanh_khach_id");
+            
+            return $hanh_khach_id;
         } catch (Exception $e) {
+            error_log("ERROR insertListKhachHang: " . $e->getMessage());
             echo 'Lỗi: ' . $e->getMessage();
+            return false;
         }
     }
 

@@ -19,10 +19,13 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="./assets/dist/css/adminlte.min.css">
   <!-- Custom Styles -->
+  <link rel="stylesheet" href="./assets/css/custom-list.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-header.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-sidebar.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-footer.css?v=<?= time() ?>">
   <link rel="stylesheet" href="./assets/css/style-hdv.css?v=<?= time() ?>">
+  <!-- SweetAlert2 theme -->
+  <link rel="stylesheet" href="./assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.css">
 </head>
 
 <style>

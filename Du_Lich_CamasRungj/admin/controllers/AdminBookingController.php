@@ -22,12 +22,16 @@ class AdminBookingController
         // Cung cấp dữ liệu tách biệt: tour và toàn bộ lịch
         $listTours   = $this->modelBooking->getAllTours();
         $listLichAll = $this->modelBooking->getAllLich();
-        require_once './views/Booking/addBooking.php';
+        require_once './views/booking/addBooking.php';
     }
 
     public function postAddBooking()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            // DEBUG: In ra dữ liệu được gửi
+            error_log("=== DEBUG postAddBooking ===");
+            error_log("POST data: " . json_encode($_POST));
 
             // Gom dữ liệu
             $tour_id        = $_POST['tour_id'] ?? null;
@@ -47,6 +51,8 @@ class AdminBookingController
 
             // Danh sách khách hàng
             $ds_khach = $_POST['ds_khach'] ?? [];
+
+            error_log("tour_id: $tour_id, lich_id: $lich_id, loai: $loai, ho_ten: $ho_ten, email: $email");
 
             // Mảng lỗi
             $error = [];
@@ -135,6 +141,9 @@ class AdminBookingController
             // Nếu có lỗi → trả về form
             if (!empty($error)) {
 
+                error_log("=== Validation errors ===");
+                error_log(json_encode($error));
+
                 $_SESSION['flash'] = true;      // cờ báo có lỗi
                 $_SESSION['error'] = $error;    // lưu lỗi
                 $_SESSION['old']   = $_POST;    // lưu dữ liệu cũ
@@ -155,8 +164,23 @@ class AdminBookingController
                     exit();
                 }
             }
+            
+            // Insert khách hàng (người đặt tour)
+            error_log("=== Starting insert process ===");
             $khach_hang_id = $this->modelBooking->insertKhachHang($ho_ten, $so_dien_thoai, $email, $cccd, $dia_chi);
 
+            error_log("khach_hang_id inserted: $khach_hang_id");
+            
+            if (!$khach_hang_id) {
+                error_log("ERROR: Failed to insert khach_hang");
+                $_SESSION['flash'] = true;
+                $_SESSION['error'] = ['system' => 'Lỗi khi thêm thông tin khách hàng. Vui lòng thử lại.'];
+                $_SESSION['old'] = $_POST;
+                header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+                exit();
+            }
+
+            // Insert booking (đặt tour)
             $dat_tour_id = $this->modelBooking->insertBooking(
                 $lich_id,
                 $loai,
@@ -167,19 +191,46 @@ class AdminBookingController
                 $tong_tien
             );
 
-            foreach ($ds_khach as $kh) {
-                $this->modelBooking->insertListKhachHang(
-                    $dat_tour_id,
-                    $kh['ho_ten'],
-                    $kh['so_dien_thoai'],
-                    $kh['email'],
-                    $kh['gioi_tinh'],
-                    $kh['cccd'],
-                    $kh['ngay_sinh'],
-                    $kh['ghi_chu'] ?? '',
-                    $kh['so_ghe'] ?? null
-                );
+            error_log("dat_tour_id inserted: $dat_tour_id");
+            
+            if (!$dat_tour_id) {
+                error_log("ERROR: Failed to insert dat_tour");
+                $_SESSION['flash'] = true;
+                $_SESSION['error'] = ['system' => 'Lỗi khi tạo đơn đặt tour. Vui lòng thử lại.'];
+                $_SESSION['old'] = $_POST;
+                header("Location:" . BASE_URL_ADMIN . '?act=form-them-booking');
+                exit();
             }
+
+            // Debug danh sách khách hàng
+            error_log("=== Danh sách khách hàng (ds_khach) ===");
+            error_log("Count: " . count($ds_khach));
+            error_log("Data: " . json_encode($ds_khach));
+
+            if (!empty($ds_khach)) {
+                foreach ($ds_khach as $index => $kh) {
+                    error_log("=== Inserting customer #" . ($index + 1) . " ===");
+                    error_log("Data: " . json_encode($kh));
+                    
+                    $result = $this->modelBooking->insertListKhachHang(
+                        $dat_tour_id,
+                        $kh['ho_ten'] ?? '',
+                        $kh['so_dien_thoai'] ?? '',
+                        $kh['email'] ?? '',
+                        $kh['gioi_tinh'] ?? '',
+                        $kh['cccd'] ?? '',
+                        $kh['ngay_sinh'] ?? '',
+                        $kh['ghi_chu'] ?? '',
+                        $kh['so_ghe'] ?? null
+                    );
+                    
+                    error_log("Insert result: " . ($result ? 'success' : 'failed'));
+                }
+            } else {
+                error_log("WARNING: ds_khach is empty - no customers to insert");
+            }
+
+            error_log("=== Booking saved successfully ===");
 
             // Xong → chuyển trang
             header("Location:" . BASE_URL_ADMIN . '?act=booking');
@@ -420,24 +471,22 @@ class AdminBookingController
         exit();
     }
 
-    // Chi tiết booking
-    public function chiTietBooking()
+    public function bookingDetail()
     {
-        $id = $_GET['id_booking'] ?? null;
-        if (!$id) {
-            header("Location: " . BASE_URL_ADMIN . '?act=booking');
+        $id_booking = $_GET['id_booking'] ?? null;
+        if (empty($id_booking)) {
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
             exit();
         }
 
-        $booking = $this->modelBooking->getDetailBooking($id);
-        if (!$booking) {
-            $_SESSION['error'] = "Không tìm thấy booking";
-            header("Location: " . BASE_URL_ADMIN . '?act=booking');
+        $bookingInfo = $this->modelBooking->getAllBookingID($id_booking);
+        if (!$bookingInfo) {
+            header("Location:" . BASE_URL_ADMIN . '?act=booking');
             exit();
         }
 
-        $hanhKhachList = $this->modelBooking->getAllHanhKhachID($id);
-        require_once './views/booking/chiTietBooking.php';
+        $hanhKhachList = $this->modelBooking->getAllHanhKhachID($id_booking);
+
+        require_once './views/booking/bookingDetail.php';
     }
 }
-
