@@ -68,12 +68,16 @@ match ($act) {
     'hdv-chi-tiet-lich' => HDVController::chiTietLich($_GET['lich_id'] ?? null, $_GET['hdv_id'] ?? null),
     'hdv-diem-danh-action' => HDVController::diemDanhAction(),
     'hdv-them-nhat-ky' => HDVController::themNhatKy(),
+    'hdv-xoa-nhat-ky' => HDVController::xoaNhatKy(),
     'hdv-get-tours' => HDVController::getToursByHDVAjax($_GET['hdv_id'] ?? null),
+    'hdv-lich-lam-viec' => (new HDVLichLamViecController())->danhSachLichLamViec(),
+    'hdv-chi-tiet-lich-lam-viec' => (new HDVLichLamViecController())->chiTietLich(),
     'hdv-danh-sach-khach' => (new HDVLichLamViecController())->danhSachKhach(),
     'hdv-diem-danh' => (new HDVLichLamViecController())->diemDanh(),
     'hdv-xu-ly-diem-danh' => (new HDVLichLamViecController())->xuLyDiemDanh(),
     'hdv-nhat-ky-tour' => (new HDVLichLamViecController())->nhatKyTour(),
     'hdv-them-nhat-ky-tour' => (new HDVLichLamViecController())->themNhatKyTour(),
+    'hdv-xoa-nhat-ky-tour' => (new HDVLichLamViecController())->xoaNhatKyTour(),
 
     // Quản lý tài khoản quản trị (AdminTaiKhoanQuanTriController)
     'list-tai-khoan-quan-tri' => (new AdminTaiKhoanQuanTriController())->danhSachQuanTri(),

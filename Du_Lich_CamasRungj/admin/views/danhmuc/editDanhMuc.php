@@ -620,14 +620,14 @@
     });
 
     ngayCard.innerHTML = `
-      <div class="card-header bg-gradient-primary text-white">
+      <div class="card-header bg-primary text-white">
         <div class="d-flex justify-content-between align-items-center">
           <h5 class="mb-0">
             <i class="fas fa-calendar-day"></i> NGÀY ${ngay.ngay_thu}
             <small class="ml-2" style="font-size: 0.85rem; opacity: 0.9;">(${ngay.lich_trinh.length} hoạt động)</small>
           </h5>
         </div>
-      </div>
+      </div>`
       <div class="card-body bg-light">
         <input type="hidden" name="ngay[${ngayIndex}][ngay_thu]" value="${ngay.ngay_thu}">
         
@@ -830,3 +830,4 @@
   }
 </script>
 <?php endif; ?>
+

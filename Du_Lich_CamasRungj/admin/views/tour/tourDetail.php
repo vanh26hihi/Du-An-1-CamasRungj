@@ -10,7 +10,7 @@
     /* Improve spacing and layout for tour days and items */
     .tour-day { margin-bottom:18px; }
     .tour-day .day-head { display:flex; gap:14px; align-items:flex-start; }
-    .tour-day .day-badge { min-width:90px; background:linear-gradient(135deg,#0d47a1,#1976d2); color:#fff; padding:12px 16px; border-radius:10px; font-weight:700; font-size:15px; box-shadow:0 6px 16px rgba(25,118,210,0.08); }
+    .tour-day .day-badge { min-width:90px; background:#5a8dee; color:#fff; padding:12px 16px; border-radius:10px; font-weight:700; font-size:15px; box-shadow:0 6px 16px rgba(90,141,238,0.08); }
     .tour-day .day-body { flex:1; }
     .tour-day .day-title { font-weight:700; color:#0f1724; margin-bottom:6px; }
     .tour-day .day-summary { color:#6b7280; margin-bottom:10px; }

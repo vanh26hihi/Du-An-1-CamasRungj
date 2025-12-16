@@ -40,19 +40,50 @@ class AdminTaiKhoanController
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $email = $_POST['email'] ?? '';
+            // Sanitize inputs
+            $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            // Validation
+            // Basic validation
+            $errors = [];
+
             if (empty($email)) {
-                $_SESSION['error'] = 'Vui lòng nhập email';
+                $errors[] = 'Vui lòng nhập địa chỉ email';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = 'Địa chỉ email không hợp lệ';
+            } elseif (strlen($email) > 255) {
+                $errors[] = 'Email quá dài (tối đa 255 ký tự)';
+            }
+
+            if (empty($password)) {
+                $errors[] = 'Vui lòng nhập mật khẩu';
+            } elseif (strlen($password) < 6) {
+                $errors[] = 'Mật khẩu phải có ít nhất 6 ký tự';
+            } elseif (strlen($password) > 255) {
+                $errors[] = 'Mật khẩu quá dài';
+            }
+
+            // If validation fails
+            if (!empty($errors)) {
+                $_SESSION['error'] = implode('<br>', $errors);
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
             }
 
-            if (empty($password)) {
-                $_SESSION['error'] = 'Vui lòng nhập mật khẩu';
+            // Rate limiting check (prevent brute force)
+            if (!isset($_SESSION['login_attempts'])) {
+                $_SESSION['login_attempts'] = [];
+            }
+            
+            // Clean old attempts (older than 15 minutes)
+            $_SESSION['login_attempts'] = array_filter($_SESSION['login_attempts'], function($time) {
+                return $time > time() - 900;
+            });
+            
+            // Check if too many attempts
+            if (count($_SESSION['login_attempts']) >= 5) {
+                $_SESSION['error'] = 'Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau 15 phút';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
@@ -63,7 +94,8 @@ class AdminTaiKhoanController
 
             // Check if user exists
             if (!$user) {
-                $_SESSION['error'] = 'Email không tồn tại trong hệ thống';
+                $_SESSION['login_attempts'][] = time();
+                $_SESSION['error'] = 'Email hoặc mật khẩu không chính xác';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
@@ -72,7 +104,8 @@ class AdminTaiKhoanController
             // Check password (support both hashed and plain text for backward compatibility)
             $verify_result = password_verify($password, $user['mat_khau']) || $password === $user['mat_khau'];
             if (!$verify_result) {
-                $_SESSION['error'] = 'Mật khẩu không chính xác';
+                $_SESSION['login_attempts'][] = time();
+                $_SESSION['error'] = 'Email hoặc mật khẩu không chính xác';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
@@ -80,7 +113,7 @@ class AdminTaiKhoanController
 
             // Check account status
             if ($user['trang_thai'] !== 'active') {
-                $_SESSION['error'] = 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên';
+                $_SESSION['error'] = 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
@@ -88,13 +121,15 @@ class AdminTaiKhoanController
 
             // Check role (only Admin and HDV can login)
             if (!in_array($user['vai_tro_id'], [1, 2])) {
-                $_SESSION['error'] = 'Bạn không có quyền truy cập vào trang quản trị';
+                $_SESSION['error'] = 'Bạn không có quyền truy cập vào hệ thống quản trị';
                 $_SESSION['old_email'] = $email;
                 header("Location: " . BASE_URL_ADMIN . '?act=login-admin');
                 exit();
             }
 
-            // Login success - set session
+            // Login success - clear failed attempts and set session
+            unset($_SESSION['login_attempts']);
+            
             $_SESSION['user_admin'] = [
                 'nguoi_dung_id' => $user['nguoi_dung_id'],
                 'ho_ten' => $user['ho_ten'],
@@ -106,6 +141,7 @@ class AdminTaiKhoanController
 
             unset($_SESSION['error'], $_SESSION['old_email']);
             
+            // Redirect to dashboard
             header("Location: " . BASE_URL_ADMIN);
             exit();
         }

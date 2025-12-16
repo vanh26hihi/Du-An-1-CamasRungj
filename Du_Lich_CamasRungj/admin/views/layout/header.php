@@ -36,16 +36,16 @@
 
   /* Content Wrapper - Màu nền sáng đẹp */
   .content-wrapper {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+    background: #f8f9fa !important;
     min-height: calc(100vh - 130px) !important;
   }
 
-  /* Card Header - Gradient đẹp */
+  /* Card Header - Soft blue */
   .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: #5a8dee !important;
     color: white !important;
     font-weight: 600;
-    border-bottom: 3px solid #f39c12;
+    border-bottom: 3px solid #ffa85d;
   }
 
   .card-header h3, .card-header h4, .card-header h5 {
@@ -71,65 +71,65 @@
 
   /* Buttons - Màu sắc sáng hơn */
   .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: #5a8dee !important;
     border: none !important;
-    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 3px 10px rgba(90, 141, 238, 0.25);
     transition: all 0.3s ease;
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 5px 15px rgba(90, 141, 238, 0.4);
   }
 
   .btn-success {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+    background: #39da8a !important;
     border: none !important;
-    box-shadow: 0 3px 10px rgba(17, 153, 142, 0.3);
+    box-shadow: 0 3px 10px rgba(57, 218, 138, 0.25);
   }
 
   .btn-success:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(17, 153, 142, 0.5);
+    box-shadow: 0 5px 15px rgba(57, 218, 138, 0.4);
   }
 
   .btn-warning {
-    background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%) !important;
+    background: #ffa85d !important;
     border: none !important;
-    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.3);
+    box-shadow: 0 3px 10px rgba(255, 168, 93, 0.25);
     color: white !important;
   }
 
   .btn-warning:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.5);
+    box-shadow: 0 5px 15px rgba(255, 168, 93, 0.4);
   }
 
   .btn-danger {
-    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%) !important;
+    background: #ff5b5c !important;
     border: none !important;
-    box-shadow: 0 3px 10px rgba(235, 51, 73, 0.3);
+    box-shadow: 0 3px 10px rgba(255, 91, 92, 0.25);
   }
 
   .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(235, 51, 73, 0.5);
+    box-shadow: 0 5px 15px rgba(255, 91, 92, 0.4);
   }
 
   .btn-info {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
+    background: #00cfe8 !important;
     border: none !important;
-    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 3px 10px rgba(0, 207, 232, 0.25);
   }
 
   .btn-info:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 207, 232, 0.4);
   }
 
   /* Tables */
   .table thead th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: #5a8dee !important;
     color: white !important;
     border: none;
     text-align: center;
@@ -143,9 +143,9 @@
   }
 
   .table tbody tr:hover {
-    background-color: rgba(102, 126, 234, 0.05);
+    background-color: rgba(90, 141, 238, 0.05);
     transform: scale(1.01);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   th, td {
@@ -154,29 +154,29 @@
 
   /* Form Controls */
   .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    border-color: #5a8dee;
+    box-shadow: 0 0 0 0.2rem rgba(90, 141, 238, 0.2);
   }
 
   /* Badge */
   .badge-success {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    box-shadow: 0 2px 5px rgba(17, 153, 142, 0.3);
+    background: #39da8a;
+    box-shadow: 0 2px 5px rgba(57, 218, 138, 0.25);
   }
 
   .badge-warning {
-    background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
-    box-shadow: 0 2px 5px rgba(243, 156, 18, 0.3);
+    background: #ffa85d;
+    box-shadow: 0 2px 5px rgba(255, 168, 93, 0.25);
   }
 
   .badge-danger {
-    background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-    box-shadow: 0 2px 5px rgba(235, 51, 73, 0.3);
+    background: #ff5b5c;
+    box-shadow: 0 2px 5px rgba(255, 91, 92, 0.25);
   }
 
   .badge-info {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+    background: #00cfe8;
+    box-shadow: 0 2px 5px rgba(0, 207, 232, 0.25);
   }
 
   /* Content Header */
@@ -275,13 +275,13 @@
 
   /* DataTables Pagination */
   .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: #5a8dee !important;
     border: none !important;
     color: white !important;
   }
 
   .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: #5a8dee !important;
     border: none !important;
     color: white !important;
   }
