@@ -3,13 +3,18 @@ require_once '../commons/env.php';
 
 class NhatKyTourModel {
 
-    // Thêm nhật ký tour (ảnh + nội dung)
+    // Thêm nhật ký tour với đầy đủ thông tin
     public static function add($data) {
         $sql = "INSERT INTO nhat_ky_tour (tour_id, hdv_id, lich_id, dia_diem_id, anh_tour, ngay_thuc_hien, noi_dung)
-                VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         db_query($sql, [
-            $data['tour_id'], $data['hdv_id'], $data['lich_id'],
-            $data['dia_diem_id'], $data['anh_tour'], $data['noi_dung']
+            $data['tour_id'], 
+            $data['hdv_id'], 
+            $data['lich_id'],
+            $data['dia_diem_id'], 
+            $data['anh_tour'] ?? '', 
+            $data['ngay_thuc_hien'],
+            $data['noi_dung']
         ]);
     }
 
