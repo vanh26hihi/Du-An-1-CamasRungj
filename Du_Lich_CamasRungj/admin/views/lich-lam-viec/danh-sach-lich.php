@@ -125,17 +125,17 @@
                                                 <td class="text-center"><?= $vaiTroBadge ?></td>
                                                 <td class="text-center"><?= $trangThai ?></td>
                                                 <td class="text-center">
-                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-danh-sach-khach&lich_id=<?= $lich['lich_id'] ?>" 
+                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-chi-tiet-lich-lam-viec&lich_id=<?= $lich['lich_id'] ?>&tab=khach-hang" 
                                                        class="btn btn-sm btn-info"
                                                        title="Danh sách khách">
                                                         <i class="fas fa-users"></i>
                                                     </a>
-                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-diem-danh&lich_id=<?= $lich['lich_id'] ?>" 
+                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-chi-tiet-lich-lam-viec&lich_id=<?= $lich['lich_id'] ?>&tab=diem-danh" 
                                                        class="btn btn-sm btn-success"
                                                        title="Điểm danh">
                                                         <i class="fas fa-check-square"></i>
                                                     </a>
-                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-nhat-ky-tour&lich_id=<?= $lich['lich_id'] ?>" 
+                                                    <a href="<?= BASE_URL_ADMIN ?>?act=hdv-chi-tiet-lich-lam-viec&lich_id=<?= $lich['lich_id'] ?>&tab=nhat-ky" 
                                                        class="btn btn-sm btn-primary"
                                                        title="Nhật ký tour">
                                                         <i class="fas fa-book"></i>
