@@ -90,7 +90,7 @@
           <?php else: // HDV 
           ?>
             <li class="nav-item">
-              <a href="<?= BASE_URL_ADMIN ?>" class="nav-link">
+              <a href="<?= BASE_URL_ADMIN ?>?act=hdv-lich-lam-viec" class="nav-link">
                 <i class="nav-icon fas fa-calendar-alt"></i>
                 <p>Lịch Làm Việc</p>
               </a>

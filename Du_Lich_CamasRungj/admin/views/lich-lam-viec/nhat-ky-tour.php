@@ -72,20 +72,37 @@
                             unset($_SESSION['error'], $_SESSION['old'], $_SESSION['flash']);
                             ?>
                             
-                            <form action="<?= BASE_URL_ADMIN ?>?act=hdv-them-nhat-ky-tour" method="POST">
+                            <form action="<?= BASE_URL_ADMIN ?>?act=hdv-them-nhat-ky-tour" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="lich_id" value="<?= $lichInfo['lich_id'] ?>">
+                                <input type="hidden" name="tour_id" value="<?= $lichInfo['tour_id'] ?>">
                                 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Địa Điểm <span class="text-danger">*</span></label>
-                                            <input type="text" 
-                                                   name="dia_diem" 
-                                                   class="form-control <?= isset($error['dia_diem']) ? 'is-invalid' : '' ?>" 
-                                                   placeholder="VD: Đà Nẵng - Bà Nà Hills"
-                                                   value="<?= $old['dia_diem'] ?? '' ?>">
-                                            <?php if (isset($error['dia_diem'])): ?>
-                                                <small class="text-danger"><?= $error['dia_diem'] ?></small>
+                                            <select name="dia_diem_id" 
+                                                    class="form-control <?= isset($error['dia_diem_id']) ? 'is-invalid' : '' ?>" 
+                                                    required>
+                                                <option value="">-- Chọn địa điểm --</option>
+                                                <?php
+                                                // Lấy danh sách địa điểm của tour
+                                                $sqlDiaDiem = "SELECT dd.dia_diem_id, dd.ten_dia_diem 
+                                                              FROM dia_diem dd
+                                                              JOIN lich_trinh lt ON dd.dia_diem_id = lt.dia_diem_id
+                                                              WHERE lt.tour_id = ?
+                                                              GROUP BY dd.dia_diem_id
+                                                              ORDER BY dd.ten_dia_diem";
+                                                $diaDiemList = db_query($sqlDiaDiem, [$lichInfo['tour_id']])->fetchAll();
+                                                foreach ($diaDiemList as $dd):
+                                                ?>
+                                                    <option value="<?= $dd['dia_diem_id'] ?>" 
+                                                            <?= (isset($old['dia_diem_id']) && $old['dia_diem_id'] == $dd['dia_diem_id']) ? 'selected' : '' ?>>
+                                                        <?= htmlspecialchars($dd['ten_dia_diem']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <?php if (isset($error['dia_diem_id'])): ?>
+                                                <small class="text-danger"><?= $error['dia_diem_id'] ?></small>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -94,21 +111,22 @@
                                         <div class="form-group">
                                             <label>Ngày Ghi</label>
                                             <input type="date" 
-                                                   name="ngay_ghi" 
+                                                   name="ngay_thuc_hien" 
                                                    class="form-control" 
-                                                   value="<?= $old['ngay_ghi'] ?? date('Y-m-d') ?>">
+                                                   value="<?= $old['ngay_thuc_hien'] ?? date('Y-m-d') ?>">
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label>Mô Tả <span class="text-danger">*</span></label>
-                                    <textarea name="mo_ta" 
+                                    <textarea name="noi_dung" 
                                               rows="4" 
-                                              class="form-control <?= isset($error['mo_ta']) ? 'is-invalid' : '' ?>" 
-                                              placeholder="Ghi chú về hoạt động, tình hình khách hàng, vấn đề phát sinh..."><?= $old['mo_ta'] ?? '' ?></textarea>
-                                    <?php if (isset($error['mo_ta'])): ?>
-                                        <small class="text-danger"><?= $error['mo_ta'] ?></small>
+                                              class="form-control <?= isset($error['noi_dung']) ? 'is-invalid' : '' ?>" 
+                                              placeholder="Ghi chú về hoạt động, tình hình khách hàng, vấn đề phát sinh..."
+                                              required><?= $old['noi_dung'] ?? '' ?></textarea>
+                                    <?php if (isset($error['noi_dung'])): ?>
+                                        <small class="text-danger"><?= $error['noi_dung'] ?></small>
                                     <?php endif; ?>
                                 </div>
                                 
@@ -151,13 +169,13 @@
                                             <div class="timeline-item">
                                                 <span class="time">
                                                     <i class="fas fa-clock"></i> 
-                                                    <?= date('d/m/Y H:i', strtotime($nhatKy['ngay_ghi'])) ?>
+                                                    <?= date('d/m/Y H:i', strtotime($nhatKy['ngay_thuc_hien'])) ?>
                                                 </span>
                                                 <h3 class="timeline-header">
-                                                    <strong><?= htmlspecialchars($nhatKy['dia_diem']) ?></strong>
+                                                    <strong><?= htmlspecialchars($nhatKy['ten_dia_diem']) ?></strong>
                                                 </h3>
                                                 <div class="timeline-body">
-                                                    <?= nl2br(htmlspecialchars($nhatKy['mo_ta'])) ?>
+                                                    <?= nl2br(htmlspecialchars($nhatKy['noi_dung'])) ?>
                                                 </div>
                                                 <div class="timeline-footer">
                                                     <small class="text-muted">

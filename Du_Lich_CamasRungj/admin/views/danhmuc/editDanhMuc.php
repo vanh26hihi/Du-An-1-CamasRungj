@@ -627,7 +627,7 @@
             <small class="ml-2" style="font-size: 0.85rem; opacity: 0.9;">(${ngay.lich_trinh.length} hoạt động)</small>
           </h5>
         </div>
-      </div>`
+      </div>
       <div class="card-body bg-light">
         <input type="hidden" name="ngay[${ngayIndex}][ngay_thu]" value="${ngay.ngay_thu}">
         

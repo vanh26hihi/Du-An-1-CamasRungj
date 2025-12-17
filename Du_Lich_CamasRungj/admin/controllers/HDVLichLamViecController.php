@@ -189,7 +189,7 @@ class HDVLichLamViecController {
         exit();
     }
 
-    // Trang nhật ký tour (cho HDV xem)
+    // Trang nhật ký tour (cho HDV xem) - DEPRECATED, dùng chiTietLich() thay thế
     public function nhatKyTour() {
         $lich_id = $_GET['lich_id'] ?? null;
         
@@ -198,14 +198,9 @@ class HDVLichLamViecController {
             exit();
         }
         
-        $lichInfo = $this->getLichInfo($lich_id);
-        $nhatKyList = NhatKyTourModel::getByLich($lich_id);
-        
-        require_once './views/layout/header.php';
-        require_once './views/layout/navbar.php';
-        require_once './views/layout/sidebar.php';
-        require_once './views/lich-lam-viec/nhat-ky-tour.php';
-        require_once './views/layout/footer.php';
+        // Redirect sang tab nhật ký trong chi tiết lịch
+        header('Location: ?act=hdv-chi-tiet-lich-lam-viec&lich_id=' . $lich_id . '&tab=nhat-ky');
+        exit();
     }
     
     // Chi tiết lịch làm việc (3 tab: Khách hàng, Điểm danh, Nhật ký) - cho HDV
@@ -242,6 +237,14 @@ class HDVLichLamViecController {
         
         // Lấy nhật ký
         $nhatKy = NhatKyTourModel::getByLich($lich_id);
+        
+        // Lấy địa điểm của tour (để chọn trong form nhật ký)
+        $sql = "SELECT dd.dia_diem_id, dd.ten as ten_dia_diem 
+                FROM dia_diem dd
+                INNER JOIN dia_diem_tour ddt ON dd.dia_diem_id = ddt.dia_diem_id
+                WHERE ddt.tour_id = ?
+                ORDER BY dd.ten";
+        $diaDiemTour = db_query($sql, [$lichInfo['tour_id']])->fetchAll();
         
         // Lấy tất cả lịch trình của tour
         $allSchedules = DiemDanhModel::getTourSchedules($lich_id);
