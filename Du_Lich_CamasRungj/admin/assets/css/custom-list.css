@@ -2,12 +2,12 @@
 
 /* Page Header */
 .page-header-custom {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a8dee;
   color: white;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .page-header-custom h1 {
@@ -36,7 +36,7 @@
 }
 
 .card-custom .card-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a8dee;
   color: white;
   border: none;
   border-radius: 8px 8px 0 0;
@@ -56,7 +56,7 @@
 }
 
 .btn-add-new {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a8dee;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -67,7 +67,7 @@
 
 .btn-add-new:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(90, 141, 238, 0.35);
   color: white;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .table-custom thead th {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a8dee;
   color: white;
   border: none;
   padding: 12px;
@@ -111,11 +111,11 @@
 }
 
 .badge-group {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5a8dee;
 }
 
 .badge-individual {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: #a389d4;
 }
 
 .badge-status {
@@ -127,7 +127,7 @@
 
 .badge-hdv {
   display: inline-block;
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: #00cfe8;
   color: white;
   padding: 5px 10px;
   margin: 2px;
@@ -164,12 +164,12 @@
 }
 
 .alert-custom.alert-success {
-  background: linear-gradient(135deg, #81fbb8 0%, #28c76f 100%);
+  background: #39da8a;
   color: white;
 }
 
 .alert-custom.alert-danger {
-  background: linear-gradient(135deg, #fa8072 0%, #ea5455 100%);
+  background: #dc3545;
   color: white;
 }
 
